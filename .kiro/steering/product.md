@@ -9,7 +9,7 @@ It is a Kiroween 2026 hackathon entry in the Resurrection category. The old tech
 - **Listener**: anyone nearby with a phone that has opened the app once before. The phone hears the sound and shows the alert in the listener's language.
 
 ## Pieces
-1. **Message code**: turns an alert into 19 to 40 bytes and back. Pure functions, no browser APIs.
+1. **Message code**: turns an alert into 21 to 40 bytes and back. Pure functions, no browser APIs.
 2. **Listen page**: microphone in, decode, check, show. Keeps a history. When nothing has been heard, it says "Dead air. Last heard N min ago."
 3. **Broadcast page**: the form, a "say this first" line for the sender to read aloud, Go on air, repeat every minute, save as a sound file.
 4. **The look**: Teletext style. Built later. Keep the UI plain until the look spec.

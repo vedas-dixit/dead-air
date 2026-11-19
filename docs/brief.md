@@ -5,7 +5,7 @@ Who uses it
 • Sender: a control room, a community radio host, or a volunteer with a megaphone. They fill in a short form and press "Go on air". The device plays a few seconds of sound.
 • Listener: anyone nearby with a phone that has opened the app once before. The phone hears the sound and shows the alert in the listener's language.
 The pieces
-1.  Message code. Turns an alert into 19 to 40 bytes and back. Pure functions with no browser APIs, so it is easy to test.
+1.  Message code. Turns an alert into 21 to 40 bytes and back. Pure functions with no browser APIs, so it is easy to test.
 2.  Listen page. Microphone in, decode, check, show. Keeps a history. When nothing has been heard, it says "Dead air. Last heard N min ago."
 3.  Broadcast page. The form, a "say this first" line for the sender to read aloud, Go on air, repeat every minute, save as a sound file.
 4.  The look. Teletext style. This comes later. Keep the UI plain until the look spec.
@@ -36,10 +36,10 @@ Fields follow CAP 1.2, the Common Alerting Protocol, wherever it has a matching 
 • Valid for, 1 byte: steps of 15 minutes
 • Place, 6 bytes: latitude and longitude, 3 bytes each
 • Sender and number, 3 bytes: a 2-byte station ID and a 1-byte counter
-• Place name, 0 to 21 bytes: optional short UTF-8 text
-• Check, 2 bytes: CRC-16 over every byte before it
+• Place name, 0 to 19 bytes: optional short UTF-8 text
+• Check, 4 bytes: CRC-32 over every byte before it
 This is a starting point. Spec 1 turns it into exact rules. Suggest changes if something is wrong, but keep the total at 40 bytes or less.
-Reject any message with an unknown version or a failed check. Spec 1 should also say whether a 2-byte check is strong enough for promise 1, or whether it needs 4 bytes.
+Reject any message with an unknown version or a failed check. Spec 1 decided that a 2-byte check is not strong enough for promise 1, so the check is 4 bytes.
 Tech rules
 • Vite, TypeScript and React. No backend.
 • Hosted on GitHub Pages under the /dead-air/ path, for now. It will later move to its own subdomain, so asset paths and the service worker scope must work both under a sub-path and at the root of a domain.

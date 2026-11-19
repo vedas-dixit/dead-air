@@ -19,7 +19,7 @@
 - Fields follow CAP 1.2 (Common Alerting Protocol) wherever a matching field exists.
 - Total size is 40 bytes or less.
 - Reject any message with an unknown version or a failed check.
-- Spec 1 decides whether a 2-byte CRC-16 is strong enough for promise 1, or whether it needs 4 bytes.
+- The check value is a 4-byte CRC-32. A 2-byte CRC-16 is not strong enough for promise 1 (decided in spec 1). Messages are 21 to 40 bytes.
 
 ## Testing
 The message code gets property tests for three things:
