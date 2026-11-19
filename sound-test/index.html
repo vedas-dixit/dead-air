@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dead Air sound test</title>
+  <style>
+    body { font-family: sans-serif; max-width: 36rem; margin: 1rem auto; padding: 0 1rem; }
+    h2 { margin-top: 2rem; }
+    input[type=text] { width: 100%; box-sizing: border-box; font-size: 1rem; padding: .4rem; }
+    button { font-size: 1rem; padding: .5rem 1rem; margin-top: .5rem; }
+    #log { list-style: none; padding: 0; margin: .5rem 0; }
+    #log li { border-bottom: 1px solid #ccc; padding: .3rem 0; white-space: pre-wrap; word-break: break-word; }
+    .meta { color: #555; font-size: .85rem; }
+    #status { color: #555; min-height: 1.2em; }
+    #error { color: #b00020; min-height: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>Dead Air sound test</h1>
+  <p>Throwaway page. Uses ggwave to send and receive short text as sound.</p>
+  <p id="status">Loading ggwave...</p>
+  <p id="error"></p>
+
+  <h2>Send</h2>
+  <label for="tx">Text to send</label>
+  <input type="text" id="tx" value="Hello dead air" maxlength="100">
+  <button id="send" disabled>Play as sound</button>
+
+  <h2>Listen</h2>
+  <button id="start" disabled>Start listening</button>
+  <button id="stop" hidden>Stop listening</button>
+  <p>Decoded: <strong id="count">0</strong></p>
+  <ul id="log"></ul>
+
+  <script src="ggwave.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+
+      var statusEl = document.getElementById("status");
+      var errorEl = document.getElementById("error");
+      var txEl = document.getElementById("tx");
+      var sendBtn = document.getElementById("send");
+      var startBtn = document.getElementById("start");
+      var stopBtn = document.getElementById("stop");
+      var countEl = document.getElementById("count");
+      var logEl = document.getElementById("log");
+
+      var ggwave = null;
+      var instance = null;
+      var context = null;
+      var stream = null;
+      var mediaSource = null;
+      var recorder = null;
+      var count = 0;
+
+      function showError(msg) { errorEl.textContent = msg || ""; }
+      function setStatus(msg) { statusEl.textContent = msg; }
+
+      // Same helper as the official ggwave-js example.
+      function convertTypedArray(src, type) {
+        var buffer = new ArrayBuffer(src.byteLength);
+        new src.constructor(buffer).set(src);
+        return new type(buffer);
+      }
+
+      // Called only from a button tap, so the browser allows audio.
+      function init() {
+        if (!context) {
+          // Fixed 48000 Hz, as in the official example.
+          context = new AudioCtx({ sampleRate: 48000 });
+          var parameters = ggwave.getDefaultParameters();
+          parameters.sampleRateInp = context.sampleRate;
+          parameters.sampleRateOut = context.sampleRate;
+          instance = ggwave.init(parameters);
+        }
+        if (context.state === "suspended") {
+          return context.resume();
+        }
+        return Promise.resolve();
+      }
+
+      function addResult(text) {
+        count += 1;
+        countEl.textContent = String(count);
+        var li = document.createElement("li");
+        var body = document.createElement("div");
+        body.textContent = text;
+        var meta = document.createElement("div");
+        meta.className = "meta";
+        meta.textContent = "#" + count + " at " + new Date().toLocaleTimeString();
+        li.appendChild(body);
+        li.appendChild(meta);
+        logEl.insertBefore(li, logEl.firstChild);
+      }
+
+      // Send
+
+      sendBtn.addEventListener("click", function () {
+        showError("");
+        var text = txEl.value;
+        if (!text) { showError("Type some text first."); return; }
+
+        stopListening(); // like the official example: pause capture while sending
+
+        init().then(function () {
+          var waveform = ggwave.encode(
+            instance,
+            text,
+            ggwave.ProtocolId.GGWAVE_PROTOCOL_AUDIBLE_FAST,
+            10
+          );
+          var buf = convertTypedArray(waveform, Float32Array);
+          var buffer = context.createBuffer(1, buf.length, context.sampleRate);
+          buffer.getChannelData(0).set(buf);
+          var source = context.createBufferSource();
+          source.buffer = buffer;
+          source.connect(context.destination);
+          source.onended = function () { setStatus("Done playing."); };
+          setStatus("Playing...");
+          source.start(0);
+        }).catch(function (e) {
+          showError("Could not play: " + e.message);
+        });
+      });
+
+      // Listen
+
+      startBtn.addEventListener("click", function () {
+        showError("");
+        if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showError("The microphone needs https or localhost.");
+          return;
+        }
+        init().then(function () {
+          return navigator.mediaDevices.getUserMedia({
+            audio: {
+              echoCancellation: false,
+              noiseSuppression: false,
+              autoGainControl: false
+            }
+          });
+        }).then(function (s) {
+          stream = s;
+          mediaSource = context.createMediaStreamSource(stream);
+          recorder = context.createScriptProcessor(1024, 1, 1);
+          recorder.onaudioprocess = function (ev) {
+            var samples = new Float32Array(ev.inputBuffer.getChannelData(0));
+            var res = ggwave.decode(instance, convertTypedArray(samples, Int8Array));
+            if (res && res.length > 0) {
+              addResult(new TextDecoder("utf-8").decode(res));
+            }
+          };
+          mediaSource.connect(recorder);
+          recorder.connect(context.destination);
+          startBtn.hidden = true;
+          stopBtn.hidden = false;
+          setStatus("Listening...");
+        }).catch(function (e) {
+          showError("Could not start the microphone: " + e.message);
+        });
+      });
+
+      function stopListening() {
+        if (recorder) {
+          recorder.onaudioprocess = null;
+          recorder.disconnect();
+          recorder = null;
+        }
+        if (mediaSource) {
+          mediaSource.disconnect();
+          mediaSource = null;
+        }
+        if (stream) {
+          stream.getTracks().forEach(function (t) { t.stop(); });
+          stream = null;
+        }
+        startBtn.hidden = false;
+        stopBtn.hidden = true;
+        if (ggwave) { setStatus("Ready. Listening is off."); }
+      }
+
+      stopBtn.addEventListener("click", stopListening);
+
+      // Load ggwave (local file, no network)
+
+      ggwave_factory().then(function (obj) {
+        ggwave = obj;
+        sendBtn.disabled = false;
+        startBtn.disabled = false;
+        setStatus("Ready. Listening is off.");
+      }).catch(function (e) {
+        setStatus("");
+        showError("ggwave failed to load: " + e.message);
+      });
+    })();
+  </script>
+</body>
+</html>
