@@ -6,7 +6,7 @@ One site, three addresses, separated by path and not by domain.
 | Path | What it is | When built |
 |---|---|---|
 | `/` | Front page: cover photo, the story in a few lines, buttons to the two app pages, how to try it | Last |
-| `/listen` | Listen app | Spec 2 |
+| `/listen` | Listen app | Spec 4 |
 | `/broadcast` | Broadcast app | Spec 3 |
 
 ## Rules

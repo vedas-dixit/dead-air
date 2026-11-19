@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.message-code.json --noEmit && tsc -p tsconfig.json --noEmit",
-    "build": "vite build"
+    "build": "vite build && node build/copy-sound-test.mjs"
   },
   "devDependencies": {
     "fast-check": "4.10.3",

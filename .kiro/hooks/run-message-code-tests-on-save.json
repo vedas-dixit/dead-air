@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run message code tests on save",
+      "trigger": "PostFileSave",
+      "action": {
+        "type": "command",
+        "command": "npx vitest run tests/message-code"
+      },
+      "description": "Runs the message code tests whenever a message code file is saved.",
+      "matcher": "src/message-code/.*\\.ts$",
+      "enabled": true
+    }
+  ]
+}

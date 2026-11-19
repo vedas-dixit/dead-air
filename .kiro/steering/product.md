@@ -21,12 +21,13 @@ It is a Kiroween 2026 hackathon entry in the Resurrection category. The old tech
 ## Work order
 One spec at a time, in this order:
 1. Message code
-2. Listen page
+2. Sound link
 3. Broadcast page
-4. Offline
-5. Languages and read aloud
-6. The Teletext look
-7. Pass it on
-8. Samples and help
-
+4. Listen page
+5. Kiro's ears
+6. Offline
+7. Languages and read aloud
+8. The Teletext look
+9. Pass it on
+10. Front page
 Requirements first, then design, then tasks. Wait for approval between phases. Stay inside the current spec. Ask before changing files that belong to another spec.

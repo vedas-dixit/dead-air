@@ -54,7 +54,7 @@ Sound rules
 • Never assume a transmission arrived intact. Everything received goes through the check.
 • ggwave carries about 8 to 16 bytes per second, so payloads stay small.
 How we work
-• One spec at a time, in this order: message code, Listen page, Broadcast page, offline, languages and read aloud, the Teletext look, pass it on, samples and help.
+• One spec at a time, in this order: message code, sound link, Broadcast page, Listen page, Kiro's ears, offline, languages and read aloud, the Teletext look, pass it on, front page.
 • Requirements first, then design, then tasks. Wait for approval between phases.
 • The message code gets property tests for three things: any alert survives encode then decode, any single changed byte is caught, and an expired alert is never reported as current.
 • Stay inside the current spec. Ask before changing files that belong to another one.
