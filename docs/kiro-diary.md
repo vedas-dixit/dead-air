@@ -40,3 +40,38 @@ Problems found and fixed:
 - **Property generators could go empty.** A fixed-seed test samples 500 values and asserts that accepted values, both place-name forms and each rejection reason all occur.
 
 Final test count: 347 tests in 14 files, all passing (`npx vitest run`).
+
+## Spec 2: Sound link (19 Nov 2026)
+
+Files: `.kiro/specs/sound-link/` (requirements, design, tasks, and `report.md`, which the tests regenerate). Code: `src/sound-link/`. Tests: `tests/sound-link/`. Git commit `decf248`.
+
+Decisions:
+- **One module wrapping ggwave.** It has three parts: `bytesToAudio`, a listener that is fed microphone samples, and `audioToWav`. It has no UI, no audio context and no microphone code. It does not read the bytes and never checks them. Only the message code check may accept what the listener hears (promise 1).
+- **`bytesToAudio` takes 21 to 40 bytes only.** Anything else is rejected as `not-bytes`, `too-short` or `too-long`. 21 is the shortest message code message.
+- **The listener reports every payload it hears, of any length,** as unchanged copies. The Listen page can then say it heard something it could not read.
+- **Default 48000 Hz. A caller may pass 16000 to 96000,** because ggwave resamples to its own 48000 Hz. The frame size follows the rate: 1024 at 48000, 941 at 44100, 342 at 16000. The module does no resampling itself.
+- **One payload is encoded once.** The Broadcast page plays each alert twice.
+- **AUDIBLE_FAST is kept.** FASTEST decoded as well in the noise sweep and takes 1.96 s for 40 bytes, against 3.24 s for FAST. It needs a real speaker and phone test before it is chosen.
+- **Bytes go to ggwave as a `Uint8Array`, never as a string,** so every byte value from 0 to 255 is carried unchanged.
+
+Airtime at 48000 Hz:
+
+| Payload | NORMAL | FAST | FASTEST |
+|---|---|---|---|
+| 19 bytes | 2.60 s | 1.96 s | 1.32 s |
+| 21 bytes | 2.79 s | 2.09 s | 1.39 s |
+| 40 bytes | 4.52 s | 3.24 s | 1.96 s |
+
+Problems found:
+- **ggwave decodes only whole frames.** A short last chunk left a shared decoder returning nothing for every later message. The listener now collects samples into whole frames itself, and the result no longer depends on how the caller splits the samples.
+- **`encode` returns a view into one shared buffer** that the next call overwrites. The encoder and the listener both copy.
+- **ggwave prints the decoded text to the console** unless logging is off. It is turned off when ggwave loads.
+- **ggwave has room for only 4 instances.** `init` returns -1 after that. The module checks for it, returns `no-free-instance`, and frees every instance on dispose. One is taken by the encoder, so a link supports 3 listeners at a time.
+- **21 bytes of 0x00 are heard as 16 bytes of 0x00,** with no noise. No other payload of 21 to 40 bytes did this, including 22 or more bytes of 0x00. A real message cannot be all zero, because byte 0 holds the version and the last 4 bytes are a CRC-32. A test pins this behaviour so a change in ggwave is noticed.
+- **Early probes showed wrong bytes for 2 to 7 byte payloads.** With every ggwave protocol listening, 11 of 120 short payloads came back wrong in FAST mode. With only FAST listening, all 120 were exact, in a check run while writing this entry. The listener now turns the other protocols off, so the final report shows no wrong results for payloads of 1 to 20 bytes. The cause is not understood beyond that. The setting is global to ggwave, so a page that also needs another protocol would change this.
+- **The noise sweep needed levels down to -30 dB before decoding failed.** The first run, from 20 to -5 dB, showed no failures at all. At -10 dB, FAST decoded 13 of 20 payloads at 21 bytes and 6 of 20 at 40 bytes. From -15 dB nothing decoded. Noise gave "nothing", never wrong bytes. This is white noise, not a room, so real speaker and phone tests are still needed.
+- **Sending again helps.** Of 60 payloads sent at 7 start offsets, 2 were missed at some offset and heard exactly at another.
+- **ggwave loads a new copy each time `loadSoundLink` runs.** Tests that do this repeatedly print a Node `MaxListenersExceededWarning`. The apps should load it once.
+- **Not checked yet:** a browser build that imports ggwave. No page uses the module so far.
+
+Final test count: 120 new tests, 467 in total, all passing (`npm test`).
