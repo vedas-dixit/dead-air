@@ -1,0 +1,240 @@
+// Types for the Broadcast page strings. Types and one constant table, no browser APIs.
+import type {
+  Action,
+  Alert,
+  DecodeRejectionReason,
+  EventType,
+  ExpiryStatus,
+  Severity,
+  Urgency,
+} from '../message-code/index';
+import type { SameKeys } from '../shared/strings-shape';
+
+export type FieldName = keyof Alert;
+export type ValidForKey = 'm15' | 'm30' | 'h1' | 'h2' | 'h3' | 'h6' | 'h12' | 'h24' | 'h48';
+
+export type AudioReasonKey = 'not-bytes' | 'too-short' | 'too-long' | 'engine-error' | 'disposed';
+export type WavReasonKey = 'not-float32' | 'empty' | 'not-finite' | 'bad-sample-rate';
+
+/**
+ * Every user-facing text key. A language file must have all of them.
+ * Placeholders are written as {name}; see PLACEHOLDERS.
+ */
+export const TEXT_KEYS = [
+  // Page
+  'page.title',
+  'page.heading',
+  'nav.home',
+  'nav.listen',
+  'loading',
+  'engine.failed',
+  // Form labels
+  'form.heading',
+  'form.event',
+  'form.urgency',
+  'form.severity',
+  'form.action',
+  'form.choose',
+  'form.placeName',
+  'form.latitude',
+  'form.longitude',
+  'form.validFor',
+  'form.stationId',
+  'form.mapPoint',
+  'bytesLeft',
+  'station.remembered',
+  // Buttons and switches
+  'btn.go',
+  'btn.stop',
+  'btn.save',
+  'btn.location',
+  'switch.test',
+  'switch.repeat',
+  'test.dialog',
+  'test.dialog.confirm',
+  'test.dialog.cancel',
+  'test.banner',
+  'real.notice',
+  // Validation
+  'err.field.not-chosen',
+  'err.map.need-both',
+  'err.map.not-a-number',
+  'err.map.out-of-range',
+  'err.station',
+  'err.placeName.too-long',
+  'err.placeName.bad-char',
+  // Build, play and save
+  'err.encode',
+  'err.audio',
+  'err.wav',
+  'check.failed',
+  'check.failed.reason',
+  'check.failed.field',
+  'clock.bad',
+  'audio.unavailable',
+  'storage.unavailable',
+  'building',
+  'on-air',
+  'stopped',
+  'saved',
+  'err.unexpected',
+  // Repeat and wake lock
+  'repeat.keep-open',
+  'repeat.round',
+  'repeat.countdown',
+  'repeat.missed',
+  'repeat.expired',
+  'wake.on',
+  'wake.off',
+  'wake.unsupported',
+  'wake.refused',
+  // Location
+  'location.found',
+  'location.refused',
+  'location.unavailable',
+  'location.timeout',
+  'location.no-api',
+  'location.off.no-api',
+  'location.off.insecure',
+  // Preview
+  'draft.label',
+  'draft.pending',
+  'preview.heading',
+  'preview.event',
+  'preview.urgency',
+  'preview.severity',
+  'preview.action',
+  'preview.place',
+  'preview.map',
+  'preview.sent',
+  'preview.until',
+  'preview.station',
+  'preview.status',
+  'preview.utc',
+  'preview.local',
+  'no-map-point',
+  // Say first
+  'sayfirst.heading',
+  'sayfirst.test',
+  'sayfirst.main',
+  'sayfirst.place',
+  'sayfirst.time',
+  'err.sayfirst',
+] as const;
+
+export type TextKey = (typeof TEXT_KEYS)[number];
+
+/** The names allowed inside {braces} for each key. Keys not listed here allow none. */
+export const PLACEHOLDERS: Readonly<Record<TextKey, readonly string[]>> = {
+  'page.title': [],
+  'page.heading': [],
+  'nav.home': [],
+  'nav.listen': [],
+  loading: [],
+  'engine.failed': [],
+  'form.heading': [],
+  'form.event': [],
+  'form.urgency': [],
+  'form.severity': [],
+  'form.action': [],
+  'form.choose': [],
+  'form.placeName': [],
+  'form.latitude': [],
+  'form.longitude': [],
+  'form.validFor': [],
+  'form.stationId': [],
+  'form.mapPoint': [],
+  bytesLeft: ['left'],
+  'station.remembered': [],
+  'btn.go': [],
+  'btn.stop': [],
+  'btn.save': [],
+  'btn.location': [],
+  'switch.test': [],
+  'switch.repeat': [],
+  'test.dialog': [],
+  'test.dialog.confirm': [],
+  'test.dialog.cancel': [],
+  'test.banner': [],
+  'real.notice': [],
+  'err.field.not-chosen': ['field'],
+  'err.map.need-both': [],
+  'err.map.not-a-number': [],
+  'err.map.out-of-range': [],
+  'err.station': [],
+  'err.placeName.too-long': [],
+  'err.placeName.bad-char': [],
+  'err.encode': ['field'],
+  'err.audio': ['reason'],
+  'err.wav': ['reason'],
+  'check.failed': [],
+  'check.failed.reason': ['reason'],
+  'check.failed.field': ['field'],
+  'clock.bad': [],
+  'audio.unavailable': [],
+  'storage.unavailable': [],
+  building: [],
+  'on-air': [],
+  stopped: [],
+  saved: ['name'],
+  'err.unexpected': [],
+  'repeat.keep-open': [],
+  'repeat.round': ['round'],
+  'repeat.countdown': ['seconds'],
+  'repeat.missed': ['skipped'],
+  'repeat.expired': [],
+  'wake.on': [],
+  'wake.off': [],
+  'wake.unsupported': [],
+  'wake.refused': [],
+  'location.found': [],
+  'location.refused': [],
+  'location.unavailable': [],
+  'location.timeout': [],
+  'location.no-api': [],
+  'location.off.no-api': [],
+  'location.off.insecure': [],
+  'draft.label': [],
+  'draft.pending': [],
+  'preview.heading': [],
+  'preview.event': [],
+  'preview.urgency': [],
+  'preview.severity': [],
+  'preview.action': [],
+  'preview.place': [],
+  'preview.map': [],
+  'preview.sent': [],
+  'preview.until': [],
+  'preview.station': [],
+  'preview.status': [],
+  'preview.utc': [],
+  'preview.local': [],
+  'no-map-point': [],
+  'sayfirst.heading': [],
+  'sayfirst.test': [],
+  'sayfirst.main': ['event', 'action'],
+  'sayfirst.place': ['place'],
+  'sayfirst.time': ['time', 'duration'],
+  'err.sayfirst': [],
+};
+
+export interface Strings {
+  labels: {
+    event: Record<EventType, string>;
+    urgency: Record<Urgency, string>;
+    severity: Record<Severity, string>;
+    action: Record<Action, string>;
+    status: Record<ExpiryStatus, string>; // current, expired, sent-in-future, clock-unknown
+    validFor: Record<ValidForKey, string>;
+    field: Record<FieldName, string>; // names used in error messages
+    decodeReason: Record<DecodeRejectionReason, string>;
+    audioReason: Record<AudioReasonKey, string>;
+    wavReason: Record<WavReasonKey, string>;
+  };
+  text: Record<TextKey, string>;
+}
+
+export type Msg = { key: TextKey; params?: Record<string, string | number> };
+
+// Compile-time check: the text map and the placeholder table have the same keys.
+export const PLACEHOLDER_KEYS_MATCH: SameKeys<Strings['text'], typeof PLACEHOLDERS> = true;

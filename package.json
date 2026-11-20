@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.message-code.json --noEmit && tsc -p tsconfig.sound-link.json --noEmit && tsc -p tsconfig.json --noEmit",
-    "build": "vite build && node build/copy-sound-test.mjs"
+    "typecheck": "tsc -p tsconfig.message-code.json --noEmit && tsc -p tsconfig.sound-link.json --noEmit && tsc -p tsconfig.broadcast-logic.json --noEmit && tsc -p tsconfig.broadcast-page.json --noEmit && tsc -p tsconfig.json --noEmit",
+    "build": "vite build && node build/copy-sound-test.mjs",
+    "check:browser": "node scripts/check-broadcast-browser.mjs"
   },
   "devDependencies": {
     "fast-check": "4.10.3",

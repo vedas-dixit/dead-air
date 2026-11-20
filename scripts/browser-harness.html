@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:," />
+    <title>Dead Air browser check harness</title>
+  </head>
+  <body>
+    <!-- Served by scripts/check-broadcast-browser.mjs as /harness.html. Not part of the site. -->
+    <pre id="result"></pre>
+    <iframe id="page" title="broadcast" width="600" height="900"></iframe>
+    <script>
+      (function () {
+        var resultEl = document.getElementById('result');
+        var frame = document.getElementById('page');
+        var log = [];
+        var flagged = [];
+        var constructed = [];
+        var phase = 'before-click';
+        var done = false;
+
+        function finish(text) {
+          if (done) return;
+          done = true;
+          resultEl.textContent = text;
+        }
+        function fail(reason) {
+          finish('FAIL ' + reason);
+        }
+        function sleep(ms) {
+          return new Promise(function (r) { setTimeout(r, ms); });
+        }
+        async function waitFor(what, test, ms) {
+          var left = ms;
+          for (;;) {
+            var v;
+            try { v = test(); } catch (e) { v = false; }
+            if (v) return v;
+            if (left <= 0) throw new Error('timeout waiting for ' + what);
+            await sleep(50);
+            left -= 50;
+          }
+        }
+
+        // Install the wrappers in the iframe window before the page scripts run.
+        // The iframe starts on about:blank and then navigates, so we poll until the
+        // new document exists but is still being parsed (module scripts run later).
+        var installedFor = null;
+        var installedState = '';
+        function tryInstall() {
+          var w = frame.contentWindow;
+          if (!w) return false;
+          var d;
+          try { d = w.document; } catch (e) { return false; }
+          if (!d || w.location.href === 'about:blank') return false;
+          if (installedFor === w) return true;
+          installedState = d.readyState;
+          if (d.readyState === 'complete') return false; // too late
+          installedFor = w;
+          var Real = w.AudioContext;
+          var RealWebkit = w.webkitAudioContext;
+          function wrap(RealCtor) {
+            if (typeof RealCtor !== 'function') return RealCtor;
+            var Wrapped = function (opts) {
+              constructed.push(phase);
+              return Reflect.construct(RealCtor, opts === undefined ? [] : [opts], new.target || Wrapped);
+            };
+            Wrapped.prototype = RealCtor.prototype;
+            return Wrapped;
+          }
+          w.AudioContext = wrap(Real);
+          if (RealWebkit) w.webkitAudioContext = wrap(RealWebkit);
+          var realFetch = w.fetch;
+          w.fetch = function (input) {
+            // data: URLs carry the embedded sound engine inside the page. They are not network requests.
+            var target = String(input && input.url ? input.url : input);
+            if (!/^data:/i.test(target)) flagged.push('fetch ' + target.slice(0, 120));
+            return realFetch.apply(w, arguments);
+          };
+          var RealXhr = w.XMLHttpRequest;
+          w.XMLHttpRequest = function () {
+            flagged.push('XMLHttpRequest constructed');
+            return new RealXhr();
+          };
+          var RealBeacon = w.navigator.sendBeacon;
+          if (RealBeacon) {
+            w.navigator.sendBeacon = function (u) {
+              flagged.push('sendBeacon ' + String(u).slice(0, 120));
+              return RealBeacon.apply(w.navigator, arguments);
+            };
+          }
+          return true;
+        }
+        var installTimer = setInterval(tryInstall, 1);
+
+        function $(id) {
+          var d = frame.contentDocument;
+          var el = d && d.getElementById(id);
+          if (!el) throw new Error('missing element id: ' + id);
+          return el;
+        }
+        function setValue(id, value) {
+          var el = $(id);
+          el.value = value;
+          if (el.value !== value) throw new Error('element ' + id + ' has no option ' + value);
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+          el.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        async function run() {
+          await new Promise(function (resolve, reject) {
+            frame.addEventListener('load', function onLoad() {
+              if (frame.contentWindow.location.href === 'about:blank') return;
+              frame.removeEventListener('load', onLoad);
+              resolve();
+            });
+            frame.src = '/broadcast/';
+            setTimeout(function () { reject(new Error('broadcast page did not load')); }, 10000);
+          });
+          clearInterval(installTimer);
+          if (installedFor !== frame.contentWindow) {
+            throw new Error('wrappers were not installed before the page scripts ran (document was ' + (installedState || 'unknown') + ')');
+          }
+          if (constructed.length !== 0) throw new Error('AudioContext constructed before the click');
+
+          // Watch the preview from the start so the pending state is not missed.
+          var sawPending = false;
+          var previewEl = $('preview');
+          var observer = new frame.contentWindow.MutationObserver(function () {
+            if (previewEl.textContent.indexOf('Sound check pending') !== -1) sawPending = true;
+          });
+          observer.observe(previewEl, { childList: true, subtree: true, characterData: true });
+
+          // Make sure every id the check uses exists, so a rename is named in the result.
+          ['alert-form', 'f-event', 'f-urgency', 'f-severity', 'f-action', 'f-valid', 'f-station', 'f-test',
+            'btn-go', 'btn-stop', 'preview', 'say-first', 'status', 'banner'].forEach($);
+
+          if (!$('f-test').checked) throw new Error('TEST switch is not on at the start');
+
+          // Fill the form with DOM events. The test switch stays on.
+          setValue('f-event', 'flood');
+          setValue('f-urgency', 'immediate');
+          setValue('f-severity', 'severe');
+          setValue('f-action', 'evacuate');
+          setValue('f-valid', 'h2');
+          setValue('f-station', '7');
+
+          await waitFor('TEST and Sound check pending in the preview',
+            function () { return sawPending && $('preview').textContent.indexOf('TEST') !== -1; }, 5000)
+            .catch(function () {
+              throw new Error('draft preview did not show TEST with "Sound check pending" (preview: ' +
+                JSON.stringify($('preview').textContent.slice(0, 200)) + ')');
+            });
+          await waitFor('Go on air enabled', function () { return !$('btn-go').disabled; }, 10000)
+            .catch(function () {
+              throw new Error('Go on air stayed disabled (status: ' + JSON.stringify($('status').textContent) +
+                ', banner: ' + JSON.stringify($('banner').textContent) + ')');
+            });
+          if ($('preview').textContent.indexOf('Sound check pending') !== -1) {
+            throw new Error('preview still says "Sound check pending" while Go on air is enabled');
+          }
+          if ($('preview').textContent.indexOf('TEST') === -1) throw new Error('TEST banner missing after the check passed');
+          if (constructed.length !== 0) throw new Error('AudioContext constructed before the click (while filling the form)');
+
+          // The tap.
+          phase = 'after-click';
+          $('btn-go').click();
+          if (constructed.length !== 1 || constructed[0] !== 'after-click') {
+            throw new Error('expected exactly one AudioContext, made by the click; saw ' + JSON.stringify(constructed));
+          }
+
+          await waitFor('on-air message and enabled Stop',
+            function () {
+              return $('status').textContent.indexOf('On air') !== -1 && !$('btn-stop').disabled;
+            }, 10000)
+            .catch(function () {
+              throw new Error('no on-air message with an enabled Stop (status: ' + JSON.stringify($('status').textContent) +
+                ', banner: ' + JSON.stringify($('banner').textContent) + ')');
+            });
+          if ($('say-first').textContent.trim() === '') throw new Error('Say first line is empty');
+          if ($('preview').textContent.indexOf('TEST') === -1) throw new Error('TEST banner missing while on air');
+          if ($('banner').textContent.trim() !== '') throw new Error('banner shows an error: ' + $('banner').textContent);
+          if (flagged.length !== 0) throw new Error('network calls from the page: ' + flagged.join('; '));
+          if (constructed.length !== 1) throw new Error('more than one AudioContext: ' + constructed.length);
+
+          finish('PASS self-check passed (preview showed "Sound check pending" then passed); ' +
+            'AudioContext constructions: 0 before the click, ' + constructed.length + ' after; ' +
+            'on-air message shown, Stop enabled, Say first line present, TEST banner shown; ' +
+            'page fetch/XHR/beacon calls to a URL: 0 (data: URLs for the embedded engine are not counted)');
+        }
+
+        run().catch(function (e) {
+          clearInterval(installTimer);
+          fail(e && e.message ? e.message : String(e));
+        });
+        setTimeout(function () { fail('harness timed out'); }, 17000);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1063 @@
+{
+  "pbtResults": {
+    "4.6 Write `tests/broadcast/place-name.property.test.ts` with Property 6 using the Indic-script generator, plus the empty name example (19 bytes left) and the too-long and bad-character examples.": {
+      "status": "passed",
+      "lastRunTimestamp": 1795163249775
+    },
+    "4.5 Write `tests/broadcast/form.property.test.ts` with Properties 8, 9 and 10, plus examples for 12.34565 giving 123457, -12.34565 giving -123457, `12,5` equal to `12.5`, and 0 and 0 as a real point.": {
+      "status": "passed",
+      "lastRunTimestamp": 1795163309235
+    },
+    "8.2 Write `tests/broadcast/build.property.test.ts` with Properties 1, 2, 3 and 18, and the 40-byte timing example under 15 seconds.": {
+      "status": "passed",
+      "lastRunTimestamp": 1795163768406
+    },
+    "9.6 Write `tests/broadcast/file-name.property.test.ts` with Property 16 and a `composeBroadcastAudio` length and content example.": {
+      "status": "passed",
+      "lastRunTimestamp": 1795163907314
+    },
+    "11.4 Write `tests/broadcast/repeat.property.test.ts` with Properties 12 and 13, plus examples: Stop during a playing round, tick countdown values, expiry while a round plays.": {
+      "status": "passed",
+      "lastRunTimestamp": 1795164224759
+    },
+    "12.4 Append to `tests/broadcast/controller.test.ts` (part 2): Save, location, wake lock, repeat flow, Properties 15 and 19.": {
+      "status": "passed",
+      "lastRunTimestamp": 1795165151711
+    }
+  },
+  "executionHistory": {
+    "1.1 Create `tsconfig.broadcast-logic.json` and `tsconfig.broadcast-page.json` as in the design, and add `\"exclude\": [\"src/broadcast/dom\"]` to `tsconfig.json`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464003
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162482644
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162528267
+      }
+    ],
+    "1.2 Edit `package.json`: extend `typecheck` with `tsc -p tsconfig.broadcast-logic.json --noEmit && tsc -p tsconfig.broadcast-page.json --noEmit` before the `tsconfig.json` step, and add the script `\"check:browser\": \"node scripts/check-broadcast-browser.mjs\"`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464052
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162544645
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162619161
+      }
+    ],
+    "1.3 Create `tests/broadcast/node-extra.d.ts` declaring only the parts of `node:child_process`, `node:fs`, `node:path`, `node:url` and `process` that the tests and scripts use.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464086
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162544943
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162619938
+      }
+    ],
+    "2.1 Create `src/shared/fill.ts`, `time.ts`, `labels.ts` and `strings-shape.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464119
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162629851
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162694073
+      }
+    ],
+    "2.2 Write `tests/broadcast/shared.test.ts`: `fillTemplate` with all, missing and extra parameters; `formatUtc`, `formatLocal` and `formatClock` for offsets such as -480, 0, 330 and 345, and across a day boundary; `labelFor` with a missing code.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464152
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162702481
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162797977
+      }
+    ],
+    "3.1 Create `src/broadcast/strings.types.ts` and `src/broadcast/valid-for.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464185
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162702969
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162798405
+      }
+    ],
+    "3.2 Create `src/broadcast/strings.en.ts` with every label and text key, typed as `Strings`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464219
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162804924
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162877057
+      }
+    ],
+    "3.3 Write `tests/broadcast/strings.test.ts` (strings part): non-empty label for every code in each map; every `TextKey` has a non-empty value; every template uses only the placeholders allowed for its key; no `\\p{Extended_Pictographic}` character; the dialog text matches exactly; the valid-for steps match Requirement 1.4.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464252
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162889489
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162962509
+      }
+    ],
+    "4.1 Create `src/broadcast/map-point.ts` and `src/broadcast/place-name.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464285
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162889793
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162962856
+      }
+    ],
+    "4.2 Create `src/broadcast/form.ts` and `src/broadcast/snapshot.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464319
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162970251
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163034285
+      }
+    ],
+    "4.3 Create `tests/broadcast/generators.ts` and `tests/broadcast/fixtures.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464352
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163041059
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163191326
+      }
+    ],
+    "4.4 Write `tests/broadcast/fixtures.test.ts`: every fixture alert and form has `test: true`, and the file list scan finds no `test: false` literal in `fixtures.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464385
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163199162
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163329238
+      }
+    ],
+    "4.5 Write `tests/broadcast/form.property.test.ts` with Properties 8, 9 and 10, plus examples for 12.34565 giving 123457, -12.34565 giving -123457, `12,5` equal to `12.5`, and 0 and 0 as a real point.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464419
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163200166
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163329991
+      }
+    ],
+    "4.6 Write `tests/broadcast/place-name.property.test.ts` with Property 6 using the Indic-script generator, plus the empty name example (19 bytes left) and the too-long and bad-character examples.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464452
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163200971
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163330809
+      }
+    ],
+    "5. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464487
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163338501
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163386333
+      }
+    ],
+    "6.1 Create `src/broadcast/station-store.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464519
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163394233
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163447252
+      }
+    ],
+    "6.2 Write `tests/broadcast/station-store.test.ts` with Property 11, all 256 counter values, throwing storage, null storage, and a check that only the two keys are ever written.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464553
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163457701
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163581711
+      }
+    ],
+    "7.1 Create `src/broadcast/providers.ts` with `Clock`, `Timers`, `Player`, `AudioHost`, `GeolocationProvider`, `WakeLockProvider`, `WakeLockHandle` and `Downloader` types.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464586
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163394692
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163448067
+      }
+    ],
+    "7.2 Create `tests/broadcast/fakes.ts`: fake clock, fake timers (manual advance), fake storage, fake player (counts calls, can fail), fake audio host (can refuse `unlock`), fake geolocation, fake wake lock (can be missing, refuse or release), fake downloader, fake link and listener (count open listeners, inject payloads, changed bytes, throws).": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464619
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163458522
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163582100
+      }
+    ],
+    "8.1 Create `src/broadcast/build.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464653
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163589686
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163667067
+      }
+    ],
+    "8.2 Write `tests/broadcast/build.property.test.ts` with Properties 1, 2, 3 and 18, and the 40-byte timing example under 15 seconds.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464686
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163675731
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163810940
+      }
+    ],
+    "8.3 Write `tests/broadcast/build-examples.test.ts`: encode rejection means `bytesToAudio` is never called, audio failure, listener unavailable, decode rejection with its reason, field difference including the null-safe latitude and longitude comparison, the returned samples exclude the check silence.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464719
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163676082
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163812024
+      }
+    ],
+    "9.1 Create `src/broadcast/preview.ts` with `buildPreview(decoded, nowMs, offsetMinutes, draft)`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464752
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163677529
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163813369
+      }
+    ],
+    "9.2 Create `src/broadcast/say-first.ts` with `buildSayFirst`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464785
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163685542
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163814464
+      }
+    ],
+    "9.3 Create `src/broadcast/compose.ts` and `src/broadcast/file-name.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464819
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163685599
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163815086
+      }
+    ],
+    "9.4 Write `tests/broadcast/preview.property.test.ts` with Properties 7 and 17, plus examples for local and UTC text at several offsets and the \"no map point\" text.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464853
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163822456
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163923020
+      }
+    ],
+    "9.5 Write `tests/broadcast/say-first.property.test.ts` with Properties 4 and 5, plus an example where a deleted template gives `ok: false`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464885
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163823461
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163923958
+      }
+    ],
+    "9.6 Write `tests/broadcast/file-name.property.test.ts` with Property 16 and a `composeBroadcastAudio` length and content example.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464933
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163824194
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163924877
+      }
+    ],
+    "10. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464965
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163931656
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164009201
+      }
+    ],
+    "11.1 Create `src/broadcast/broadcast-run.ts` with `PLAY_GAP_MS` and `runBroadcast`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162464998
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164022138
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164104956
+      }
+    ],
+    "11.2 Write `tests/broadcast/broadcast-run.test.ts` with Property 14, plus examples: zero player calls before a tap, zero after a failed Self_Check, Stop cancels the second play.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465031
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164114862
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164242711
+      }
+    ],
+    "11.3 Create `src/broadcast/repeater.ts` with `REPEAT_INTERVAL_MS` and `createRepeater`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465065
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164022736
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164105016
+      }
+    ],
+    "11.4 Write `tests/broadcast/repeat.property.test.ts` with Properties 12 and 13, plus examples: Stop during a playing round, tick countdown values, expiry while a round plays.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465097
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164116233
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164244049
+      }
+    ],
+    "11.5 Create `src/broadcast/location.ts` with `LOCATION_TIMEOUT_MS` (15000) and `requestLocation`, which rounds to 4 decimals and returns text for both boxes or a failure reason.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465130
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164024072
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164106060
+      }
+    ],
+    "11.6 Create `src/broadcast/download.ts` with `REVOKE_AFTER_MS` (5000) and `createDownloader`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465164
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164025722
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164107003
+      }
+    ],
+    "11.7 Write `tests/broadcast/download.test.ts`: URL revoked at 5000 ms and not before, anchor clicked once with the given name, no audio unlock call.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465198
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164116857
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164244817
+      }
+    ],
+    "12.1 Create `src/broadcast/ui-state.ts` with `deriveControls(state)` following the control-state table in the design.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465230
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164251863
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164332832
+      }
+    ],
+    "12.2 Create `src/broadcast/controller.ts` and `src/broadcast/index.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465260
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164333222
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164643333
+      }
+    ],
+    "12.3 Write `tests/broadcast/controller.test.ts` (part 1): initial state, TEST dialog, phases and the control table, Go on air flow, draft behaviour.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465293
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164643740
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164855665
+      }
+    ],
+    "12.4 Append to `tests/broadcast/controller.test.ts` (part 2): Save, location, wake lock, repeat flow, Properties 15 and 19.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465326
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164855950
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165168185
+      }
+    ],
+    "13. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465368
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165168633
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165217935
+      }
+    ],
+    "14.1 Create `src/broadcast/dom/ids.ts`, `web-platform.ts` and `web-download.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465402
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165218614
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165310900
+      }
+    ],
+    "14.2 Create `src/broadcast/dom/web-audio.ts`, `web-location.ts` and `web-wake-lock.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465435
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165226177
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165311563
+      }
+    ],
+    "14.3 Create `broadcast/index.html` (replace the current placeholder), keeping its existing Vite entry role.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465468
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165318789
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165383297
+      }
+    ],
+    "14.4 Create `src/broadcast/dom/render.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465502
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165383976
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165526418
+      }
+    ],
+    "14.5 Create `src/broadcast/dom/mount.ts` and `broadcast/main.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465534
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165526809
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165792832
+      }
+    ],
+    "14.6 Write `tests/broadcast/boundary.test.ts`: a source scan of `src/broadcast` (outside `dom/`) and `src/shared` for `document`, `window`, `navigator`, `localStorage`, `fetch`, `XMLHttpRequest`, `getUserMedia`, `serviceWorker`, `speechSynthesis` and any import of `encodePlaceName`; a scan of `dom/` and `broadcast/main.ts` for `fetch`, `XMLHttpRequest`, `sendBeacon`, `WebSocket`, `getUserMedia`, `serviceWorker`; `loadSoundLink` is called once; no file under the page folders writes `localStorage` outside `web-platform.ts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465568
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165793298
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165876723
+      }
+    ],
+    "14.7 Append to `tests/broadcast/strings.test.ts` (markup part): every id in `ELEMENT_IDS` appears exactly once in `broadcast/index.html`, every `data-text` key is a `TextKey`, the page has no `http://` or `https://`, no `<img>`, and its two links are relative.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465601
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165794166
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165877427
+      }
+    ],
+    "15.1 Write `tests/broadcast/build-site.test.ts` that runs `vite build` twice through `process.execPath` and `node_modules/vite/bin/vite.js`, with `BASE_PATH=dead-air` and with `BASE_PATH` unset, into folders under `node_modules/.cache/dead-air-broadcast-build/`, with a long timeout.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465635
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165884477
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166042014
+      }
+    ],
+    "16.1 Create `scripts/browser-check-lib.mjs` and `scripts/browser-check-lib.d.mts`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465668
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166042513
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166119850
+      }
+    ],
+    "16.2 Create `scripts/check-broadcast-browser.mjs` and `scripts/browser-harness.html`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465700
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166120271
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166267093
+      }
+    ],
+    "16.3 Write `tests/broadcast/browser-check-lib.test.ts`: Chrome lookup with and without `CHROME_PATH`, result parsing for PASS, FAIL and garbage, request check accepts own files and rejects `.wasm` and other origins, and `package.json` has the `check:browser` script while `test`, `build` and `deploy.yml` do not mention `check:browser`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465726
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166130554
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166267159
+      }
+    ],
+    "17.1 Write `.kiro/specs/broadcast-page/report.md`.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465756
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166275299
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166371711
+      }
+    ],
+    "17.2 Add a \"Spec 3: Broadcast page\" entry to `docs/kiro-diary.md`, in the style of the Spec 1 entry.": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465784
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166371999
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166490682
+      }
+    ],
+    "18. Final checkpoint - Run all checks": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162465809
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166490808
+      },
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166546999
+      }
+    ],
+    "1. Project setup": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162619959
+      }
+    ],
+    "2. Shared helpers": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162798015
+      }
+    ],
+    "3. Strings file": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795162962544
+      }
+    ],
+    "4. Form model and validation": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163330836
+      }
+    ],
+    "6. Station store": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163581753
+      }
+    ],
+    "7. Providers and fakes": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163582135
+      }
+    ],
+    "8. Build and Self_Check": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163812066
+      }
+    ],
+    "9. Preview, Say_First, file name and sound file audio": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795163924905
+      }
+    ],
+    "11. Playing, repeat, location and download": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795164244855
+      }
+    ],
+    "12. Controller and control states": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165168216
+      }
+    ],
+    "14. DOM glue and the page": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795165877460
+      }
+    ],
+    "15. Build test": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166042057
+      }
+    ],
+    "16. Headless Chrome check": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166267192
+      }
+    ],
+    "17. Report and diary": [
+      {
+        "executionId": "8450bca2-5d4d-4e4e-8763-6196c477160b",
+        "chatSessionId": "sess_ee4eac11-7175-4432-b89a-f85cd2a4e001",
+        "timestamp": 1795166490728
+      }
+    ]
+  }
+}

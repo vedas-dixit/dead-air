@@ -3,13 +3,127 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Broadcast</title>
+    <title>Dead Air</title>
   </head>
   <body>
-    <h1>Broadcast</h1>
-    <nav>
-      <a href="../">Dead Air</a>
-      <a href="../listen/">Listen</a>
-    </nav>
+    <main>
+      <h1 data-text="page.heading"></h1>
+      <nav>
+        <a href="../" data-text="nav.home"></a>
+        <a href="../listen/" data-text="nav.listen"></a>
+      </nav>
+
+      <div id="banner" role="alert"></div>
+      <div id="status" aria-live="polite"></div>
+
+      <form id="alert-form" autocomplete="off" novalidate>
+        <h2 data-text="form.heading"></h2>
+
+        <div>
+          <label for="f-event" data-text="form.event"></label>
+          <select id="f-event" name="event">
+            <option value="" selected data-text="form.choose"></option>
+          </select>
+        </div>
+
+        <div>
+          <label for="f-urgency" data-text="form.urgency"></label>
+          <select id="f-urgency" name="urgency">
+            <option value="" selected data-text="form.choose"></option>
+          </select>
+        </div>
+
+        <div>
+          <label for="f-severity" data-text="form.severity"></label>
+          <select id="f-severity" name="severity">
+            <option value="" selected data-text="form.choose"></option>
+          </select>
+        </div>
+
+        <div>
+          <label for="f-action" data-text="form.action"></label>
+          <select id="f-action" name="action">
+            <option value="" selected data-text="form.choose"></option>
+          </select>
+        </div>
+
+        <div>
+          <label for="f-place" data-text="form.placeName"></label>
+          <input id="f-place" name="placeName" type="text" autocomplete="off" aria-describedby="place-left" />
+          <span id="place-left"></span>
+        </div>
+
+        <fieldset>
+          <legend data-text="form.mapPoint"></legend>
+          <div>
+            <label for="f-lat" data-text="form.latitude"></label>
+            <input id="f-lat" name="latitude" type="text" inputmode="decimal" autocomplete="off" />
+          </div>
+          <div>
+            <label for="f-lon" data-text="form.longitude"></label>
+            <input id="f-lon" name="longitude" type="text" inputmode="decimal" autocomplete="off" />
+          </div>
+          <button id="btn-location" type="button" data-text="btn.location"></button>
+        </fieldset>
+
+        <div>
+          <label for="f-valid" data-text="form.validFor"></label>
+          <select id="f-valid" name="validFor">
+            <option value="m15"></option>
+            <option value="m30"></option>
+            <option value="h1" selected></option>
+            <option value="h2"></option>
+            <option value="h3"></option>
+            <option value="h6"></option>
+            <option value="h12"></option>
+            <option value="h24"></option>
+            <option value="h48"></option>
+          </select>
+        </div>
+
+        <div>
+          <label for="f-station" data-text="form.stationId"></label>
+          <input id="f-station" name="stationId" type="text" inputmode="numeric" autocomplete="off" />
+        </div>
+
+        <div>
+          <input id="f-test" name="test" type="checkbox" role="switch" checked />
+          <label for="f-test" data-text="switch.test"></label>
+        </div>
+
+        <div>
+          <input id="f-repeat" name="repeat" type="checkbox" />
+          <label for="f-repeat" data-text="switch.repeat"></label>
+        </div>
+
+        <div>
+          <button id="btn-go" type="button" data-text="btn.go"></button>
+          <button id="btn-stop" type="button" data-text="btn.stop"></button>
+          <button id="btn-save" type="button" data-text="btn.save"></button>
+        </div>
+      </form>
+
+      <div id="countdown"></div>
+      <div id="repeat-info"></div>
+
+      <section>
+        <h2 data-text="preview.heading"></h2>
+        <div id="preview"></div>
+      </section>
+
+      <section>
+        <h2 data-text="sayfirst.heading"></h2>
+        <div id="say-first"></div>
+      </section>
+
+      <dialog id="dialog-test">
+        <p data-text="test.dialog"></p>
+        <form method="dialog">
+          <button id="dialog-confirm" type="button" data-text="test.dialog.confirm"></button>
+          <button id="dialog-cancel" type="button" data-text="test.dialog.cancel"></button>
+        </form>
+      </dialog>
+    </main>
+    <script type="module" src="./main.ts"></script>
   </body>
 </html>

@@ -11,5 +11,6 @@
     "skipLibCheck": true,
     "isolatedModules": true
   },
-  "include": ["src", "tests", "build", "vite.config.ts"]
+  "include": ["src", "tests", "build", "vite.config.ts"],
+  "exclude": ["src/broadcast/dom"]
 }
