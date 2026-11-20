@@ -6,7 +6,7 @@
  */
 
 export interface RawMessageParts {
-  /** Byte 0 (version nibble, TEST, passed-on, compact flag, reserved bit). Default 0x18: Version 1, TEST. */
+  /** Byte 0 (version nibble, TEST, passed-on, compact flag, No_Map_Point_Flag). Default 0x18: Version 1, TEST. */
   flagsByte?: number;
   /** Event code, byte 1. Default 1. */
   event?: number;
@@ -24,6 +24,8 @@ export interface RawMessageParts {
   stationId?: number;
   /** Counter, byte 16. Default 0. */
   counter?: number;
+  /** If given, six bytes written over the latitude and longitude bytes (bytes 8 to 13), as given. */
+  pointBytes?: ArrayLike<number>;
   /** Raw place-name bytes, copied as given. Default empty. */
   placeBytes?: ArrayLike<number>;
 }
@@ -55,6 +57,7 @@ export function buildRaw(parts: RawMessageParts = {}): Uint8Array {
     stationId = 1,
     counter = 0,
     placeBytes = [],
+    pointBytes,
   } = parts;
 
   const n = placeBytes.length;
@@ -82,6 +85,7 @@ export function buildRaw(parts: RawMessageParts = {}): Uint8Array {
   out[12] = (lon >>> 8) & 0xff;
   out[13] = lon & 0xff;
 
+  if (pointBytes) for (let i = 0; i < 6; i++) out[8 + i] = (pointBytes[i] ?? 0) & 0xff;
   out[14] = (stationId >>> 8) & 0xff;
   out[15] = stationId & 0xff;
   out[16] = counter & 0xff;

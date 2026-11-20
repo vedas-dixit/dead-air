@@ -26,8 +26,14 @@ export function validateAlert(a: unknown): keyof Alert | null {
   if (!isMember(ACTIONS, r.action)) return 'action';
   if (!isIntInRange(r.sentMinute, 0, 4294967295)) return 'sentMinute';
   if (!isIntInRange(r.validSteps, 1, 255)) return 'validSteps';
-  if (!isIntInRange(r.latitude, -900000, 900000)) return 'latitude';
-  if (!isIntInRange(r.longitude, -1800000, 1800000)) return 'longitude';
+  if (r.latitude === null && r.longitude === null) {
+    // no map point: valid
+  } else if (r.latitude === null || r.longitude === null) {
+    return 'latitude'; // exactly one is null: the first field that is null alone, or paired with a non-null
+  } else {
+    if (!isIntInRange(r.latitude, -900000, 900000)) return 'latitude';
+    if (!isIntInRange(r.longitude, -1800000, 1800000)) return 'longitude';
+  }
   if (!isIntInRange(r.stationId, 0, 65535)) return 'stationId';
   if (!isIntInRange(r.counter, 0, 255)) return 'counter';
   if (typeof r.placeName !== 'string' || !isValidPlaceNameText(r.placeName)) return 'placeName';

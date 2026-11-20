@@ -94,3 +94,23 @@ describe('golden messages (independently computed)', () => {
     });
   }
 });
+
+// Golden message with no map point. Same alert as the "Mumbai" golden, with latitude and longitude null.
+// Byte 0 is 0x19 (version 1, TEST, No_Map_Point_Flag) and bytes 8 to 13 are zero.
+// crc32 = 6df5e014, from: python3 -c "import zlib; print('%08x' % zlib.crc32(bytes(<bytes before the check>)))"
+describe('golden message with no map point (independently computed)', () => {
+  const bytes = [
+    0x19, 0x01, 0x07, 0x01, 0xba, 0x81, 0x40, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00,
+    0x4d, 0x75, 0x6d, 0x62, 0x61, 0x69,
+    0x6d, 0xf5, 0xe0, 0x14,
+  ];
+  const alert = { ...TEST_FIXTURES[0]!, latitude: null, longitude: null };
+  it('encodes to the hand-written bytes', () => {
+    const result = encodeAlert(alert);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect([...result.bytes]).toEqual(bytes);
+  });
+  it('decodes the hand-written bytes to the alert', () => {
+    expect(decodeMessage(new Uint8Array(bytes))).toEqual({ ok: true, alert });
+  });
+});

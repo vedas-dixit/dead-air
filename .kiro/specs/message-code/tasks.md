@@ -165,6 +165,29 @@ Dependencies are exactly `vite`, `typescript`, `vitest` and `fast-check`. If `@t
     - Run `npm run typecheck`, `npm test` and `npm run build`, then `BASE_PATH=/x/ npm run build` and confirm the output uses `/x/`. Check `package.json` lists only the four allowed dependencies and that the tree has no Listen, Broadcast, offline, language, sound or look files. Fix any failure inside this spec's files.
     - _Requirements: 11.1, 11.2, 11.4, 11.5, 11.7, 11.8_
 
+- [x] 9. Optional map point (change after spec 3 review)
+  - [x] 9.1 Update `types.ts` and `layout.ts`
+    - In `src/message-code/types.ts` make `Alert.latitude` and `Alert.longitude` `number | null` (both numbers or both null).
+    - In `src/message-code/layout.ts` add `FLAG_NO_MAP_POINT` (bit 0, value 0x01) and remove `RESERVED_MASK`. Update every reference to `RESERVED_MASK`. Layout offsets and sizes stay unchanged.
+    - _Requirements: 1.2, 1.9, 1.12_
+
+  - [x] 9.2 Update `validate.ts`, `encode.ts` and `decode.ts`
+    - In `validate.ts` add the pair rule: both numeric (range-checked as before) or both null. If exactly one is null, return `latitude` as the invalid field. Keep `validateAlert` in `Alert` field order.
+    - In `encode.ts`, when both are null set `FLAG_NO_MAP_POINT` and write six zero bytes for latitude and longitude. Otherwise clear the flag and write the numbers as before, so a real 0, 0 stays distinct. A lone null gives `invalid-field` naming `latitude`.
+    - In `decode.ts` remove the bit 0 rejection. After the Check_Value passes, in the field-value step: when the flag is set and any of the six point bytes is not zero, reject with `invalid-field`, and otherwise return latitude and longitude as null. When the flag is clear, range-check latitude and longitude and return numbers, including 0 and 0. Keep the check order and the final `validateAlert` guard.
+    - Run `npm run typecheck` for `tsconfig.message-code.json` to confirm the source compiles.
+    - _Requirements: 1.10, 1.11, 3.4, 3.7, 4.4, 7.7, 7.9, 7.20, 7.21, 7.22_
+
+  - [x] 9.3 Update test support and existing tests, and add `map-point.test.ts`
+    - Test support: in `tests/message-code/fixtures.ts` give `TEST_FIXTURES` at least one entry with latitude and longitude null (all still `test: true`). In `tests/message-code/generators.ts` make `alertArb` produce no-point alerts (both null) and map-point alerts, including a real 0, 0, and add mutations to the Property 4 arbitrary that toggle the No_Map_Point_Flag bit and change latitude and longitude bytes. In `tests/message-code/raw-message.ts` add `pointBytes` (six bytes for latitude and longitude) and `noMapPoint` (sets bit 0) options to `buildRaw`, still computing the CRC-32 itself.
+    - Existing tests that assumed bit 0 or numeric latitude and longitude: in `decode.test.ts` replace the "bit 0 set is rejected" case with the flag-set-with-non-zero-point-byte rejection and add a no-map-point accept case; in `encode.test.ts` replace "never sets bit 0" with byte 0 checks for the flag; in `layout.test.ts` update the golden messages and add a no-point golden checked against `python3` `zlib.crc32`, not `crc32.ts`; in `boundary.test.ts` keep the scans passing and check that fixtures include a no-point entry; in `properties.test.ts` keep exactly four `fc.assert` property tests with the same meaning, now drawing alerts with and without a map point; in `seeded-fuzz.test.ts` and `generator-coverage.test.ts` fix any numeric latitude and longitude assumption and assert that accepted values include both flag states and that `alertArb` yields both no-point alerts and a real 0, 0.
+    - Create `tests/message-code/map-point.test.ts` with the Requirement 12.12 examples: round trip of a no-map-point alert; the flag set with a non-zero latitude byte and with a non-zero longitude byte rejected with `invalid-field`, built with `buildRaw` and a correct check; the encoder rejecting exactly one null (latitude null alone, longitude null alone) with `invalid-field` naming `latitude`; a real 0, 0 that round trips as 0 and 0 with bit 0 clear; byte 0 is 0x11 for a plain alert with no map point and 0x19 with the TEST flag. Add the bad-check-first case: a no-map-point message with a non-zero point byte and a wrong check value is rejected with `bad-check`, not `invalid-field`.
+    - _Requirements: 1.9, 1.10, 1.11, 3.7, 4.2, 7.7, 7.13, 7.20, 7.21, 7.22, 12.5, 12.9, 12.11, 12.12, 12.13_
+
+  - [x] 9.4 Run the full verification
+    - Run `npm run typecheck` and `npm test`. All four property tests and every earlier test must pass. Fix any failure inside this spec's files.
+    - _Requirements: 11.1, 11.4, 11.5, 12.1, 12.13_
+
 ## Notes
 
 - Every task is required, including all test tasks and the four property tests (Requirement 12.1 needs exactly four).
@@ -196,7 +219,11 @@ Dependencies are exactly `vite`, `typescript`, `vitest` and `fast-check`. If `@t
     { "id": 15, "tasks": ["6.6"] },
     { "id": 16, "tasks": ["7"] },
     { "id": 17, "tasks": ["8.1"] },
-    { "id": 18, "tasks": ["8.2"] }
+    { "id": 18, "tasks": ["8.2"] },
+    { "id": 19, "tasks": ["9.1"] },
+    { "id": 20, "tasks": ["9.2"] },
+    { "id": 21, "tasks": ["9.3"] },
+    { "id": 22, "tasks": ["9.4"] }
   ]
 }
 ```

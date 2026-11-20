@@ -219,8 +219,9 @@ describe('encodeAlert: byte 0 flags', () => {
     }
   });
 
-  it('never sets bit 0', () => {
+  it('sets bit 0 only when there is no map point', () => {
     expect(encode({ test: true, passedOn: true, placeName: 'नई दिल्ली' })[0] & 1).toBe(0);
+    expect(encode({ test: true, latitude: null, longitude: null })[0] & 1).toBe(1);
   });
 });
 

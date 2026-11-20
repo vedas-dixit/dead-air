@@ -149,12 +149,19 @@ export const alertArb: fc.Arbitrary<Alert> = fc.record({
   action: actionArb,
   sentMinute: fc.integer({ min: 0, max: 4294967295 }),
   validSteps: fc.integer({ min: 1, max: 255 }),
-  latitude: fc.integer({ min: -900000, max: 900000 }),
-  longitude: fc.integer({ min: -1800000, max: 1800000 }),
   stationId: fc.integer({ min: 0, max: 65535 }),
   counter: fc.integer({ min: 0, max: 255 }),
   placeName: placeNameArb,
-});
+}).chain((base) =>
+  // About one alert in four has no map point. Real points include the edges and a real 0, 0.
+  fc
+    .oneof(
+      { weight: 6, arbitrary: fc.tuple(fc.integer({ min: -900000, max: 900000 }), fc.integer({ min: -1800000, max: 1800000 })) },
+      { weight: 2, arbitrary: fc.constantFrom<[number, number]>([0, 0], [900000, 1800000], [-900000, -1800000]) },
+      { weight: 3, arbitrary: fc.constant<[null, null]>([null, null]) },
+    )
+    .map(([latitude, longitude]): Alert => ({ ...base, latitude, longitude })),
+);
 
 /** Encodes a generated alert. Throws if the encoder rejects it, which would be a generator bug. */
 export function encodeOrThrow(alert: Alert): Uint8Array {
@@ -172,6 +179,8 @@ type Mutation =
   | { kind: 'truncate'; n: number }
   | { kind: 'append'; bytes: number[] }
   | { kind: 'toggleCompactFlag' }
+  | { kind: 'toggleNoMapPointFlag' }
+  | { kind: 'setPointByte'; i: number; v: number }
   | { kind: 'setSelector'; v: number };
 
 const byteArb = fc.integer({ min: 0, max: 255 });
@@ -186,6 +195,8 @@ const mutationArb: fc.Arbitrary<Mutation> = fc.oneof(
     bytes: fc.array(byteArb, { minLength: 1, maxLength: 8 }),
   }),
   fc.record({ kind: fc.constant('toggleCompactFlag' as const) }),
+  fc.record({ kind: fc.constant('toggleNoMapPointFlag' as const) }),
+  fc.record({ kind: fc.constant('setPointByte' as const), i: fc.integer({ min: 0, max: 5 }), v: byteArb }),
   fc.record({ kind: fc.constant('setSelector' as const), v: byteArb }),
 );
 
@@ -206,6 +217,12 @@ function applyMutation(bytes: number[], m: Mutation): number[] {
       return [...bytes, ...m.bytes];
     case 'toggleCompactFlag':
       if (bytes.length > 0) bytes[0] = bytes[0]! ^ 0b0000_0010;
+      return bytes;
+    case 'toggleNoMapPointFlag':
+      if (bytes.length > 0) bytes[0] = bytes[0]! ^ 0b0000_0001;
+      return bytes;
+    case 'setPointByte':
+      if (bytes.length > 14) bytes[8 + m.i] = m.v;
       return bytes;
     case 'setSelector':
       // Offset 17 is the first place-name byte (the selector in compact form).

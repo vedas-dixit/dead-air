@@ -6,6 +6,7 @@ import {
   CHECK_BYTES,
   FIXED_PREFIX_BYTES,
   FLAG_COMPACT_PLACE,
+  FLAG_NO_MAP_POINT,
   FLAG_PASSED_ON,
   FLAG_TEST,
   OFFSET,
@@ -35,14 +36,19 @@ export function encodeAlert(alert: Alert): EncodeResult {
   if (alert.test) flags |= FLAG_TEST;
   if (alert.passedOn) flags |= FLAG_PASSED_ON;
   if (place.compact) flags |= FLAG_COMPACT_PLACE;
+  const hasPoint = alert.latitude !== null && alert.longitude !== null;
+  if (!hasPoint) flags |= FLAG_NO_MAP_POINT;
 
   out[OFFSET.versionFlags] = flags;
   out[OFFSET.event] = EVENT_CODES[alert.event];
   out[OFFSET.usa] = packUsa(alert.urgency, alert.severity, alert.action);
   writeU32(out, OFFSET.sentMinute, alert.sentMinute);
   out[OFFSET.validSteps] = alert.validSteps;
-  writeI24(out, OFFSET.latitude, alert.latitude);
-  writeI24(out, OFFSET.longitude, alert.longitude);
+  // With no map point the six point bytes stay zero (the array starts zeroed).
+  if (alert.latitude !== null && alert.longitude !== null) {
+    writeI24(out, OFFSET.latitude, alert.latitude);
+    writeI24(out, OFFSET.longitude, alert.longitude);
+  }
   out[OFFSET.stationId] = alert.stationId >>> 8;
   out[OFFSET.stationId + 1] = alert.stationId & 0xff;
   out[OFFSET.counter] = alert.counter;

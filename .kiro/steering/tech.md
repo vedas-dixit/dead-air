@@ -1,7 +1,7 @@
 # Tech rules
 
 ## Stack
-- Vite, TypeScript and React. No backend.
+- Vite and TypeScript, with plain DOM code. No UI framework (no React, Vue or similar). No backend.
 - Sound: the `ggwave` npm package (MIT). Follow the official browser example in the ggwave repo, `examples/ggwave-js`, including how it sets sample rates.
 - Tests: Vitest, with fast-check for property tests.
 - Keep dependencies few. Ask before adding a new one.

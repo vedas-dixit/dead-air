@@ -2,6 +2,8 @@
 
 ## Introduction
 
+This document was updated to make the map point optional, using bit 0 of byte 0 as the No_Map_Point_Flag (see "Change: optional map point" below).
+
 The Message Code turns one emergency alert into a short sequence of bytes and turns those bytes back into the same alert. It is spec 1 of 8 for Dead Air. It is a module of pure TypeScript functions. It uses no browser APIs, no UI and no sound code, so it runs and is tested in plain Node. Later specs (Listen, Broadcast, offline, languages, look) build on it and are out of scope here.
 
 The module carries codes only. It never carries translated text. Each alert type, urgency, severity and action is a fixed code, so later specs can give each one an icon and text in every shipped language (promise 6).
@@ -16,10 +18,21 @@ Promise 1 says a damaged alert is never shown. The check value is the only thing
 - **Decision.** The check is 4 bytes, a CRC-32. The message is 21 to 40 bytes. The brief and the steering files already state this range.
 - **Limit.** A CRC detects accidental damage. It does not stop a person who deliberately forges a message. Forgery protection is not part of any promise and is out of scope.
 
+### Change: optional map point
+
+The map point (latitude and longitude) is optional and is never sent as a fake 0, 0. Bit 0 of byte 0, which was reserved as zero, becomes the No_Map_Point_Flag. The Version stays 1, because no Version 1 sender ever sent a Message with bit 0 set and old decoders reject bit 0 set, which is the safe behaviour.
+
+- The Message size of 21 to 40 bytes and the position of every field are unchanged.
+- The Passed_On_Flag and every other field are unchanged.
+- The three property tests named in the tech rules (round trip, any single changed byte caught, expired alert never current) must still pass.
+- The Broadcast page spec (spec 3) needs this change, so that a sender can leave the map point empty.
+- The Listen page spec (spec 4) must show "no map point" when latitude and longitude are both null, and must never show 0, 0 for that case.
+
 ## Glossary
 
 - **Message_Code**: The module of pure functions in this spec. It holds the encoder, the decoder, the expiry check and the fixed code lists.
-- **Alert**: The decoded form of a message. It has the fields listed in Requirement 1.
+- **Alert**: The decoded form of a message. It has the fields listed in Requirement 1. Its `latitude` and `longitude` fields are each a number or null, and are either both numbers or both null.
+- **No_Map_Point_Flag**: Bit 0 of byte 0. When set, the Message has no map point and the Alert has latitude null and longitude null. When clear, the Message has a map point and the Alert has numeric latitude and longitude.
 - **Message**: The byte sequence produced by the Encoder for one Alert.
 - **Encoder**: The function that turns an Alert into a Message.
 - **Decoder**: The function that turns a sequence of bytes into an Alert, or into a rejection.
@@ -58,13 +71,17 @@ Promise 1 says a damaged alert is never shown. The check value is the only thing
 #### Acceptance Criteria
 
 1. THE Message_Code SHALL define Version 1 of the Message as the following fields in this order, with all multi-byte numbers in big-endian order: version and flags (1 byte), Event_Type (1 byte), Urgency, Severity and Action (1 byte), Sent_Minute (4 bytes), Valid_Steps (1 byte), latitude (3 bytes), longitude (3 bytes), station ID (2 bytes), counter (1 byte), Place_Name (0 to 19 bytes), Check_Value (4 bytes).
-2. THE Message_Code SHALL store the Version in the high 4 bits of byte 0, the TEST_Flag in bit 3, the Passed_On_Flag in bit 2, the Compact_Place_Name_Flag in bit 1, and zero in bit 0.
+2. THE Message_Code SHALL store the Version in the high 4 bits of byte 0, the TEST_Flag in bit 3, the Passed_On_Flag in bit 2, the Compact_Place_Name_Flag in bit 1, and the No_Map_Point_Flag in bit 0.
 3. THE Message_Code SHALL derive the length of the place name bytes, in either form, from the Message length, as the Message length minus 21 bytes.
 4. THE Message_Code SHALL produce Messages of 21 to 40 bytes.
 5. THE Message_Code SHALL store latitude and longitude as signed 24-bit two's complement whole numbers in units of 0.0001 degree, in WGS 84 degrees as CAP 1.2 uses.
 6. THE Message_Code SHALL accept latitude from -900000 to 900000 and longitude from -1800000 to 1800000 in those units.
 7. THE Message_Code SHALL accept a station ID from 0 to 65535 and a counter from 0 to 255.
 8. THE Message_Code SHALL pack Urgency, Severity and Action into one byte so that every combination of the listed values has exactly one byte value.
+9. THE Message_Code SHALL represent an Alert with latitude `number | null` and longitude `number | null`, where the two are either both numbers or both null.
+10. WHEN an Alert has latitude null and longitude null, THE Encoder SHALL set the No_Map_Point_Flag and write three zero bytes for latitude and three zero bytes for longitude.
+11. WHEN an Alert has numeric latitude and longitude, THE Encoder SHALL clear the No_Map_Point_Flag and write the two numbers as in criterion 5, so that a real map point of 0, 0 stays possible and differs from no map point.
+12. THE Message_Code SHALL keep the Version at 1 and keep the position and size of every field unchanged by the No_Map_Point_Flag.
 
 ### Requirement 2: Fixed code lists
 
@@ -94,6 +111,7 @@ Promise 1 says a damaged alert is never shown. The check value is the only thing
 4. IF an Alert has a field outside the ranges in Requirements 1, 2, 7 or 8, THEN THE Encoder SHALL return a Rejection that names the invalid field and SHALL return no bytes.
 5. IF the shortest form allowed by Requirement 10 for the Place_Name is longer than 19 bytes, THEN THE Encoder SHALL return a Rejection and SHALL NOT shorten the Place_Name.
 6. THE Encoder SHALL NOT read the device clock or any random source.
+7. IF exactly one of latitude and longitude is null, THEN THE Encoder SHALL return a Rejection with the reason `invalid-field` that names the field `latitude` (the first field that is null alone), and SHALL return no bytes.
 
 ### Requirement 4: Decoding and round trip
 
@@ -144,9 +162,9 @@ Promise 1 says a damaged alert is never shown. The check value is the only thing
 4. IF the input is longer than 40 bytes, THEN THE Decoder SHALL return a Rejection with the reason `too-long`.
 5. IF the Event_Type code is not one of the nine codes in Requirement 2, THEN THE Decoder SHALL return a Rejection with the reason `unknown-event`.
 6. IF the packed byte for Urgency, Severity and Action does not map to a listed combination, THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
-7. IF bit 0 of byte 0 is not zero, THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
+7. IF the No_Map_Point_Flag is set and any of the 6 latitude and longitude bytes is not zero, THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
 8. IF Valid_Steps is 0, THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
-9. IF the latitude or longitude is outside the ranges in Requirement 1, THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
+9. IF the No_Map_Point_Flag is clear and the latitude or longitude is outside the ranges in Requirement 1, THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
 10. IF the Compact_Place_Name_Flag is clear and the place name bytes are not valid UTF-8, or the decoded Place_Name contains a control character (U+0000 to U+001F or U+007F), THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
 11. THE Decoder SHALL return either a complete Alert or a Rejection, and SHALL NOT return a partly filled Alert.
 12. FOR ALL inputs, THE Decoder SHALL return a result and SHALL NOT throw an error, as checked by the random-bytes property test in Requirement 12.
@@ -157,6 +175,9 @@ Promise 1 says a damaged alert is never shown. The check value is the only thing
 17. IF the Compact_Place_Name_Flag is set and the decoded Place_Name contains a control character (U+0000 to U+001F or U+007F), THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
 18. WHEN the Decoder has decoded a Place_Name, THE Decoder SHALL encode the decoded text by the rule in Requirement 10, and IF the result is not exactly the same place name bytes with the same Compact_Place_Name_Flag value, THEN THE Decoder SHALL return a Rejection with the reason `invalid-field`.
 19. THE Decoder SHALL accept a Script_Character byte whose code point is unassigned in Unicode, and SHALL NOT keep a table of assigned code points.
+20. WHEN the Decoder accepts a Message with the No_Map_Point_Flag set, THE Decoder SHALL return an Alert with latitude null and longitude null.
+21. WHEN the Decoder accepts a Message with the No_Map_Point_Flag clear, THE Decoder SHALL return an Alert with numeric latitude and longitude, including a map point of exactly 0, 0.
+22. THE Decoder SHALL apply the check in criterion 7 after the Check_Value passes, as part of the field value checks in criterion 13.
 
 ### Requirement 8: Sent time, expiry and clock edge cases
 
@@ -237,10 +258,12 @@ Promise 1 says a damaged alert is never shown. The check value is the only thing
 2. THE Project SHALL include a property test that FOR ALL valid Alerts, decoding the encoded Message returns an Alert equal to the original.
 3. THE Project SHALL include a property test that FOR ALL valid Alerts, all byte positions and all different replacement values, the Decoder rejects the Message with that one byte changed.
 4. THE Project SHALL include a property test that FOR ALL valid Alerts and all Current_Time values at or after the Expiry_Time, the Expiry_Checker never returns `current`.
-5. THE Project SHALL generate Alerts for these tests from every Event_Type, Urgency, Severity and Action value, both flag values, the full ranges in Requirement 1, and Place_Names whose chosen form is 0 to 19 bytes. THE Project SHALL generate Place_Names that include multi-byte characters, names in each of the nine Script_Windows, names that mix one Script_Window with ASCII, names with ZWNJ and ZWJ, names that mix two Script_Windows, names that are ASCII only, and names whose UTF-8_Form is longer than 19 bytes but whose Compact_Form fits.
+5. THE Project SHALL generate Alerts for these tests from every Event_Type, Urgency, Severity and Action value, both flag values, the full ranges in Requirement 1, alerts with a map point and alerts with no map point (latitude and longitude both null), and Place_Names whose chosen form is 0 to 19 bytes. THE Project SHALL generate Place_Names that include multi-byte characters, names in each of the nine Script_Windows, names that mix one Script_Window with ASCII, names with ZWNJ and ZWJ, names that mix two Script_Windows, names that are ASCII only, and names whose UTF-8_Form is longer than 19 bytes but whose Compact_Form fits.
 6. THE Project SHALL cover every other acceptance criterion in this document with example-based unit tests, including the CRC-32 check string, each rejection reason, input that is not bytes, lengths of 0, 20, 21, 40 and 41 bytes, and the Expiry_Status boundaries at Expiry_Time and at the Clock_Tolerance.
 7. THE Project SHALL include an example-based test that runs the Decoder on a fixed set of seeded pseudo-random byte sequences of every length from 0 to 64 and confirms that no call throws.
 8. THE Project SHALL include a fourth property test that FOR ALL generated byte arrays, the Decoder does not throw, and WHEN the Decoder accepts the bytes, encoding the decoded Alert returns exactly the same bytes.
-9. THE Project SHALL generate the byte arrays for the fourth property test from two sources: arbitrary byte arrays with arbitrary byte values and lengths from 0 to 64 and beyond, and valid Messages that have been mutated by changing, inserting or removing bytes, with the Check_Value recomputed after mutation for a share of the cases, so that the Decoder accepts many of the generated inputs. THE Project SHALL include in the mutations a change of the Compact_Place_Name_Flag bit and a change of the Script_Selector byte, so that non-canonical compact forms reach the Decoder.
+9. THE Project SHALL generate the byte arrays for the fourth property test from two sources: arbitrary byte arrays with arbitrary byte values and lengths from 0 to 64 and beyond, and valid Messages that have been mutated by changing, inserting or removing bytes, with the Check_Value recomputed after mutation for a share of the cases, so that the Decoder accepts many of the generated inputs. THE Project SHALL include in the mutations a change of the Compact_Place_Name_Flag bit, a change of the Script_Selector byte, and a change of the No_Map_Point_Flag bit and of the latitude and longitude bytes, so that non-canonical compact forms and a flag set with non-zero point bytes reach the Decoder. THE fourth property test SHALL therefore cover the canonical encoding of the No_Map_Point_Flag.
 10. THE Project SHALL include example-based unit tests for the Compact_Form that cover: one name in each of the nine Script_Windows; the "नई दिल्ली" case in Requirement 10.11; a name of exactly 19 compact bytes; a name that fits only in Compact_Form; a name where Compact_Form is not strictly shorter and UTF-8_Form is used; an ASCII-only name; a name mixing two Script_Windows; ZWNJ and ZWJ carried as 0x80 and 0x81; an Urdu name in UTF-8_Form; and a Script_Character whose code point is unassigned being accepted.
-11. THE Project SHALL include example-based unit tests that the Decoder rejects with the reason `invalid-field`: bit 0 of byte 0 set; the Compact_Place_Name_Flag set with an empty place name; a Script_Selector of 0 and of 10; a Shared_Character byte of 0x82, 0x9F and 0xFF; a Shared_Character byte whose low 7 bits are a control character; the flag set on an ASCII-only name; the flag set with a Compact_Form that is not strictly shorter than the UTF-8_Form; a Script_Selector that does not match the characters; and a name that is canonical in UTF-8_Form but carries the flag set, each with a correct Check_Value so that the check does not reject it first.
+11. THE Project SHALL include example-based unit tests that the Decoder rejects with the reason `invalid-field`: the No_Map_Point_Flag set with a non-zero latitude or longitude byte; the Compact_Place_Name_Flag set with an empty place name; a Script_Selector of 0 and of 10; a Shared_Character byte of 0x82, 0x9F and 0xFF; a Shared_Character byte whose low 7 bits are a control character; the flag set on an ASCII-only name; the flag set with a Compact_Form that is not strictly shorter than the UTF-8_Form; a Script_Selector that does not match the characters; and a name that is canonical in UTF-8_Form but carries the flag set, each with a correct Check_Value so that the check does not reject it first.
+12. THE Project SHALL include example-based unit tests for the optional map point: a round trip of an Alert with no map point; the No_Map_Point_Flag set with a non-zero latitude or longitude byte rejected with the reason `invalid-field`, built with the raw-message helper with a correct Check_Value; the Encoder rejecting an Alert with exactly one of latitude and longitude null, with the reason `invalid-field` naming `latitude`; a real map point of 0, 0 that round trips as the numbers 0 and 0 and has the No_Map_Point_Flag clear; and byte 0 equal to 0x11 for a plain Alert with no map point and 0x19 for the same Alert with the TEST_Flag set.
+13. THE Project SHALL keep the four property tests in criterion 1 passing, with the round-trip, single-changed-byte and expired-never-current properties unchanged in meaning.

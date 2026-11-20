@@ -14,8 +14,9 @@ export interface Alert {
   readonly action: Action;
   readonly sentMinute: number; // integer, 0 to 4294967295, minutes since 1970-01-01 UTC
   readonly validSteps: number; // integer, 1 to 255, steps of 15 minutes
-  readonly latitude: number; // integer, -900000 to 900000, units of 0.0001 degree
-  readonly longitude: number; // integer, -1800000 to 1800000, units of 0.0001 degree
+  // Both are null (no map point) or both are integers. Never one of each. A real point at 0, 0 is numbers.
+  readonly latitude: number | null; // integer, -900000 to 900000, units of 0.0001 degree
+  readonly longitude: number | null; // integer, -1800000 to 1800000, units of 0.0001 degree
   readonly stationId: number; // integer, 0 to 65535
   readonly counter: number; // integer, 0 to 255
   readonly placeName: string; // chosen form (UTF-8 or compact) is 0 to 19 bytes, no control characters

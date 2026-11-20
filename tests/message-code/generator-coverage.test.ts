@@ -63,6 +63,17 @@ describe('generator coverage', () => {
     }
   });
 
+  it('alertArb covers alerts with and without a map point, and a real 0, 0', () => {
+    const alerts = fc.sample(alertArb, { numRuns: 500, seed: SEED });
+    const none = alerts.filter((a) => a.latitude === null).length;
+    const zero = alerts.filter((a) => a.latitude === 0 && a.longitude === 0).length;
+    const point = alerts.filter((a) => a.latitude !== null && !(a.latitude === 0 && a.longitude === 0)).length;
+    const msg = JSON.stringify({ none, zero, point });
+    expect(none, msg).toBeGreaterThan(30);
+    expect(zero, msg).toBeGreaterThan(0);
+    expect(point, msg).toBeGreaterThan(100);
+    expect(alerts.every((a) => (a.latitude === null) === (a.longitude === null))).toBe(true);
+  });
   it('alertArb place names cover every category', () => {
     const alerts = fc.sample(alertArb, { numRuns: 500, seed: SEED });
     const windowsSeen = new Set<number>();

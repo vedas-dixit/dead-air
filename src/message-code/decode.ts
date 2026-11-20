@@ -7,8 +7,8 @@ import {
   FLAG_TEST,
   MAX_MESSAGE_BYTES,
   MIN_MESSAGE_BYTES,
+  FLAG_NO_MAP_POINT,
   OFFSET,
-  RESERVED_MASK,
   VERSION,
   readI24,
   readU32,
@@ -42,7 +42,6 @@ export function decodeMessage(input: unknown): DecodeResult {
   const event = eventFromCode(input[OFFSET.event]!);
   if (event === null) return reject('unknown-event');
 
-  if ((flags & RESERVED_MASK) !== 0) return reject('invalid-field');
 
   const usa = unpackUsa(input[OFFSET.usa]!);
   if (usa === null) return reject('invalid-field');
@@ -50,10 +49,21 @@ export function decodeMessage(input: unknown): DecodeResult {
   const validSteps = input[OFFSET.validSteps]!;
   if (validSteps < 1) return reject('invalid-field');
 
-  const latitude = readI24(input, OFFSET.latitude);
-  if (latitude < -900000 || latitude > 900000) return reject('invalid-field');
-  const longitude = readI24(input, OFFSET.longitude);
-  if (longitude < -1800000 || longitude > 1800000) return reject('invalid-field');
+  let latitude: number | null;
+  let longitude: number | null;
+  if ((flags & FLAG_NO_MAP_POINT) !== 0) {
+    // No map point: all six point bytes must be zero, so there is one byte form for "no point".
+    for (let i = OFFSET.latitude; i < OFFSET.stationId; i++) {
+      if (input[i] !== 0) return reject('invalid-field');
+    }
+    latitude = null;
+    longitude = null;
+  } else {
+    latitude = readI24(input, OFFSET.latitude);
+    if (latitude < -900000 || latitude > 900000) return reject('invalid-field');
+    longitude = readI24(input, OFFSET.longitude);
+    if (longitude < -1800000 || longitude > 1800000) return reject('invalid-field');
+  }
 
   const placeName = decodePlaceName(
     input.subarray(OFFSET.placeName, checkStart),

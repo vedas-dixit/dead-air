@@ -21,7 +21,7 @@ export const OFFSET = {
 export const FLAG_TEST = 0b0000_1000; // bit 3
 export const FLAG_PASSED_ON = 0b0000_0100; // bit 2
 export const FLAG_COMPACT_PLACE = 0b0000_0010; // bit 1, Compact_Place_Name_Flag
-export const RESERVED_MASK = 0b0000_0001; // bit 0, must be zero
+export const FLAG_NO_MAP_POINT = 0b0000_0001; // bit 0, No_Map_Point_Flag
 
 /** Writes an unsigned 32-bit value big-endian at `offset`. */
 export function writeU32(bytes: Uint8Array, offset: number, value: number): void {

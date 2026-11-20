@@ -63,6 +63,7 @@ tests/message-code/
   properties.test.ts            the four property tests
   crc32.test.ts  utf8.test.ts  codes.test.ts  layout.test.ts
   encode.test.ts  decode.test.ts  expiry.test.ts  place-name.test.ts
+  map-point.test.ts             optional map point examples
   raw-message.ts                test-only helper that builds raw bytes with a correct check value
   seeded-fuzz.test.ts           fixed pseudo-random inputs, lengths 0 to 64
   boundary.test.ts              source scans for forbidden APIs and imports
@@ -168,8 +169,10 @@ export interface Alert {
   readonly action: Action;
   readonly sentMinute: number;     // integer, 0 to 4294967295, minutes since 1970-01-01 UTC
   readonly validSteps: number;     // integer, 1 to 255, steps of 15 minutes
-  readonly latitude: number;       // integer, -900000 to 900000, units of 0.0001 degree
-  readonly longitude: number;      // integer, -1800000 to 1800000, units of 0.0001 degree
+  readonly latitude: number | null;   // integer, -900000 to 900000, units of 0.0001 degree. null means no map point
+  readonly longitude: number | null;  // integer, -1800000 to 1800000, units of 0.0001 degree. null means no map point
+  // latitude and longitude are either both numbers or both null. Exactly one null is invalid.
+  // A real map point of 0, 0 is two numbers and is not the same as no map point.
   readonly stationId: number;      // integer, 0 to 65535
   readonly counter: number;        // integer, 0 to 255
   readonly placeName: string;      // text whose chosen form (UTF-8 or compact) is 0 to 19 bytes, no control characters
@@ -261,26 +264,26 @@ export const OFFSET = {
 export const FLAG_TEST = 0b0000_1000;           // bit 3
 export const FLAG_PASSED_ON = 0b0000_0100;      // bit 2
 export const FLAG_COMPACT_PLACE = 0b0000_0010;  // bit 1, Compact_Place_Name_Flag
-export const RESERVED_MASK = 0b0000_0001;       // bit 0, must be zero
+export const FLAG_NO_MAP_POINT = 0b0000_0001;   // bit 0, No_Map_Point_Flag. Set: no map point and the 6 point bytes are zero
 ```
 
 ### Exact byte layout, Version 1
 
 | Offset | Size | Field | Encoding |
 |---|---|---|---|
-| 0 | 1 | Version and flags | high 4 bits = 1, bit 3 = TEST, bit 2 = passed on, bit 1 = Compact_Place_Name_Flag, bit 0 = 0 |
+| 0 | 1 | Version and flags | high 4 bits = 1, bit 3 = TEST, bit 2 = passed on, bit 1 = Compact_Place_Name_Flag, bit 0 = No_Map_Point_Flag |
 | 1 | 1 | Event_Type | code 1 to 9 |
 | 2 | 1 | Urgency, severity, action | packed value 0 to 149 |
 | 3 to 6 | 4 | Sent_Minute | unsigned 32-bit, big-endian |
 | 7 | 1 | Valid_Steps | 1 to 255 |
-| 8 to 10 | 3 | Latitude | signed 24-bit two's complement, big-endian, units of 0.0001 degree |
-| 11 to 13 | 3 | Longitude | signed 24-bit two's complement, big-endian, units of 0.0001 degree |
+| 8 to 10 | 3 | Latitude | signed 24-bit two's complement, big-endian, units of 0.0001 degree. Three zero bytes when the No_Map_Point_Flag is set |
+| 11 to 13 | 3 | Longitude | signed 24-bit two's complement, big-endian, units of 0.0001 degree. Three zero bytes when the No_Map_Point_Flag is set |
 | 14 to 15 | 2 | Station ID | unsigned 16-bit, big-endian |
 | 16 | 1 | Counter | 0 to 255 |
 | 17 to 17+n-1 | n | Place_Name | n = length - 21, 0 to 19 bytes. Flag clear: UTF-8. Flag set: one Script_Selector byte, then one byte per character |
 | length-4 to length-1 | 4 | Check_Value | CRC-32 of bytes 0 to length-5, big-endian |
 
-The fixed part is 17 bytes plus 4 check bytes, so the shortest message is 21 bytes and the longest is 40 (Requirements 1.3, 1.4, 10.2, 10.3). The place name length is derived from the message length in both forms, so the layout needs no length byte. Byte 0 is `0x10` for a plain alert, `0x18` with TEST, `0x12` with a compact place name, and so on by adding the flag bits. Two helpers do the number work without bit operators that overflow into negative values: `writeU32/readU32` use `>>> 0`, and `writeI24/readI24` add or subtract 0x1000000 for negative values. `readI24` returns `x >= 0x800000 ? x - 0x1000000 : x`.
+The fixed part is 17 bytes plus 4 check bytes, so the shortest message is 21 bytes and the longest is 40 (Requirements 1.3, 1.4, 10.2, 10.3). The place name length is derived from the message length in both forms, so the layout needs no length byte. Byte 0 is `0x11` for a plain alert with no map point, `0x10` for a plain alert with a map point, `0x19` with TEST and no map point, `0x13` with a compact place name and no map point, `0x1A` with TEST and a compact place name and a map point, and so on by adding the flag bits. The offsets and sizes are the same as before the No_Map_Point_Flag. Bit 0 is a flag, never reserved. A real map point of 0, 0 has bit 0 clear, and its six point bytes are zero too, so the flag alone tells the two cases apart. Two helpers do the number work without bit operators that overflow into negative values: `writeU32/readU32` use `>>> 0`, and `writeI24/readI24` add or subtract 0x1000000 for negative values. `readI24` returns `x >= 0x800000 ? x - 0x1000000 : x`.
 
 ### `crc32.ts`
 
@@ -359,13 +362,15 @@ export function validateAlert(a: unknown): keyof Alert | null;
 
 It checks, at run time and without trusting the TypeScript types: both flags are booleans, `event`, `urgency`, `severity` and `action` are members of their lists, every number field is a safe integer inside its range, and `placeName` is a string that passes `isValidPlaceNameText`. It does not check the 19-byte limit, because the encoder reports that with its own reason.
 
+Map point pair rule: `latitude` and `longitude` must be either both null, or both integers in range. If exactly one is null, `validateAlert` returns `latitude` as the invalid field (Requirement 3.7). If both are numbers, each is range-checked as before, and the first out-of-range one is named. The encoder and the decoder both call `validateAlert`, so both sides accept exactly the same pairs. This is what keeps the encoding canonical: an Alert with one null can neither be encoded nor come out of the decoder.
+
 ### `encode.ts`
 
 ```ts
 export function encodeAlert(alert: Alert): EncodeResult;
 ```
 
-Steps: run `validateAlert` (reject `invalid-field` with the field name), call `encodePlaceName` (reject `place-name-too-long` for `too-long`, or `invalid-field` for `invalid`), allocate `21 + n` bytes where `n` is the length of the returned bytes, write the fields at the offsets above with the Compact_Place_Name_Flag bit set when `compact` is true, copy the place-name bytes to offset 17, compute `crc32` over bytes `0` to `len-5`, and write it big-endian into the last 4 bytes. It does not mutate its argument and calls no clock or random source (Requirements 3.2, 3.6).
+Steps: run `validateAlert` (reject `invalid-field` with the field name), call `encodePlaceName` (reject `place-name-too-long` for `too-long`, or `invalid-field` for `invalid`), allocate `21 + n` bytes where `n` is the length of the returned bytes, write the fields at the offsets above with the Compact_Place_Name_Flag bit set when `compact` is true, and the map point as follows: when `latitude` and `longitude` are both null, set the No_Map_Point_Flag (bit 0 of byte 0) and write 6 zero bytes at offsets 8 to 13; otherwise leave the flag clear and write both numbers with `writeI24` as before, copy the place-name bytes to offset 17, compute `crc32` over bytes `0` to `len-5`, and write it big-endian into the last 4 bytes. It does not mutate its argument and calls no clock or random source (Requirements 3.2, 3.6).
 
 ### `decode.ts`
 
@@ -379,7 +384,10 @@ Steps, in the required order (Requirement 7.13):
 2. Length below 21 gives `too-short`, above 40 gives `too-long`.
 3. `input[0] >>> 4 !== 1` gives `unknown-version`. No other field is read.
 4. Compute `crc32(input, 0, len - 4)` and compare with the big-endian last 4 bytes. A difference gives `bad-check`.
-5. Only now read fields. Event code not in 1 to 9 gives `unknown-event`. Bit 0 of byte 0 set, packed value above 149, `validSteps` of 0, or latitude or longitude out of range each give `invalid-field`. Bit 1 is the compact flag and is not an error by itself.
+5. Only now read fields. Event code not in 1 to 9 gives `unknown-event`. A packed value above 149 or a `validSteps` of 0 gives `invalid-field`. Bit 1 (compact flag) and bit 0 (No_Map_Point_Flag) are flags and are not errors by themselves. For the map point:
+   - Flag set: the six bytes at offsets 8 to 13 must all be zero, otherwise `invalid-field`. The Alert gets `latitude: null` and `longitude: null` (Requirements 7.7, 7.20).
+   - Flag clear: read both numbers with `readI24` and range-check them, otherwise `invalid-field`. The Alert gets the two numbers, including 0 and 0 (Requirements 7.9, 7.21).
+   This step runs after the check value, with the other field checks (Requirement 7.22).
 6. Read the place name bytes `input[17 .. len-5]` and the flag. Call `decodePlaceName(bytes, flag)`. A `null` result gives `invalid-field`.
 7. Build the `Alert`, run `validateAlert` on it as a final guard, and return `{ ok: true, alert }`.
 
@@ -450,7 +458,7 @@ Exports `encodeAlert`, `decodeMessage`, `checkExpiry`, `crc32`, the code lists `
 
 The data models are the `Alert` interface and the byte layout above. Two derived facts matter for tests.
 
-- **Canonical form.** Every field has exactly one byte form: fixed-width numbers, bit 0 of byte 0 fixed at zero, one packed value per combination, and a place name in exactly the one form that the rule in Requirement 10 picks for its text. So the set of accepted messages and the set of valid alerts are in one-to-one correspondence, and `encode(decode(b)) == b` for every accepted `b`, including the flag bit.
+- **Canonical form.** Every field has exactly one byte form: fixed-width numbers, one packed value per combination, one map point form (the No_Map_Point_Flag set with six zero bytes for no point, or the flag clear with two numbers, so a real 0, 0 is distinct from no point and no other byte pattern means no point), and a place name in exactly the one form that the rule in Requirement 10 picks for its text. So the set of accepted messages and the set of valid alerts are in one-to-one correspondence, and `encode(decode(b)) == b` for every accepted `b`, including the flag bit.
 - **Check coverage.** The check covers bytes 0 to `len-5`, so flags (including TEST and the compact flag), version, and place name are all protected (Requirement 9.1).
 
 Fixtures (`tests/message-code/fixtures.ts`) export `TEST_FIXTURES`, a list of alerts that all have `test: true`. They include one with a compact place name ("नई दिल्ली") and one with a UTF-8 place name. A test checks that every entry has `test: true` (Requirement 9.7). Tests that need `test: false` build it at run time with `{ ...fixture, test: false }`, so no stored fixture is a non-test alert.
@@ -508,13 +516,13 @@ Reflection on overlap: the round trip subsumes the field-by-field checks (layout
 
 ### Property 1: Encode then decode returns the original alert
 
-For any valid Alert (any event, urgency, severity and action; either value of both flags; any sent minute, valid steps, latitude, longitude, station ID and counter in range; any place name whose chosen form is 0 to 19 bytes, including multi-byte characters, names in each of the nine Script_Windows, names that mix one Script_Window with ASCII, ZWNJ and ZWJ, ASCII-only names, names that mix two Script_Windows, and names with leading or trailing spaces), `encodeAlert` returns `ok: true` with 21 + (length of the chosen place name form) bytes, `decodeMessage` of those bytes returns `ok: true`, and the decoded alert deeply equals the original, including the sent minute, the TEST flag, the passed-on flag and the exact place name text.
+For any valid Alert (any event, urgency, severity and action; either value of both flags; any sent minute, valid steps, station ID and counter in range; either a map point with latitude and longitude in range (including 0, 0) or no map point with both null; any place name whose chosen form is 0 to 19 bytes, including multi-byte characters, names in each of the nine Script_Windows, names that mix one Script_Window with ASCII, ZWNJ and ZWJ, ASCII-only names, names that mix two Script_Windows, and names with leading or trailing spaces), `encodeAlert` returns `ok: true` with 21 + (length of the chosen place name form) bytes, `decodeMessage` of those bytes returns `ok: true`, and the decoded alert deeply equals the original, including null latitude and longitude for a no-point alert, the sent minute, the TEST flag, the passed-on flag and the exact place name text.
 
-**Validates: Requirements 1.2, 1.3, 1.4, 1.5, 1.7, 3.1, 4.1, 4.2, 4.4, 8.1, 9.3, 9.4, 9.5, 10.1, 10.4, 10.12**
+**Validates: Requirements 1.2, 1.3, 1.4, 1.5, 1.7, 1.9, 1.10, 1.11, 3.1, 4.1, 4.2, 4.4, 8.1, 9.3, 9.4, 9.5, 10.1, 10.4, 10.12**
 
 ### Property 2: Any single changed byte is rejected
 
-For any valid Alert, any byte position in its encoded Message, and any replacement value different from the original byte at that position, `decodeMessage` of the changed bytes returns `ok: false`, and the rejection object has no field other than `ok` and `reason`. For any position other than byte 0 the reason is `bad-check`. For byte 0 the reason is `unknown-version` when the high 4 bits changed, and `bad-check` when only the low 4 bits changed (this includes a change of the Compact_Place_Name_Flag).
+For any valid Alert, any byte position in its encoded Message, and any replacement value different from the original byte at that position, `decodeMessage` of the changed bytes returns `ok: false`, and the rejection object has no field other than `ok` and `reason`. For any position other than byte 0 the reason is `bad-check`. For byte 0 the reason is `unknown-version` when the high 4 bits changed, and `bad-check` when only the low 4 bits changed (this includes a change of the Compact_Place_Name_Flag or of the No_Map_Point_Flag).
 
 **Validates: Requirements 5.3, 5.4, 5.6, 6.1**
 
@@ -526,9 +534,9 @@ For any valid Alert and any current time at or after its Expiry_Time (finite val
 
 ### Property 4: The decoder never throws, and whatever it accepts is canonical
 
-For any byte array (arbitrary bytes of length 0 to 80, and valid Messages that were changed, extended or shortened, including changes of the Compact_Place_Name_Flag bit and of the Script_Selector byte, with the check value recomputed for a share of the cases), `decodeMessage` returns without throwing, returns either a complete Alert or a rejection, does not change the input array, and when it returns `ok: true`, `encodeAlert` of the decoded Alert returns exactly the same bytes, with the same place name form and the same flag bit.
+For any byte array (arbitrary bytes of length 0 to 80, and valid Messages that were changed, extended or shortened, including changes of the Compact_Place_Name_Flag bit, of the Script_Selector byte, of the No_Map_Point_Flag bit and of the latitude and longitude bytes, with the check value recomputed for a share of the cases), `decodeMessage` returns without throwing, returns either a complete Alert or a rejection, does not change the input array, and when it returns `ok: true`, `encodeAlert` of the decoded Alert returns exactly the same bytes, with the same place name form and the same flag bit.
 
-**Validates: Requirements 4.3, 4.6, 7.1, 7.10, 7.11, 7.12, 7.14, 7.15, 7.16, 7.17, 7.18, 7.19, 12.8, 12.9**
+**Validates: Requirements 4.3, 4.6, 7.1, 7.7, 7.10, 7.11, 7.12, 7.14, 7.15, 7.16, 7.17, 7.18, 7.19, 7.20, 7.21, 12.8, 12.9**
 
 The compact place name adds no new property. Properties 1 and 4 pick up Indic and mixed names through the generators. Property 4 also checks that every non-canonical compact form that the mutations produce is rejected, because an accepted one would fail the re-encode comparison.
 
@@ -544,7 +552,7 @@ The compact place name adds no new property. Properties 1 and 4 pick up Indic an
 | `unknown-version` | high 4 bits of byte 0 are not 1 | third |
 | `bad-check` | CRC-32 of bytes before the last 4 differs from the last 4 | fourth |
 | `unknown-event` | event code is not 1 to 9 | after the check |
-| `invalid-field` | bit 0 of byte 0 set, packed value above 149, valid steps 0, latitude or longitude out of range, UTF-8 place name not valid UTF-8 or containing a control character, compact place name that is empty, has a selector outside 1 to 9, has a byte that is not a Script_Character or Shared_Character, contains a control character, or does not re-encode to exactly the same bytes and flag | after the check |
+| `invalid-field` | No_Map_Point_Flag set with a non-zero point byte, packed value above 149, valid steps 0, flag clear and latitude or longitude out of range, UTF-8 place name not valid UTF-8 or containing a control character, compact place name that is empty, has a selector outside 1 to 9, has a byte that is not a Script_Character or Shared_Character, contains a control character, or does not re-encode to exactly the same bytes and flag | after the check |
 
 A rejection carries only `ok: false` and `reason`. It never carries a partial alert (promise 1). The caller must show nothing from a rejected message.
 
@@ -552,7 +560,7 @@ A rejection carries only `ok: false` and `reason`. It never carries a partial al
 
 | Reason | `field` | When |
 |---|---|---|
-| `invalid-field` | the first invalid field name | wrong type, value not in a code list, number not an integer or out of range, valid steps 0, place name with a control character or a lone surrogate |
+| `invalid-field` | the first invalid field name | wrong type, value not in a code list, number not an integer or out of range, exactly one of latitude and longitude null (field `latitude`), valid steps 0, place name with a control character or a lone surrogate |
 | `place-name-too-long` | `placeName` | the shortest form allowed by Requirement 10 is longer than 19 bytes. The name is never shortened. |
 
 ### Expiry outcomes
@@ -645,12 +653,20 @@ const alertArb: fc.Arbitrary<Alert> = fc.record({
   event: eventArb, urgency: urgencyArb, severity: severityArb, action: actionArb,
   sentMinute: fc.integer({ min: 0, max: 4294967295 }),
   validSteps: fc.integer({ min: 1, max: 255 }),
-  latitude:   fc.integer({ min: -900000, max: 900000 }),
-  longitude:  fc.integer({ min: -1800000, max: 1800000 }),
   stationId:  fc.integer({ min: 0, max: 65535 }),
   counter:    fc.integer({ min: 0, max: 255 }),
   placeName:  placeNameArb,
-});
+}).chain((base) =>
+  mapPointArb.map(({ latitude, longitude }) => ({ ...base, latitude, longitude })));
+
+// Either a map point (both numbers, including the 0, 0 edge) or no map point (both null). Never exactly one null.
+const mapPointArb = fc.oneof(
+  { weight: 3, arbitrary: fc.record({
+      latitude:  fc.integer({ min: -900000, max: 900000 }),
+      longitude: fc.integer({ min: -1800000, max: 1800000 }) }) },
+  { weight: 1, arbitrary: fc.constant({ latitude: 0, longitude: 0 }) },          // a real 0, 0
+  { weight: 2, arbitrary: fc.constant({ latitude: null, longitude: null }) },     // no map point
+);
 ```
 
 `windowNameArb` and `twoWindowNameArb` are sketches of intent, and the task phase may write them differently. The requirement on them is only that every generated name lies in one window plus Shared_Characters, and has at least one window character. The generators never build the expected bytes. They produce text, and the tests compare the encoder with the decoder and with the examples. `fc.integer` already favors the edges of its range, so the extremes (0, 4294967295, -900000 and so on) appear often.
@@ -661,7 +677,7 @@ Byte arrays for Property 4 come from `fc.oneof` over three sources (Requirement 
 
 1. `fc.uint8Array({ minLength: 0, maxLength: 80 })`: arbitrary bytes.
 2. `alertArb` encoded, left unchanged: always accepted, so the "accepted" branch is exercised.
-3. `alertArb` encoded, then a list of 1 to 3 mutations, then, for about half the cases, the last 4 bytes replaced by the CRC-32 of the rest when the length is at least 5. This gets mutated fields past the check and into the field validation. The mutations are `change(i, v)`, `insert(i, v)`, `remove(i)`, `truncate(n)`, `append(bytes)`, plus two for the compact form: `toggleCompactFlag` (flip bit 1 of byte 0) and `setSelector(v)` (set byte 17 to any value 0 to 255, when the message has a place name).
+3. `alertArb` encoded, then a list of 1 to 3 mutations, then, for about half the cases, the last 4 bytes replaced by the CRC-32 of the rest when the length is at least 5. This gets mutated fields past the check and into the field validation. The mutations are `change(i, v)`, `insert(i, v)`, `remove(i)`, `truncate(n)`, `append(bytes)`, plus these for the compact form and the map point: `toggleCompactFlag` (flip bit 1 of byte 0), `setSelector(v)` (set byte 17 to any value 0 to 255, when the message has a place name), `toggleNoMapPointFlag` (flip bit 0 of byte 0), and `setPointByte(i, v)` (set one of bytes 8 to 13 to any value). These reach the decoder with the flag set and a non-zero point byte, and with the flag cleared over six zero bytes (which decodes as a real 0, 0).
 
 A separate example test samples 500 values from this arbitrary with a fixed seed. It asserts that at least 10 percent are accepted, that some accepted values have the compact flag set and some have it clear, and that each of `bad-check`, `invalid-field`, `too-short` and `unknown-version` occurs, so the generator cannot go vacuous (Requirement 12.9).
 
@@ -672,16 +688,27 @@ A separate example test samples 500 values from this arbitrary with a fixed seed
 | `crc32.test.ts` | "123456789" gives 0xCBF43926 (5.2), empty input gives 0, a range `start/end` call |
 | `utf8.test.ts` | fixed vectors: overlong `C0 80`, surrogate `ED A0 80`, above U+10FFFF `F4 90 80 80`, truncated sequences, 1 to 4 byte characters, lone surrogate string on encode |
 | `codes.test.ts` | pinned literal lists and codes (2.1 to 2.4, 2.7), `SCRIPT_WINDOWS` pinned to its nine literal entries (2.8, 2.9), `selectorForCodePoint` agrees with `SCRIPT_WINDOWS` at the first and last code point of every window and returns `null` just outside U+0900 to U+0D7F, all 150 combinations pack to distinct bytes 0..149 and unpack back (1.8), bytes 150 to 255 give `null` |
-| `layout.test.ts` | golden messages written out by hand, with TEST set: one with a UTF-8 place name and one with the compact place name "नई दिल्ली" (31 bytes, byte 0 is `0x1A`, place name bytes `01 28 08 A0 ...` written out in the test: selector 1, then न as 0x28, ई as 0x08, and the space as 0xA0), CRC cross-checked against an independent tool (for example Python `zlib.crc32`) when the test is written (1.1, 1.2, 5.1, 9.1, 9.2, 10.11). Byte 0 is checked for each combination of TEST, passed-on and compact flags. |
+| `layout.test.ts` | golden messages written out by hand, with TEST set: one with a UTF-8 place name and one with the compact place name "नई दिल्ली" (31 bytes, byte 0 is `0x1A`, place name bytes `01 28 08 A0 ...` written out in the test: selector 1, then न as 0x28, ई as 0x08, and the space as 0xA0), CRC cross-checked against an independent tool (for example Python `zlib.crc32`) when the test is written (1.1, 1.2, 5.1, 9.1, 9.2, 10.11). Byte 0 is checked for each combination of TEST, passed-on, compact and no-map-point flags (all 16), including `0x11`, `0x19` and `0x13`. The compact golden message has a map point, so its byte 0 stays `0x1A`; one more golden message has no map point (byte 0 `0x1B` with TEST and a compact place name). |
 | `encode.test.ts` | determinism (3.2), version nibble (3.3), each out-of-range field rejected with its name (3.4), a name whose shortest allowed form is over 19 bytes rejected and not shortened (3.5), lengths 21 and 40 for both forms (10.2, 10.3), lat, lon, station and counter boundary values (1.6, 1.7), input not mutated, compact flag set in byte 0 exactly when the compact form is chosen (1.2, 10.6, 10.7) |
 | `decode.test.ts` | each reason code (5.3, 6.1, 7.2 to 7.10), lengths 0, 20, 21, 40 and 41, input types (string, null, number array, `ArrayBuffer`, `Uint16Array`), bad check beats bad event (5.5, 7.13), version 2 with a valid CRC gives `unknown-version` (6.3), all 15 other version nibbles, rejection has only `ok` and `reason` (5.6), TEST and passed-on flags, and the `invalid-field` cases of Requirement 12.11 (see `place-name.test.ts` below for the list) |
 | `expiry.test.ts` | expired at exactly `expiresAtMs` and valid one millisecond before (8.3, 8.5, 8.6), `current` at exactly 5 minutes ahead and `sent-in-future` one millisecond later (8.7), NaN, Infinity, -Infinity and negative gives `clock-unknown` (8.8), repeat calls equal (8.11), flag unchanged (9.6), sent minute 0 and 4294967295 (8.2) |
-| `raw-message.ts` | A test-only helper `buildRaw({ flagsByte, placeBytes, ... })` that writes the fixed fields of a Version 1 message around chosen place-name bytes and computes a correct CRC-32 on its own. It does not call `encodeAlert`, so a bug in the encoder cannot hide a bug in the decoder. All `invalid-field` tests below use it, so the check never rejects first (Requirement 12.11). |
-| `place-name.test.ts` | Compact_Form examples (Requirement 12.10): one name in each of the nine Script_Windows, each with its selector byte checked (10.5, 10.6); "नई दिल्ली" gives a 10-byte place name and a 31-byte message (10.11); a name of exactly 19 compact bytes ("म" repeated 18 times, 40 bytes, 10.3, 10.8); a name that fits only in Compact_Form ("Dharavi, धारावी", 10.6); an ASCII-only name uses UTF-8 and a name with Latin letters only does too (10.7, 10.9); a name that mixes two windows uses UTF-8 (10.10); ZWNJ and ZWJ carried as `0x80` and `0x81` (10.12); a ZWNJ with no Script_Character uses UTF-8 (10.5); an Urdu name uses UTF-8 (10.14) and is rejected when over 19 bytes (3.5); a name with an en dash uses UTF-8 (10.13); a Script_Character whose code point is unassigned is accepted (7.19); the empty name gives a 21-byte message with the flag clear (10.2); no trimming and no change of case in either form (10.4); control characters and lone surrogates are rejected on encode. Decoder rejections (Requirement 12.11), each built with `buildRaw` and a correct check value, each expected to give `invalid-field`: bit 0 of byte 0 set (7.7); the flag set with an empty place name (7.15); a Script_Selector of 0 and of 10 (7.15); a Shared_Character byte of 0x82, 0x9F and 0xFF (7.16); a Shared_Character byte whose low 7 bits are a control character, such as `0x85` (7.16, 7.17); the flag set on an ASCII-only name (7.18); the flag set with a Compact_Form that is not strictly shorter than the UTF-8_Form, built as a selector followed only by Shared_Characters (7.18); a selector that does not match the characters, covered by the same selector-with-only-Shared_Characters input because a changed selector on Script_Character bytes names another window and is accepted (7.18); a name that is canonical in UTF-8_Form but carries the flag set, for example the UTF-8 bytes of "Pune" and of a Devanagari name (7.15, 7.16, 7.18); and the flag clear on valid Compact_Form bytes, which gives a UTF-8 or control character failure (7.10, 7.18). |
+| `raw-message.ts` | A test-only helper `buildRaw({ flagsByte, placeBytes, pointBytes, noMapPoint, ... })` that writes the fixed fields of a Version 1 message around chosen place-name bytes and computes a correct CRC-32 on its own. The new option `pointBytes` sets the six bytes at offsets 8 to 13 (default: the two numbers of a fixed map point, or six zero bytes when `noMapPoint` is true). The new option `noMapPoint` sets bit 0 of byte 0 in addition to `flagsByte`. This lets a test build a message with the flag set and a non-zero point byte, which the encoder can never produce. It does not call `encodeAlert`, so a bug in the encoder cannot hide a bug in the decoder. All `invalid-field` tests below use it, so the check never rejects first (Requirement 12.11). |
+| `place-name.test.ts` | Compact_Form examples (Requirement 12.10): one name in each of the nine Script_Windows, each with its selector byte checked (10.5, 10.6); "नई दिल्ली" gives a 10-byte place name and a 31-byte message (10.11); a name of exactly 19 compact bytes ("म" repeated 18 times, 40 bytes, 10.3, 10.8); a name that fits only in Compact_Form ("Dharavi, धारावी", 10.6); an ASCII-only name uses UTF-8 and a name with Latin letters only does too (10.7, 10.9); a name that mixes two windows uses UTF-8 (10.10); ZWNJ and ZWJ carried as `0x80` and `0x81` (10.12); a ZWNJ with no Script_Character uses UTF-8 (10.5); an Urdu name uses UTF-8 (10.14) and is rejected when over 19 bytes (3.5); a name with an en dash uses UTF-8 (10.13); a Script_Character whose code point is unassigned is accepted (7.19); the empty name gives a 21-byte message with the flag clear (10.2); no trimming and no change of case in either form (10.4); control characters and lone surrogates are rejected on encode. Decoder rejections (Requirement 12.11), each built with `buildRaw` and a correct check value, each expected to give `invalid-field`: the No_Map_Point_Flag set with a non-zero point byte (7.7, covered in `map-point.test.ts`); the flag set with an empty place name (7.15); a Script_Selector of 0 and of 10 (7.15); a Shared_Character byte of 0x82, 0x9F and 0xFF (7.16); a Shared_Character byte whose low 7 bits are a control character, such as `0x85` (7.16, 7.17); the flag set on an ASCII-only name (7.18); the flag set with a Compact_Form that is not strictly shorter than the UTF-8_Form, built as a selector followed only by Shared_Characters (7.18); a selector that does not match the characters, covered by the same selector-with-only-Shared_Characters input because a changed selector on Script_Character bytes names another window and is accepted (7.18); a name that is canonical in UTF-8_Form but carries the flag set, for example the UTF-8 bytes of "Pune" and of a Devanagari name (7.15, 7.16, 7.18); and the flag clear on valid Compact_Form bytes, which gives a UTF-8 or control character failure (7.10, 7.18). |
+| `map-point.test.ts` | Optional map point examples (Requirement 12.12). Round trip of an Alert with latitude and longitude null: decoded values are `null` and `null`, flag set, six zero bytes (1.9, 1.10, 7.20). With `buildRaw` and a correct check value: the flag set with a non-zero byte at each of offsets 8 to 13 gives `invalid-field` (7.7, 7.22). The encoder rejects an Alert with only latitude null and with only longitude null, with `invalid-field` naming `latitude` both times (3.7). A real map point of 0, 0 round trips as the numbers 0 and 0, byte 0 has bit 0 clear, and the message differs from the no-point message for the same alert (1.11, 7.21). Byte 0 is `0x11` for a plain Alert with no map point and `0x19` for the same Alert with TEST (1.2). Flag clear with an out-of-range latitude or longitude gives `invalid-field` (7.9). Offsets and message length are unchanged: a no-point alert with an empty place name is 21 bytes (1.12). The decode order is kept: a no-point message with a bad check gives `bad-check` even when its point bytes are non-zero (5.5, 7.13). |
 | `seeded-fuzz.test.ts` | a small seeded generator (mulberry32 written in the test), 200 inputs for each length 0 to 64, none throws (12.7) |
 | `boundary.test.ts` | reads every file under `src/message-code` as text with `import.meta.glob('../../src/message-code/*.ts', { query: '?raw', eager: true })` and fails on: any import specifier that leaves the folder or names a package, the words `Date.now`, `Math.random`, `fetch`, `localStorage`, `window`, `document`, `XMLHttpRequest` (3.6, 4.5, 8.4, 11.3, 11.9). A second scan of source and config files, including `vite.config.ts` and `build/`, fails on the text `/dead-air/` (11.6). |
 | `fixtures.test.ts` (inside `boundary.test.ts` if small) | every entry of `TEST_FIXTURES` has `test: true` (9.7) |
 | `tests/build/base-path.test.ts` | `resolveBase(undefined)` is `/`, `x`, `/x` and `/x/` give `/x/`, values with `://` or `..` throw (11.7) |
+
+The three property tests named in the tech rules (round trip, any single changed byte caught, expired never current) and the random-bytes property test stay as four tests with the same meaning (Requirement 12.13). The generators now produce no-point alerts, so they also cover the optional map point.
+
+### Consequences for other specs
+
+These are notes for later specs. This spec changes none of their files.
+
+- Broadcast (spec 3): sets `latitude: null` and `longitude: null` when the sender leaves the map point empty. It never fills in 0, 0 for an empty field.
+- Listen (spec 4): must show "no map point" when latitude and longitude are null, and must never show 0, 0 for that case. A real 0, 0 arrives as two numbers and is shown as a point.
+- The Teletext look spec (spec 8) uses the same rule for any place a map point is drawn.
 
 ### Not covered by automated tests
 

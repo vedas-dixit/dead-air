@@ -186,8 +186,12 @@ describe('decodeMessage: rejection shape (Req 5.6, 7.11)', () => {
 });
 
 describe('decodeMessage: invalid-field, header fields (Req 7.6 to 7.9)', () => {
-  it('bit 0 of byte 0 set', () => {
-    expect(reasonOf(buildRaw({ flagsByte: 0x19 }))).toBe('invalid-field');
+  it('No_Map_Point_Flag set with a non-zero point byte (Req 7.7)', () => {
+    for (let i = 0; i < 6; i++) {
+      const pointBytes = [0, 0, 0, 0, 0, 0];
+      pointBytes[i] = 1;
+      expect(reasonOf(buildRaw({ flagsByte: 0x19, pointBytes }))).toBe('invalid-field');
+    }
   });
   it('valid steps 0', () => {
     expect(reasonOf(buildRaw({ validSteps: 0 }))).toBe('invalid-field');

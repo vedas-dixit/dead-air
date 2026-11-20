@@ -29,19 +29,19 @@ Promises that never bend
 6.  Every alert type has an icon and has text in every language we ship.
 Message code, first draft
 Fields follow CAP 1.2, the Common Alerting Protocol, wherever it has a matching field.
-• Version and flags, 1 byte: format version, TEST flag, passed-on flag
+• Version and flags, 1 byte: format version, TEST flag, passed-on flag, compact place name flag, no map point flag
 • Event, 1 byte: flood, cyclone, fire, earthquake, heatwave, landslide, medical, missing person, all clear
 • Urgency, severity and action, 1 byte: CAP values. Action is one of shelter, evacuate, prepare, avoid, monitor, all clear
 • Sent time, 4 bytes: to the minute, in UTC
 • Valid for, 1 byte: steps of 15 minutes
-• Place, 6 bytes: latitude and longitude, 3 bytes each
+• Place, 6 bytes: latitude and longitude, 3 bytes each. When the no map point flag is set, all six bytes are zero
 • Sender and number, 3 bytes: a 2-byte station ID and a 1-byte counter
 • Place name, 0 to 19 bytes: optional short UTF-8 text
 • Check, 4 bytes: CRC-32 over every byte before it
 This is a starting point. Spec 1 turns it into exact rules. Suggest changes if something is wrong, but keep the total at 40 bytes or less.
 Reject any message with an unknown version or a failed check. Spec 1 decided that a 2-byte check is not strong enough for promise 1, so the check is 4 bytes.
 Tech rules
-• Vite, TypeScript and React. No backend.
+• Vite and TypeScript, with plain DOM code. No UI framework (no React, Vue or similar). No backend.
 • Hosted on GitHub Pages under the /dead-air/ path, for now. It will later move to its own subdomain, so asset paths and the service worker scope must work both under a sub-path and at the root of a domain.
 • Sound uses the ggwave npm package (MIT license). Follow its official browser example in the ggwave repo, examples/ggwave-js, including how it sets sample rates.
 • Tests use Vitest, with fast-check for property tests.
