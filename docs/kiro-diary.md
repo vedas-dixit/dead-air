@@ -75,3 +75,49 @@ Problems found:
 - **Not checked yet:** a browser build that imports ggwave. No page uses the module so far.
 
 Final test count: 120 new tests, 467 in total, all passing (`npm test`).
+
+## Spec 3: Broadcast page (20 Nov 2026)
+
+Files: `.kiro/specs/broadcast-page/` (requirements, design, tasks and `report.md`). Page: `broadcast/index.html` and `broadcast/main.ts`. Code: `src/broadcast/` (logic, no DOM), `src/broadcast/dom/` (thin DOM glue) and `src/shared/`. Tests: `tests/broadcast/`. Scripts: `scripts/` (headless Chrome check). New configs: `tsconfig.broadcast-logic.json` and `tsconfig.broadcast-page.json`. The message code change below is commit `2af80e0`. The page work is in the commit "Add Broadcast page".
+
+The message code changed first, because the Broadcast form must be able to send an alert with no map point:
+- **Bit 0 of byte 0 is now the No_Map_Point_Flag.** With the flag set, the map point is absent and the six point bytes are zero. A real 0, 0 stays as numbers with the flag clear, so a missing point is never sent as a fake 0, 0. The decoder rejects the flag with any non-zero point byte.
+- **New golden message and map-point tests** (`tests/message-code/map-point.test.ts`, additions to `layout.test.ts`). There are 353 tests in `tests/message-code/` after the change, and all four property tests still pass. The change also updated the message-code spec files, `tech.md` and the brief.
+- **Plain TypeScript with no UI framework** is now written in `tech.md` and the brief.
+
+Decisions:
+- **Logic and DOM are split by folder and by tsconfig.** `src/broadcast/` and `src/shared/` use no browser API and are type-checked without the DOM library. Only `src/broadcast/dom/` and `broadcast/main.ts` touch the page. `tests/broadcast/boundary.test.ts` scans the sources to keep it that way. The `typecheck` script now runs both new configs.
+- **`check:browser` is a separate script,** outside `npm test`, `build` and CI. It needs an installed Chrome and a free local port. A test checks that `test`, `build` and `deploy.yml` do not call it.
+- **The draft Preview is labelled "sound check pending".** It is made by encode then decode, which already runs the check value. The Self_Check runs on Go on air or Save.
+- **Save is disabled while a Broadcast is playing.**
+- **The counter is committed only after a passed Build and an unlocked audio context.** A failed Build or a refused unlock does not use up a counter value. Save never unlocks audio.
+- **Double play, 1 second apart,** with the same samples both times. **Repeat is every 60 seconds with identical bytes.** The sent time and counter are fixed at the first Build.
+- **Wake lock** is requested while repeating and released on Stop and at expiry. If the browser has none or refuses, repeat goes on with a notice. A hidden tab gets one catch-up round when it is visible again, and a message about the missed rounds.
+- **Location only on a tap, with a 15 second timeout.** It fills both boxes on success with 4 decimals and leaves them unchanged otherwise. Nothing is stored.
+- **Nine fixed valid-for choices:** 15 minutes, 30 minutes, 1, 2, 3, 6, 12, 24 and 48 hours. They are 1, 2, 4, 8, 12, 24, 48, 96 and 192 steps of 15 minutes.
+- **All text is in one strings file with a `Strings` type,** so a missing label is a type error. The page markup has no visible English text.
+- **The audio context is created only inside the Go on air tap.** The sound link is loaded once per page.
+- **The map point is parsed as text,** into units of 0.0001 degree by string arithmetic.
+- **The Preview is built from the decoded bytes, not from the form,** and its status is recomputed every second from `checkExpiry`. It always shows the sent time.
+
+Problems found and fixed:
+- **Floating point rounding.** `12.34565 * 10000` is 123456.49999999999, so the half-up rule gave 123456. The parser works on digits and gives 123457. A test pins this example.
+- **The Self_Check needs trailing silence.** ggwave reports a payload only after a few silent frames. The check copy has 2 seconds of zeros added. The audio that is played, and the audio in the WAV file, do not.
+- **ggwave in the Vite build.** It builds with no special setting and no change to `vite.config.ts`. It prints two harmless warnings, for `path` and `fs` being externalized, from the Node-only branch of ggwave. The build test accepts only these two.
+- **The first headless Chrome run failed.** ggwave loads its embedded engine by fetching a `data:` URL, and the harness counted that as a network call. The harness now ignores `data:` URLs. The server log still shows only three requests, all to the local test server.
+- **`stop()` could hang** if `player.stop()` threw. It left the result pending. Fixed in `src/broadcast/broadcast-run.ts`: the error is caught and the run always ends as `stopped`. A test covers it.
+- **The station store accepted stored values with leading zeros,** such as "007". It now takes canonical decimal only, and anything else falls back to empty and 0.
+- **The build test gave a different bundle under Vitest.** It now removes `NODE_ENV` and the `VITEST` variables from the child process, so it builds the same bundle as `npm run build`.
+- **The design had no answer for the Preview before the first Self_Check.** We added the draft Preview, marked "sound check pending", and wrote the choice into the design notes.
+- **Requirement 6.1 said "reference device".** That is not testable, so it became a 15 second limit, measured in the Node test run. The time on a real phone is a manual check.
+- **0, 0 versus no map point.** This is the reason for the message code change above. Both empty boxes now mean no map point, and 0 and 0 typed in is a real point.
+- **Promise 6 is not met for icons on this page.** It shows text labels only. Icons come with the Teletext look, spec 8. This is stated in `report.md`.
+
+Not verified yet (all listed in `report.md`):
+- A real speaker and phone test. There is no Listen page yet, and the headless Chrome check shows that the page loads and goes on air, not that sound comes out of a speaker.
+- The sample rate of a real phone, and Build time on a real phone.
+- Geolocation and wake lock on a real phone, and the hidden-tab repeat.
+- Safari and iOS (audio start inside the tap, the TEST dialog) and a screen-reader pass.
+- A real deploy under `/dead-air/` and at a root. The build test covers both base paths.
+
+Final test count: 358 new tests, 841 in total in 44 files, all passing (`npm test`). Before this spec's own tests the total was 483, after the message code change. `npm test` prints two Node `MaxListenersExceededWarning` messages, which come from loading ggwave many times in tests.
