@@ -8,6 +8,7 @@
 import { checkExpiry, decodeMessage, encodeAlert } from '../message-code/index';
 import type { Alert } from '../message-code/index';
 import { audioToWav } from '../sound-link/index';
+import { relabelMsg } from '../languages/relabel';
 import { labelFor } from '../shared/labels';
 import { formatUtc } from '../shared/time';
 import { composeBroadcastAudio } from './compose';
@@ -122,6 +123,8 @@ export interface Controller extends ControllerActions {
   getState(): ViewState;
   subscribe(listener: (s: ViewState) => void): () => void;
   engineLoaded(link: LinkLike | null): void;
+  /** Switch the Language: re-label stored messages and rebuild the Say_First line. */
+  setStrings(next: Strings): void;
   /** Same as toggleTest. Names as in the design. */
   requestTest(on: boolean): void;
   confirmReal(): void;
@@ -135,7 +138,8 @@ interface LastBuild {
 }
 
 export function createBroadcastController(deps: ControllerDeps): Controller {
-  const { clock, timers, audio, geolocation, wakeLock, downloader, strings } = deps;
+  const { clock, timers, audio, geolocation, wakeLock, downloader } = deps;
+  let strings = deps.strings;
   const store = createStationStore(deps.storage);
 
   // ---- state ----
@@ -847,6 +851,17 @@ export function createBroadcastController(deps: ControllerDeps): Controller {
     }
   }
 
+  function setStrings(next: Strings): void {
+    if (disposed) return;
+    const old = strings;
+    strings = next;
+    if (banner !== null) banner = relabelMsg(banner, old, next);
+    if (bannerDetail !== null) bannerDetail = relabelMsg(bannerDetail, old, next);
+    flowNotices = flowNotices.map((n) => relabelMsg(n, old, next));
+    if (sayFirst !== null && previewAlert !== null) setSayFirst(previewAlert);
+    publish();
+  }
+
   function dispose(): void {
     if (disposed) return;
     const r = repeater;
@@ -911,6 +926,7 @@ export function createBroadcastController(deps: ControllerDeps): Controller {
       };
     },
     engineLoaded,
+    setStrings,
     requestTest,
     confirmReal,
     cancelReal,

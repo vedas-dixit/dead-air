@@ -8,6 +8,11 @@ export interface LoaderCall {
   /** Exact call text. */
   call: string;
   /**
+   * When set, a call matches if its text matches this pattern, and `call` is
+   * only the label shown in findings. Anchor it with ^ and $.
+   */
+  pattern?: RegExp;
+  /**
    * 1-based position among calls with this exact text in that file, in source
    * order. Without it, the text must appear exactly once in the file.
    */
@@ -28,6 +33,8 @@ const GGWAVE_XHR =
   'Emscripten loader path in ggwave for reading a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.';
 const GGWAVE_FETCH =
   'Emscripten loader path in ggwave for fetching a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.';
+// Minified names change between builds, so the variable is any JS identifier.
+const GGWAVE_FETCH_CALL = /^fetch\([A-Za-z_$][\w$]*,\{credentials:`same-origin`\}\)$/;
 const SW_FILE = 'sw.js';
 
 export const LOADER_CALL_LIST: readonly LoaderCall[] = [
@@ -36,8 +43,8 @@ export const LOADER_CALL_LIST: readonly LoaderCall[] = [
   { file: GGWAVE_FILE, call: 'XMLHttpRequest', occurrence: 1, reason: GGWAVE_XHR },
   { file: GGWAVE_FILE, call: 'XMLHttpRequest', occurrence: 2, reason: GGWAVE_XHR },
   { file: GGWAVE_FILE, call: 'XMLHttpRequest', occurrence: 3, reason: GGWAVE_XHR },
-  { file: GGWAVE_FILE, call: 'fetch(R,{credentials:`same-origin`})', occurrence: 1, reason: GGWAVE_FETCH },
-  { file: GGWAVE_FILE, call: 'fetch(R,{credentials:`same-origin`})', occurrence: 2, reason: GGWAVE_FETCH },
+  { file: GGWAVE_FILE, call: 'fetch(<identifier>,{credentials:`same-origin`})', pattern: GGWAVE_FETCH_CALL, occurrence: 1, reason: GGWAVE_FETCH },
+  { file: GGWAVE_FILE, call: 'fetch(<identifier>,{credentials:`same-origin`})', pattern: GGWAVE_FETCH_CALL, occurrence: 2, reason: GGWAVE_FETCH },
 ];
 
 export const ALLOWED_URLS: readonly AllowedUrl[] = [];

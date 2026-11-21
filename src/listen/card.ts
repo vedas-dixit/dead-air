@@ -6,6 +6,7 @@ import { unitsToDegreesText } from '../broadcast/map-point';
 import type { Strings } from '../broadcast/strings.types';
 import { labelFor } from '../shared/labels';
 import { formatLocal } from '../shared/time';
+import { buildAlertSentence } from '../languages/sentence';
 import { alertKey } from './history';
 import type { HistoryEntry } from './history';
 import { text } from './texts';
@@ -13,6 +14,7 @@ import { text } from './texts';
 export interface CardRow {
   label: string;
   value: string;
+  dirAuto?: true; // set on the place row: text direction follows the name
 }
 
 export interface CardView {
@@ -26,6 +28,7 @@ export interface CardView {
   expiredWord: string | null; // labels.status.expired when expired
   clockLine: string | null; // listen.clock.line for sent-in-future or clock-unknown
   heardText: string;
+  sentence: string | null; // buildAlertSentence text, null when it fails
 }
 
 export function buildCardView(
@@ -46,7 +49,7 @@ export function buildCardView(
     { label: text(strings, 'preview.action'), value: labelFor(strings.labels.action, alert.action) ?? alert.action },
   ];
   if (alert.placeName !== '') {
-    rows.push({ label: text(strings, 'preview.place'), value: alert.placeName });
+    rows.push({ label: text(strings, 'preview.place'), value: alert.placeName, dirAuto: true });
   }
   if (typeof alert.latitude === 'number' && typeof alert.longitude === 'number') {
     rows.push({
@@ -58,6 +61,7 @@ export function buildCardView(
   rows.push({ label: text(strings, 'preview.until'), value: untilText });
   rows.push({ label: text(strings, 'listen.row.sender'), value: String(alert.stationId) });
 
+  const built = buildAlertSentence(alert, strings);
   const status = expiry.status;
   const expired = status === 'expired';
 
@@ -76,5 +80,6 @@ export function buildCardView(
       entry.heardCount === 1
         ? text(strings, 'listen.heard.one')
         : text(strings, 'listen.heard.many', { n: entry.heardCount }),
+    sentence: built.ok ? built.text : null,
   };
 }

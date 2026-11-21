@@ -9,7 +9,10 @@ import type { Controller } from '../controller';
 import { createDownloader } from '../download';
 import type { LinkLike } from '../build';
 import type { RawForm } from '../form';
-import { stringsEn } from '../strings.en';
+import type { Strings } from '../strings.types';
+import { applyDocumentLanguage, createWebLanguageState } from '../../languages/dom/web-language';
+import { mountLanguageSwitch } from '../../languages/dom/language-switch';
+import { OFFLINE_IDS } from '../../offline/dom/ids';
 import { ELEMENT_IDS } from './ids';
 import { createRenderer } from './render';
 import { createWebAudioHost } from './web-audio';
@@ -27,7 +30,9 @@ function byId<T extends HTMLElement>(id: string): T {
 
 /** Starts the page. Returns a function that removes every listener and disposes the controller. */
 export function mount(): () => void {
-  const strings = stringsEn;
+  const languageState = createWebLanguageState();
+  applyDocumentLanguage(document, languageState.current());
+  let strings: Strings = languageState.current().strings;
 
   // Browsers may restore form state after a reload. TEST on and repeat off are the start values.
   const testBox = byId<HTMLInputElement>(ELEMENT_IDS.test);
@@ -58,6 +63,20 @@ export function mount(): () => void {
   const renderer = createRenderer(document, strings);
   const unsubscribe = controller.subscribe((s) => renderer.render(s));
   renderer.render(controller.getState());
+
+  // One subscriber for a language change. It is added before the switch, so the switch label
+  // is read after `strings` has been replaced.
+  const unsubscribeLanguage = languageState.subscribe((entry) => {
+    strings = entry.strings;
+    applyDocumentLanguage(document, entry);
+    controller.setStrings(strings);
+    renderer.setStrings(strings);
+    renderer.render(controller.getState());
+    const note = document.getElementById(OFFLINE_IDS.storageNote);
+    if (note && !note.hidden) note.textContent = strings.text['offline.storageNote'];
+  });
+  const switchHost = byId<HTMLElement>(ELEMENT_IDS.languageSwitch);
+  const disposeSwitch = mountLanguageSwitch(switchHost, languageState, () => strings.text['lang.switch.label']);
 
   const banner = byId<HTMLElement>(ELEMENT_IDS.banner);
   const removers: Array<() => void> = [];
@@ -141,7 +160,15 @@ export function mount(): () => void {
 
   // Buttons. goOnAir is called straight from the click, so the audio unlock runs inside the tap.
   on(byId<HTMLButtonElement>(ELEMENT_IDS.go), 'click', () => guard(() => controller.goOnAir()));
-  const persistence = createPersistence(document, strings);
+  const stringsView: Strings = {
+    get text() {
+      return strings.text;
+    },
+    get labels() {
+      return strings.labels;
+    },
+  };
+  const persistence = createPersistence(document, stringsView);
   on(byId<HTMLButtonElement>(ELEMENT_IDS.go), 'click', () => persistence.firstPress());
   on(byId<HTMLButtonElement>(ELEMENT_IDS.stop), 'click', () => guard(() => controller.stop()));
   on(byId<HTMLButtonElement>(ELEMENT_IDS.save), 'click', () => guard(() => controller.save()));
@@ -162,6 +189,8 @@ export function mount(): () => void {
     removers.length = 0;
     window.removeEventListener('pagehide', teardown);
     unsubscribe();
+    unsubscribeLanguage();
+    disposeSwitch();
     controller.dispose();
   };
   window.addEventListener('pagehide', teardown);

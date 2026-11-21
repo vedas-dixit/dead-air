@@ -152,6 +152,22 @@ export const TEXT_KEYS = [
   'offline.unsaved',
   'offline.saved',
   'offline.storageNote',
+  // Languages and read aloud
+  'lang.switch.label',
+  'sentence.main',
+  'spoken.expired',
+  'spoken.age.now',
+  'spoken.age.minutes',
+  'spoken.age.hours',
+  'spoken.age.days',
+  'listen.read',
+  'listen.read.stop',
+  'listen.read.error',
+  'listen.read.help',
+  'listen.read.missing',
+  'listen.settings.heading',
+  'listen.setting.flash',
+  'listen.setting.vibrate',
 ] as const;
 
 export type TextKey = (typeof TEXT_KEYS)[number];
@@ -278,6 +294,21 @@ export const PLACEHOLDERS: Readonly<Record<TextKey, readonly string[]>> = {
   'offline.unsaved': [],
   'offline.saved': [],
   'offline.storageNote': [],
+  'lang.switch.label': [],
+  'sentence.main': ['event', 'urgency', 'severity', 'action'],
+  'spoken.expired': ['status'],
+  'spoken.age.now': [],
+  'spoken.age.minutes': ['n'],
+  'spoken.age.hours': ['n'],
+  'spoken.age.days': ['n'],
+  'listen.read': [],
+  'listen.read.stop': [],
+  'listen.read.error': [],
+  'listen.read.help': [],
+  'listen.read.missing': [],
+  'listen.settings.heading': [],
+  'listen.setting.flash': [],
+  'listen.setting.vibrate': [],
 };
 
 export interface Strings {

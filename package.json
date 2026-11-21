@@ -8,6 +8,8 @@
     "typecheck": "tsc -p tsconfig.message-code.json --noEmit && tsc -p tsconfig.sound-link.json --noEmit && tsc -p tsconfig.broadcast-logic.json --noEmit && tsc -p tsconfig.broadcast-page.json --noEmit && tsc -p tsconfig.listen-logic.json --noEmit && tsc -p tsconfig.listen-page.json --noEmit && tsc -p tsconfig.offline-logic.json --noEmit && tsc -p tsconfig.offline-worker.json --noEmit && tsc -p tsconfig.offline-page.json --noEmit && tsc -p tsconfig.json --noEmit && tsc -p tsconfig.tools.json --noEmit",
     "build": "vite build && node build/offline-postbuild.mjs && node build/offline-check.mjs && node build/copy-sound-test.mjs",
     "build:ears": "vite build --config tools/ears/vite.config.ts",
+    "translations": "vite build --config tools/languages/vite.config.mjs && node tools/languages/build/languages.mjs",
+    "translations:check": "vite build --config tools/languages/vite.config.mjs && node tools/languages/build/languages.mjs --check",
     "check:browser": "node scripts/check-broadcast-browser.mjs"
   },
   "devDependencies": {

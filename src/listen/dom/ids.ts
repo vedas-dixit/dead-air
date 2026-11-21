@@ -15,6 +15,11 @@ export const ELEMENT_IDS = {
   keepOpenLine: 'keep-open-line',
   historyUnkeptLine: 'history-unkept-line',
   cards: 'cards',
+  languageSwitch: 'language-switch',
+  alertSettings: 'alert-settings',
+  setFlash: 'set-flash',
+  setVibrate: 'set-vibrate',
+  setVibrateRow: 'set-vibrate-row',
 } as const;
 
 export type ElementKey = keyof typeof ELEMENT_IDS;

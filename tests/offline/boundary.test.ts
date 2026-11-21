@@ -142,6 +142,7 @@ describe('offline boundary scans', () => {
     const allowedStrings = new Set([
       join(ROOT, 'src/broadcast/strings.en.ts'),
       join(ROOT, 'src/broadcast/strings.types.ts'),
+      join(ROOT, 'src/languages/page-language.ts'),
     ]);
     const hits: string[] = [];
     for (const file of offlineFiles) {
@@ -196,7 +197,7 @@ describe('offline boundary scans', () => {
       expect(b, `${path} persistence listener`).toBeGreaterThan(a);
       expect(text.split('persistence.firstPress').length - 1, path).toBe(1);
       expect(text.split("import { createPersistence } from '../../offline/dom/persist';").length - 1, path).toBe(1);
-      expect(text.split('const persistence = createPersistence(document, strings);').length - 1, path).toBe(1);
+      expect(text.split('const persistence = createPersistence(document, stringsView);').length - 1, path).toBe(1);
     }
     const header = read(join(ROOT, 'src/broadcast/dom/mount.ts')).split('\n').slice(0, 4).join('\n');
     expect(header).not.toMatch(/no service worker/i);

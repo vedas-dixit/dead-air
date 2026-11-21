@@ -3,6 +3,10 @@
 import type { Strings } from '../broadcast/strings.types';
 import type { WakeLockHandle, WakeLockProvider } from '../broadcast/providers';
 import type { Listener, SoundLink } from '../sound-link';
+import { buildSpokenText } from '../languages/spoken-text';
+import { checkExpiry } from '../message-code/index';
+import type { ExpiryStatus } from '../message-code/index';
+import { alertKey } from './history';
 import { parseHistory, serializeHistory } from './history-store';
 import { levelOf } from './level';
 import { applyPayload, clearHistory, endSession as endModelSession, initialModel, startSession } from './model';
@@ -29,6 +33,8 @@ export interface ListenDeps {
   wake: WakeLockProvider;
   visibility: PageVisibility;
   strings: Strings;
+  /** Called once for each alert that is new to the History while a Session runs. */
+  onNewAlert?: (e: { expiry: ExpiryStatus }) => void;
 }
 
 export interface ListenController {
@@ -40,6 +46,9 @@ export interface ListenController {
   tick(): void;
   snapshot(): ListenUi;
   subscribe(fn: (ui: ListenUi) => void): () => void;
+  setStrings(next: Strings): void;
+  /** The text to read aloud for a History alert, or null when the key is not in the History. */
+  spokenText(alertKey: string): string | null;
 }
 
 const MIC_NOTICE: Record<MicFailure, Notice> = {
@@ -51,6 +60,7 @@ const MIC_NOTICE: Record<MicFailure, Notice> = {
 };
 
 export function createListenController(deps: ListenDeps): ListenController {
+  let strings = deps.strings;
   let model: ListenModel = initialModel(parseHistory(deps.storage.read()));
   let intent = false; // Listening_Intent. True after a successful start; false on Stop and mic loss.
   let phase: Phase = 'idle';
@@ -76,7 +86,7 @@ export function createListenController(deps: ListenDeps): ListenController {
       level,
       nowMs: deps.clock.now(),
       offsetMinutes: deps.clock.offsetMinutes(),
-      strings: deps.strings,
+      strings,
     });
   }
 
@@ -163,10 +173,16 @@ export function createListenController(deps: ListenDeps): ListenController {
         const r = listener.feed(samples);
         if (r.ok) {
           const before = model.history;
+          const keysBefore = new Set(before.map((e) => alertKey(e.alert)));
           for (const payload of r.payloads) {
             model = applyPayload(model, payload, deps.clock.now());
           }
           if (model.history !== before) saveHistory();
+          const now = deps.clock.now();
+          for (const entry of model.history) {
+            if (keysBefore.has(alertKey(entry.alert))) continue;
+            deps.onNewAlert?.({ expiry: checkExpiry(entry.alert, now).status });
+          }
         }
         // ok:false: the block is discarded.
       } catch {
@@ -330,6 +346,16 @@ export function createListenController(deps: ListenDeps): ListenController {
     },
 
     snapshot,
+
+    setStrings(next) {
+      strings = next;
+      emit();
+    },
+
+    spokenText(key) {
+      const entry = model.history.find((e) => alertKey(e.alert) === key);
+      return entry ? buildSpokenText(entry.alert, deps.clock.now(), strings) : null;
+    },
 
     subscribe(fn) {
       subscribers.add(fn);

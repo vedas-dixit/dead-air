@@ -227,5 +227,23 @@ export const stringsEn: Strings = {
     'offline.saved': 'Saved for offline use',
     'offline.storageNote':
       'Your browser may clear this saved copy if you do not use the app. Add it to your Home Screen to keep it.',
+    // Languages and read aloud
+    'lang.switch.label': 'Language',
+    'sentence.main': '{event}. Urgency: {urgency}. Severity: {severity}. {action}.',
+    'spoken.expired': '{status}.',
+    'spoken.age.now': 'Sent just now.',
+    'spoken.age.minutes': 'Sent {n} minutes ago.',
+    'spoken.age.hours': 'Sent {n} hours ago.',
+    'spoken.age.days': 'Sent {n} days ago.',
+    'listen.read': 'Read aloud',
+    'listen.read.stop': 'Stop reading',
+    'listen.read.error': 'This alert could not be read aloud.',
+    'listen.read.help':
+      "If you hear nothing or the voice sounds wrong, install this language's voice in your phone's text-to-speech settings.",
+    'listen.read.missing':
+      "To hear alerts read aloud, install this language's voice in your phone's text-to-speech settings.",
+    'listen.settings.heading': 'Alert signals',
+    'listen.setting.flash': 'Flash the screen when a new alert arrives',
+    'listen.setting.vibrate': 'Vibrate when a new alert arrives',
   },
 };

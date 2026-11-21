@@ -3,3 +3,4 @@ dist
 .vitest/json/output.json
 tools/ears/build/
 tools/ears/out/
+tools/languages/build/

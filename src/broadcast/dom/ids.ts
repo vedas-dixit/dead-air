@@ -28,6 +28,7 @@ export const ELEMENT_IDS = {
   sayFirst: 'say-first',
   countdown: 'countdown',
   repeatInfo: 'repeat-info',
+  languageSwitch: 'language-switch',
 } as const;
 
 export type ElementKey = keyof typeof ELEMENT_IDS;

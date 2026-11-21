@@ -96,13 +96,13 @@ Reason: Emscripten loader path in ggwave for reading a wasm file by URL. ggwave 
 
 ### Loader call 6
 File: assets/persist-*.js
-Call: fetch(R,{credentials:`same-origin`})
+Call: fetch(<identifier>,{credentials:`same-origin`})
 Occurrence: 1
 Reason: Emscripten loader path in ggwave for fetching a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.
 
 ### Loader call 7
 File: assets/persist-*.js
-Call: fetch(R,{credentials:`same-origin`})
+Call: fetch(<identifier>,{credentials:`same-origin`})
 Occurrence: 2
 Reason: Emscripten loader path in ggwave for fetching a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.
 

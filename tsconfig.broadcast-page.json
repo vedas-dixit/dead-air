@@ -14,6 +14,7 @@
   "include": [
     "broadcast/main.ts",
     "src/broadcast",
+    "src/languages",
     "src/shared",
     "src/message-code",
     "src/sound-link"

@@ -14,6 +14,8 @@ import { ELEMENT_IDS } from './ids';
 
 export interface Renderer {
   render(state: ViewState): void;
+  /** Switch language. The caller then calls render with the current state. */
+  setStrings(next: Strings): void;
 }
 
 type Field = keyof RawForm;
@@ -81,6 +83,13 @@ export function bindStaticText(doc: Document, strings: Strings): void {
   });
   doc.title = textOf(strings, 'page.title');
 
+  // Same value that mountLanguageSwitch writes, so the two never disagree.
+  const switchGroup = doc.getElementById(ELEMENT_IDS.languageSwitch);
+  if (switchGroup !== null) {
+    const label = textOf(strings, 'lang.switch.label');
+    if (switchGroup.getAttribute('aria-label') !== label) switchGroup.setAttribute('aria-label', label);
+  }
+
   fillSelect(doc, byId<HTMLSelectElement>(doc, ELEMENT_IDS.event), EVENT_TYPES, strings.labels.event);
   fillSelect(doc, byId<HTMLSelectElement>(doc, ELEMENT_IDS.urgency), URGENCIES, strings.labels.urgency);
   fillSelect(doc, byId<HTMLSelectElement>(doc, ELEMENT_IDS.severity), SEVERITIES, strings.labels.severity);
@@ -97,7 +106,8 @@ export function bindStaticText(doc: Document, strings: Strings): void {
   }
 }
 
-export function createRenderer(doc: Document, strings: Strings): Renderer {
+export function createRenderer(doc: Document, initialStrings: Strings): Renderer {
+  let strings = initialStrings;
   bindStaticText(doc, strings);
 
   const el = {
@@ -407,5 +417,14 @@ export function createRenderer(doc: Document, strings: Strings): Renderer {
     renderDialog(state.dialogOpen, state.dialogMessage);
   }
 
-  return { render };
+  function setStrings(next: Strings): void {
+    strings = next;
+    bindStaticText(doc, strings);
+    // Clear the cached signatures so these nodes redraw in the new language.
+    el.preview.removeAttribute('data-sig');
+    el.banner.removeAttribute('data-sig');
+    el.status.removeAttribute('data-sig');
+  }
+
+  return { render, setStrings };
 }

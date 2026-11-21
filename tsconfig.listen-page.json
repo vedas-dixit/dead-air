@@ -14,6 +14,7 @@
   "include": [
     "listen/main.ts",
     "src/listen",
+    "src/languages",
     "src/shared",
     "src/message-code",
     "src/sound-link",

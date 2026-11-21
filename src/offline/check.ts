@@ -292,35 +292,34 @@ function acceptsUrl(allowedUrls: readonly AllowedUrl[], url: string): boolean {
   return allowedUrls.some((a) => a.url === url && a.reason.trim() !== '');
 }
 
-/** Numbers calls per exact text in source order (1-based) and counts each text. */
-function numberCalls(calls: readonly JsCall[]): { index: number[]; total: Map<string, number> } {
-  const total = new Map<string, number>();
-  const index: number[] = [];
-  for (const c of calls) {
-    const n = (total.get(c.text) ?? 0) + 1;
-    total.set(c.text, n);
-    index.push(n);
-  }
-  return { index, total };
+/** True when an allow-list entry names this call text (exact text, or its pattern). */
+function entryMatches(e: LoaderCall, text: string): boolean {
+  return e.pattern === undefined ? e.call === text : e.pattern.test(text);
 }
 
 /**
- * An entry with an occurrence accepts only that numbered call. An entry
- * without one accepts a call only when its text appears once in the file.
+ * An entry with an occurrence accepts only that numbered call, counted among
+ * the calls the entry matches in the file. An entry without one accepts a call
+ * only when it matches exactly one call in the file.
  */
 function callAccepted(
   callList: readonly LoaderCall[],
   path: string,
-  call: JsCall,
-  occurrence: number,
-  total: number,
+  all: readonly JsCall[],
+  position: number,
 ): boolean {
-  return callList.some(
-    (e) =>
-      e.call === call.text &&
-      globMatch(e.file, path) &&
-      (e.occurrence === undefined ? total === 1 : e.occurrence === occurrence),
-  );
+  const text = (all[position] as JsCall).text;
+  return callList.some((e) => {
+    if (!entryMatches(e, text) || !globMatch(e.file, path)) return false;
+    let total = 0;
+    let occurrence = 0;
+    all.forEach((c, i) => {
+      if (!entryMatches(e, c.text)) return;
+      total++;
+      if (i === position) occurrence = total;
+    });
+    return e.occurrence === undefined ? total === 1 : e.occurrence === occurrence;
+  });
 }
 
 /** Calls of a whole file, used to number calls across several script bodies. */
@@ -338,13 +337,11 @@ export function scanJs(path: string, text: string, ctx: ScanContext, fileCalls?:
     }
   }
   const own = findCalls(text);
-  const numbered = numberCalls(fileCalls?.all ?? own);
+  const all = fileCalls?.all ?? own;
   const offset = fileCalls?.offset ?? 0;
   own.forEach((call, i) => {
     if (call.target === 'relative' || call.target === 'external') return;
-    const occurrence = numbered.index[offset + i] as number;
-    const total = numbered.total.get(call.text) as number;
-    if (callAccepted(ctx.callList, path, call, occurrence, total)) return;
+    if (callAccepted(ctx.callList, path, all, offset + i)) return;
     out.push({ path, kind: 'js-call', detail: call.text });
   });
   return out;
@@ -506,7 +503,7 @@ export function validateCallList(callList: readonly LoaderCall[], files: readonl
     }
     let count = 0;
     for (const f of matched) {
-      for (const c of callsByFile.get(f.path) ?? []) if (c.text === e.call) count++;
+      for (const c of callsByFile.get(f.path) ?? []) if (entryMatches(e, c.text)) count++;
     }
     if (e.occurrence !== undefined) {
       if (!Number.isInteger(e.occurrence) || e.occurrence < 1 || e.occurrence > count) {

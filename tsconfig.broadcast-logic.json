@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "isolatedModules": true
   },
-  "include": ["src/broadcast", "src/shared", "src/message-code", "src/sound-link"],
-  "exclude": ["src/broadcast/dom"]
+  "include": ["src/broadcast", "src/languages", "src/shared", "src/message-code", "src/sound-link"],
+  "exclude": ["src/broadcast/dom", "src/languages/dom"]
 }
