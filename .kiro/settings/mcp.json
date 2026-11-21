@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "dead-air-ears": {
+      "command": "node",
+      "args": ["tools/ears/build/ears.mjs"],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

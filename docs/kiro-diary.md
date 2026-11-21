@@ -127,3 +127,41 @@ Not verified yet (all listed in `report.md`):
 - A real deploy under `/dead-air/` and at a root. The build test covers both base paths.
 
 Final test count: 358 new tests, 841 in total in 44 files, all passing (`npm test`). Before this spec's own tests the total was 483, after the message code change. `npm test` prints two Node `MaxListenersExceededWarning` messages, which come from loading ggwave many times in tests.
+
+## Spec 5: Kiro's ears (21 Nov 2026)
+What was built: a small local MCP server, `dead-air-ears`, in `tools/ears/`. It has three tools: `make_broadcast` (TEST alert JSON to a WAV file), `hear_wav` (WAV file, with optional noise, through the Listen page decoder path) and `round_trip` (make, add noise, decode, count over N tries). It reuses `src/message-code`, `src/sound-link` and `composeBroadcastAudio` and changes none of them.
+Where things are:
+- Code: `tools/ears/` (`handlers.ts`, `noise.ts`, `wav-reader.ts`, `hear.ts`, `round-trip-core.ts`, `transport.ts`, `main.ts`). Only `transport.ts` imports the MCP SDK.
+- Tests: `tests/ears/` (21 property tests, example tests, a build test and a child-process protocol test).
+- Registration: `.kiro/settings/mcp.json`, switched off, `autoApprove` empty. Steps to turn it on: `tools/ears/README.md`.
+- Build: `npm run build:ears` writes `tools/ears/build/ears.mjs`.
+First use (21 Nov 2026), `round_trip` on one TEST alert (flood, immediate, severe, evacuate, "Riverside ward 4"), seed 1, 48000 Hz:
+
+| Noise level | Tries | Successes | Failures | Failure outcomes |
+|---|---|---|---|---|
+| 0 dB | 20 | 20 | 0 | none |
+| -10 dB | 20 | 19 | 1 | 1 nothing-heard |
+| -15 dB | 20 | 0 | 20 | 20 nothing-heard |
+
+No run had a `wrong-alert` outcome, so no check-passed alert ever differed from the one sent. At -10 dB both plays were heard in 11 of 20 tries, so the second play is what saved most of the tries there. At -15 dB nothing was heard in any try.
+How the runs were made: the server could not be turned on from the agent session, so the runs used the fallback, `node tools/ears/build/ears.mjs --call round_trip <json>`. That calls the same handlers as the server, with the same inputs. The protocol itself is covered by the child-process test, not by these runs.
+Live session (21 Nov 2026): the server connected in a live Kiro session, and `round_trip` at -10 dB gave 19 of 20 with no wrong alerts.
+What these numbers are not: the noise is white noise added to clean audio. It is not a room. Tests on real speakers and phones are still needed.
+Decisions:
+- **The MCP SDK is a dev dependency only** (`@modelcontextprotocol/sdk` and `zod`, exact versions). The server is bundled to one file with the Vite we already have, so no `tsx`. The site build holds nothing from `tools/` or the SDK, and a test checks it.
+- **The low-level SDK `Server` with hand-written JSON Schemas,** so the handlers return their own named errors (`bad-tries`, `bad-noise-level`, `not-a-test-alert`) and the SDK does not turn them into generic protocol errors.
+- **`test: false` is rejected before encoding.** The tools never make a non-TEST alert (promise 3).
+- **Noise level is signal-to-noise ratio in dB.** The noise is scaled so its RMS over the signal part is exact, so the 1 percent bound holds by construction. Each try's seed comes from the seed and the try number, so the same inputs always give the same counts.
+- **One loaded sound link per sample rate,** because a link's rate is fixed at load.
+- **A failed check returns only the length and the reason.** The report object has no alert key at all (promise 1). Every decoded alert shows its sent time and an expiry status in words (promise 2).
+- **`--call <tool> <json>` mode in the same bundle,** for this fallback and for a quick check.
+Problems found and fixed:
+- **Two test files built the bundle into the same folder** and raced each other. Each file now has its own folder.
+- **The protocol test waited with a busy loop,** which blocked the event loop so stdout was never read. It now uses a timer.
+- **The scan for `Math.random` matched a comment.** It now looks for a call.
+- **The bundle scan for SDK imports matched text inside the SDK's own comments.** It now matches only real `import ... from` lines.
+- **Type-checking `tools/` needed the ggwave declaration file** from `src/sound-link`, and the `vite.config.ts` of the tool is left out of that check.
+- **`console.log` from a library would corrupt stdout.** `stdout-guard.ts` is imported first and sends it to stderr.
+Not verified yet:
+- Kiro connecting to the server in a real session. The protocol is tested with a child process, not with Kiro.
+- Anything on a real speaker, a real phone or in a real room.

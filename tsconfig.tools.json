@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "types": [],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "tools",
+    "tests/ears/node-extra.d.ts",
+    "tests/broadcast/node-extra.d.ts",
+    "tests/sound-link/node-fs.d.ts",
+    "src/sound-link/ggwave.d.ts"
+  ],
+  "exclude": [
+    "tools/ears/vite.config.ts",
+    "tools/ears/build", "tools/ears/out"]
+}
