@@ -24,7 +24,7 @@ Promises that never bend
 1.  Never show a damaged alert. If the check value fails, show nothing from that message.
 2.  Never show an expired alert as current. Always show the sent time.
 3.  A test alert carries a TEST flag and always shows a TEST banner. Every sample and demo in the repo is a test alert.
-4.  Make no network requests after the first load. No CDNs, web fonts, analytics or outside APIs.
+4.  After the first load the app works with no network and never contacts any other site. No CDNs, web fonts, analytics or outside APIs. The only request it ever makes is to its own address, to check for a new version, and only when a connection is there.
 5.  Process microphone audio in memory and discard it. Never record, store or upload it.
 6.  Every alert type has an icon and has text in every language we ship.
 Message code, first draft

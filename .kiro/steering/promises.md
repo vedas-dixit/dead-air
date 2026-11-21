@@ -5,7 +5,7 @@ These six rules override convenience, speed and style. If a task would break one
 1. **Never show a damaged alert.** If the check value fails, show nothing from that message.
 2. **Never show an expired alert as current.** Always show the sent time.
 3. **Test alerts are always marked.** A test alert carries a TEST flag and always shows a TEST banner. Every sample and demo in the repo is a test alert.
-4. **No network requests after the first load.** No CDNs, web fonts, analytics or outside APIs. This covers `/listen` and `/broadcast`. The front page may load its own images, but nothing from other sites.
+4. **After the first load the app works with no network and never contacts any other site.** No CDNs, web fonts, analytics or outside APIs. The only request it ever makes is to its own address, to check for a new version, and only when a connection is there. This covers `/listen` and `/broadcast`. The front page may load its own images, but nothing from other sites.
 5. **Microphone audio stays in memory and is discarded.** Never record, store or upload it.
 6. **Every alert type has an icon and text in every shipped language.** A missing translation or icon is a bug, not a fallback case.
 
