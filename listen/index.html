@@ -3,13 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Listen</title>
+    <title data-text="listen.page.title"></title>
   </head>
   <body>
-    <h1>Listen</h1>
-    <nav>
-      <a href="../">Dead Air</a>
-      <a href="../broadcast/">Broadcast</a>
-    </nav>
+    <main>
+      <h1 data-text="listen.page.heading"></h1>
+      <nav>
+        <a id="link-home" href="%BASE_URL%" data-text="nav.home"></a>
+        <a id="link-broadcast" href="%BASE_URL%broadcast/" data-text="listen.nav.broadcast"></a>
+      </nav>
+
+      <div id="error-line" role="alert"></div>
+
+      <div>
+        <button id="btn-start" type="button" data-text="listen.btn.start"></button>
+        <button id="btn-stop" type="button" data-text="listen.btn.stop"></button>
+      </div>
+
+      <div id="state-line" aria-live="polite"></div>
+      <div id="level-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="">
+        <div id="level-bar"></div>
+      </div>
+      <div id="unreadable-line" aria-live="polite"></div>
+      <div id="keep-open-line"></div>
+      <div id="history-unkept-line"></div>
+
+      <section>
+        <div id="cards"></div>
+        <button id="btn-clear" type="button" data-text="listen.btn.clear"></button>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
   </body>
 </html>

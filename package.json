@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.message-code.json --noEmit && tsc -p tsconfig.sound-link.json --noEmit && tsc -p tsconfig.broadcast-logic.json --noEmit && tsc -p tsconfig.broadcast-page.json --noEmit && tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.message-code.json --noEmit && tsc -p tsconfig.sound-link.json --noEmit && tsc -p tsconfig.broadcast-logic.json --noEmit && tsc -p tsconfig.broadcast-page.json --noEmit && tsc -p tsconfig.listen-logic.json --noEmit && tsc -p tsconfig.listen-page.json --noEmit && tsc -p tsconfig.json --noEmit",
     "build": "vite build && node build/copy-sound-test.mjs",
     "check:browser": "node scripts/check-broadcast-browser.mjs"
   },

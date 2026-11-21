@@ -143,19 +143,22 @@ describe.each([
     expect(home).toContain('./listen/');
     expect(home).toContain('./broadcast/');
     const listen = urlsIn(text(join(b.out, 'listen', 'index.html')));
-    expect(listen).toContain('../');
-    expect(listen).toContain('../broadcast/');
-    for (const [dir, urls] of [['', home], ['listen', listen]] as const) {
-      for (const u of urls) {
-        expect(existsSync(join(resolve(join(b.out, dir), dirname(u + 'x')), 'index.html')), u).toBe(true);
-      }
+    // The real Listen page builds its links from the Vite base, so they are absolute.
+    expect(listen).toContain(b.base);
+    expect(listen).toContain(`${b.base}broadcast/`);
+    for (const u of home) {
+      expect(existsSync(join(resolve(b.out, dirname(u + 'x')), 'index.html')), u).toBe(true);
+    }
+    for (const u of [b.base, `${b.base}broadcast/`]) {
+      expect(existsSync(join(b.out, u.slice(b.base.length), 'index.html')), u).toBe(true);
     }
   });
 
   it('no other page loads the broadcast bundle or any image', () => {
     for (const p of ['index.html', 'listen/index.html']) {
       const t = text(join(b.out, p));
-      expect(t).not.toContain('assets/');
+      // The real Listen page loads its own bundle from assets/. The front page loads none.
+      if (p === 'index.html') expect(t).not.toContain('assets/');
       expect(/\.(png|jpe?g|gif|webp|svg)/i.test(t), p).toBe(false);
     }
     expect(/\.(png|jpe?g|gif|webp|svg)/i.test(text(join(b.out, 'broadcast', 'index.html')))).toBe(false);
