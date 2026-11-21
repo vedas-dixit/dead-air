@@ -1,6 +1,13 @@
 /* Dead Air: the radio look. One stylesheet for all pages.
    Colours are named once per theme in the token blocks below. Nothing else in
-   this file names a colour value. Orange and olive are shapes, never text. */
+   this file names a colour value. Orange and olive are shapes, never text.
+
+   Layout is phone first: one column, the main control at the bottom of the
+   screen. From 60em the page opens into two columns, like the face of a hi-fi.
+
+   One idiom for state, taken from the lamps: solid means live, hollow means
+   idle. A lit lamp, a knob that is on and a button you can press are solid.
+   An unlit lamp, a knob that is off and a locked control are hollow rings. */
 
 /* ---------- Fonts (IBM Plex Mono, Latin subset, this site only) ---------- */
 
@@ -39,9 +46,12 @@
 
   --target: max(48px, 3rem);
   --gap: 8px;
+  --gutter: 16px;
+  --measure: 40rem;
   --radius: 12px;
   --pill: 999px;
   --ring: 3px;
+  --lh-tight: 1.25;
   --font-latin: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --font-system: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Devanagari', 'Noto Sans', sans-serif;
 
@@ -80,28 +90,36 @@
   box-sizing: border-box;
 }
 
+/* The hidden attribute always wins, whatever display a rule below sets. */
+[hidden] {
+  display: none !important;
+}
+
 html {
+  background: var(--page);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
+/* The body is the column: the header and the page share one gutter and one width. */
 body {
-  margin: 0;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
   color: var(--text);
   background: var(--page);
   font-family: var(--font-latin);
   font-size: 1.125rem;
   font-weight: 400;
   line-height: 1.5;
+  overflow-wrap: break-word;
 }
 
 main {
   display: flex;
   flex-direction: column;
-  gap: var(--gap);
-  max-width: 40rem;
-  margin: 0 auto;
-  padding: var(--gap) 1rem 6rem;
+  gap: calc(var(--gap) * 2);
+  padding: var(--gap) 0 6rem;
   color: var(--text);
   background: var(--page);
 }
@@ -111,7 +129,7 @@ h2,
 h3 {
   margin: 0;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: var(--lh-tight);
 }
 
 h1 {
@@ -131,8 +149,14 @@ a {
   background: var(--page);
 }
 
-/* Hindi uses the phone's own font. No capitals, no letter spacing. */
+/* Latin text keeps the bundled font even inside a Hindi page (the "English" button). */
+:lang(en) {
+  font-family: var(--font-latin);
+}
+
+/* Hindi uses the phone's own font. No capitals, no letter spacing, roomy lines. */
 :lang(hi) {
+  --lh-tight: 1.6;
   font-family: var(--font-system);
   line-height: 1.6;
   text-transform: none;
@@ -157,6 +181,19 @@ legend:lang(hi),
 .label:lang(hi) {
   text-transform: none;
   letter-spacing: 0;
+}
+
+/* Kept for screen readers and the page outline, not drawn. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ---------- Surfaces: colour and background always set together ---------- */
@@ -187,9 +224,16 @@ legend:lang(hi),
 }
 
 /* Secondary text. Only on the page background, never on a panel. */
-.muted-line {
+.muted-line,
+#offline-line,
+#storage-note {
   color: var(--muted);
   background: var(--page);
+}
+
+#offline-line,
+#storage-note {
+  font-size: 0.875rem;
 }
 
 /* ---------- Focus ---------- */
@@ -225,32 +269,39 @@ button,
   gap: var(--gap);
   min-width: var(--target);
   padding: 0.5rem 1.25rem;
-  border: 0;
+  border: var(--ring) solid var(--panel);
   border-radius: var(--pill);
   color: var(--text);
   background: var(--panel);
   font: inherit;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: var(--lh-tight);
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
 }
 
-button[hidden],
-.pill[hidden] {
-  display: none;
-}
-
+/* A button that cannot be pressed is a hollow ring. */
 button:disabled {
+  color: var(--muted);
+  background: var(--page);
   cursor: default;
 }
 
 /* Primary actions: ink pill, paper text. */
 .btn-primary,
 #btn-start,
-#btn-go {
+#btn-go,
+#dialog-cancel {
+  border-color: var(--selected-bg);
   color: var(--selected-fg);
   background: var(--selected-bg);
+}
+
+#btn-go:disabled {
+  border-color: var(--panel);
+  color: var(--muted);
+  background: var(--page);
 }
 
 /* ---------- Fields ---------- */
@@ -262,7 +313,7 @@ select,
 textarea {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 0;
+  border: var(--ring) solid var(--panel);
   border-radius: var(--radius);
   color: var(--text);
   background: var(--panel);
@@ -270,17 +321,15 @@ textarea {
   font-weight: 400;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--gap) * 2);
+/* Locked while on air: hollow, the value stays easy to read. */
+input[type='text']:disabled,
+select:disabled {
+  background: var(--page);
+  opacity: 1;
 }
 
-form > div,
-fieldset > div {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap);
+[aria-invalid='true'] {
+  border-color: var(--text);
 }
 
 fieldset {
@@ -294,10 +343,43 @@ legend {
   padding: 0 0 var(--gap);
 }
 
+/* A label, its control and the notes under it. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Two fields side by side when there is room, one under the other when not. */
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: calc(var(--gap) * 2);
+  align-items: start;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 2);
+}
+
+#place-left {
+  font-size: 0.875rem;
+}
+
 .field-error {
+  padding-left: 0.75rem;
+  border-left: var(--ring) solid var(--text);
   color: var(--text);
   background: var(--page);
   font-weight: 600;
+}
+
+.location-note,
+.location-message {
+  display: block;
 }
 
 /* ---------- Header ---------- */
@@ -315,6 +397,7 @@ legend {
 .site-header .app-name {
   min-height: var(--target);
   display: inline-flex;
+  flex: none;
   align-items: center;
   color: var(--text);
   background: var(--page);
@@ -323,11 +406,14 @@ legend {
   text-decoration: none;
 }
 
-/* Page_Switch: a pill track, a round knob, both labels in text. */
+/* Page_Switch: a pill track, a knob that sits inside it, both labels in text.
+   On a phone it takes the rest of the first row. */
 .page-switch {
   position: relative;
   display: grid;
+  flex: 1 1 11rem;
   grid-template-columns: 1fr 1fr;
+  max-width: 20rem;
   border-radius: var(--pill);
   color: var(--text);
   background: var(--panel);
@@ -336,10 +422,10 @@ legend {
 .page-switch::before {
   content: '';
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 50%;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
   border-radius: var(--pill);
   background: var(--selected-bg);
 }
@@ -354,12 +440,13 @@ legend {
   align-items: center;
   justify-content: center;
   min-width: var(--target);
-  padding: 0.25rem 1rem;
+  padding: 0.25rem 0.75rem;
   border-radius: var(--pill);
   color: var(--text);
   background: transparent;
   font-size: 0.875rem;
   font-weight: 600;
+  text-align: center;
   text-decoration: none;
 }
 
@@ -395,19 +482,26 @@ legend {
 
 #language-switch button[aria-pressed='true'],
 #language-switch [aria-current='true'] {
+  border-color: var(--selected-bg);
   color: var(--selected-fg);
   background: var(--selected-bg);
 }
 
 /* ---------- Event picker ---------- */
 
+/* Three across, a bank of nine. Falls to two, then one, when a third of the
+   row is narrower than a tile can be (a very small phone, or large text). */
 .tile-grid,
 #event-picker {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(6.5rem, calc((100% - 2 * var(--gap)) / 3 - 1px)), 1fr)
+  );
   gap: var(--gap);
 }
 
+/* The name is a word to read, not a small label: no capitals, no spacing. */
 .tile {
   position: relative;
   display: flex;
@@ -416,12 +510,15 @@ legend {
   justify-content: center;
   gap: var(--gap);
   min-width: var(--target);
-  min-height: 6rem;
-  padding: 0.75rem 0.5rem;
+  min-height: 5.75rem;
+  padding: 0.75rem 0.25rem;
+  border: var(--ring) solid var(--panel);
   border-radius: var(--radius);
   color: var(--text);
   background: var(--panel);
   text-align: center;
+  text-transform: none;
+  letter-spacing: 0;
   cursor: pointer;
 }
 
@@ -448,14 +545,16 @@ legend {
 }
 
 .tile .tile-name {
+  max-width: 100%;
   font-size: 0.875rem;
   font-weight: 600;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
+  line-height: var(--lh-tight);
+  hyphens: auto;
 }
 
 /* Selected tile: inverted, plus a round dot in the corner. */
 .tile:has(input:checked) {
+  border-color: var(--selected-bg);
   color: var(--selected-fg);
   background: var(--selected-bg);
 }
@@ -463,8 +562,8 @@ legend {
 .tile:has(input:checked)::after {
   content: '';
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: 0.375rem;
+  right: 0.375rem;
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 50%;
@@ -474,6 +573,20 @@ legend {
 .tile:has(input:focus-visible) {
   outline: var(--ring) solid var(--text);
   outline-offset: 3px;
+}
+
+/* Locked while on air: the tiles not chosen go hollow, the chosen one stays. */
+fieldset:disabled .tile {
+  cursor: default;
+}
+
+fieldset:disabled .tile input {
+  cursor: default;
+}
+
+fieldset:disabled .tile:not(:has(input:checked)) {
+  color: var(--text);
+  background: var(--page);
 }
 
 /* ---------- Lamps ---------- */
@@ -488,17 +601,14 @@ legend {
   background: var(--orange);
 }
 
-.lamp[hidden] {
-  display: none;
-}
-
 .lamp[data-lit='false'] {
   background: transparent;
 }
 
-/* ---------- Test toggle: a pill switch with a lamp and a text state ---------- */
+/* ---------- Switches: a pill track and a knob ---------- */
 
-#f-test {
+/* Off: a hollow knob on the left. On: a solid knob on the right. */
+input[type='checkbox'] {
   position: relative;
   flex: none;
   appearance: none;
@@ -506,33 +616,41 @@ legend {
   width: 4.5rem;
   height: var(--target);
   margin: 0;
+  border: var(--ring) solid var(--panel);
   border-radius: var(--pill);
   color: var(--text);
   background: var(--panel);
   cursor: pointer;
 }
 
-#f-test::before {
+input[type='checkbox']::before {
   content: '';
   position: absolute;
-  top: 6px;
-  bottom: 6px;
-  left: 6px;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
   width: calc(var(--target) - 12px);
+  border: var(--ring) solid var(--text);
   border-radius: 50%;
-  background: var(--text);
+  background: transparent;
 }
 
-#f-test:checked::before {
+input[type='checkbox']:checked::before {
+  background: var(--text);
   transform: translateX(calc(4.5rem - var(--target)));
 }
 
-/* The lamp sits at the open end of the track and shows only when on. */
+input[type='checkbox']:disabled {
+  background: var(--page);
+  cursor: default;
+}
+
+/* Test toggle: the lamp sits at the open end of the track and shows only when on. */
 #f-test::after {
   content: '';
   position: absolute;
   top: 50%;
-  right: 0.75rem;
+  left: 0.375rem;
   width: 1rem;
   height: 1rem;
   margin-top: -0.5rem;
@@ -544,47 +662,147 @@ legend {
 
 #f-test:checked::after {
   display: block;
-  right: auto;
-  left: 0.5rem;
 }
 
 #test-state {
   font-weight: 600;
 }
 
-/* A row that holds a switch, its state text and its label. */
-.switch-row,
-form > div:has(> input[role='switch']),
-form > div:has(> #f-repeat) {
-  flex-direction: row;
+/* A switch and the words beside it. The words are a sentence, so they are set as text. */
+.switch-row {
+  display: flex;
   align-items: center;
   gap: calc(var(--gap) * 2);
   min-height: var(--target);
 }
 
-#f-repeat {
-  width: var(--target);
-  height: var(--target);
-  margin: 0;
-  accent-color: var(--text);
+.switch-row + .switch-row {
+  margin-top: var(--gap);
 }
 
-/* ---------- Go on air, action bar ---------- */
+.switch-row label {
+  font-size: 1.125rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  cursor: pointer;
+}
 
-#btn-go {
-  width: 100%;
-  min-height: 4.5rem;
+.switch-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ---------- Broadcast: the console ---------- */
+
+.broadcast-page main {
+  padding-bottom: var(--gap);
+}
+
+.console {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 3);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 2.5);
+  min-width: 0;
+}
+
+/* On a phone the deck has no box of its own: its parts follow the fields in
+   one column, and the bar sticks to the screen bottom over the whole form. */
+.deck {
+  display: contents;
+}
+
+.deck-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* Nothing to show yet: no heading over an empty space. */
+.deck-block:has(> #say-first:empty),
+.deck-block:has(> #preview:empty) {
+  display: none;
+}
+
+/* The line the sender reads aloud. A bar marks it as speech. */
+#say-first {
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 6px solid var(--text);
   font-size: 1.25rem;
+  font-weight: 600;
 }
+
+/* The preview is drawn as the card a listener gets. */
+#preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding: 1rem;
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--panel);
+  overflow-wrap: anywhere;
+}
+
+.draft-label {
+  align-self: flex-start;
+  padding: 0.125rem 0.75rem;
+  border: var(--ring) solid var(--text);
+  border-radius: var(--pill);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ---------- Messages ---------- */
+
+#banner,
+#error-line {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+  font-weight: 600;
+}
+
+.real-notice {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+  font-weight: 600;
+}
+
+#countdown,
+.go-note,
+#unreadable-line {
+  font-weight: 600;
+}
+
+#banner:empty,
+#status:empty,
+#countdown:empty,
+#repeat-info:empty,
+#go-onair:empty,
+#say-first:empty,
+#preview:empty,
+#place-left:empty,
+#offline-line:empty {
+  display: none;
+}
+
+/* ---------- Action bars ---------- */
 
 .action-bar {
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
   display: flex;
   flex-wrap: wrap;
   gap: var(--gap);
-  padding: var(--gap) 0;
   color: var(--text);
   background: var(--page);
 }
@@ -594,8 +812,76 @@ form > div:has(> #f-repeat) {
   flex: 1 1 auto;
 }
 
-.action-bar > #btn-go {
-  flex: 1 1 100%;
+/* Go on air: the largest control on the page. Its height is set in px so that
+   at a large text size the bar does not take the screen away from the form. */
+#btn-go {
+  width: 100%;
+  min-height: max(72px, var(--target));
+  font-size: 1.25rem;
+}
+
+/* Broadcast: the bar is the last thing in the form and sticks to the screen
+   bottom, so it never sits on top of the part of the form being filled in for
+   longer than a scroll, and at the end of the page it covers nothing. */
+.broadcast-page .action-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  padding: var(--gap) 0 calc(var(--gap) * 2);
+}
+
+.broadcast-page .action-bar > * {
+  grid-column: 1 / -1;
+}
+
+/* Messages come above the buttons, whatever their place in the markup. */
+.broadcast-page .action-bar > #banner {
+  order: -4;
+}
+
+.broadcast-page .action-bar > .real-notice {
+  order: -3;
+}
+
+.broadcast-page .action-bar > .go-note {
+  order: -2;
+}
+
+.broadcast-page .action-bar > #countdown {
+  order: -1;
+}
+
+/* Stop is drawn only when there is something to stop. Then it is the solid
+   pill, and Go on air becomes the hollow sign that says the sound is playing. */
+.broadcast-page #btn-stop:disabled {
+  display: none;
+}
+
+.broadcast-page #btn-stop:enabled {
+  border-color: var(--selected-bg);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+.broadcast-page .action-bar:has(#btn-stop:enabled) > #btn-go {
+  grid-column: 1;
+}
+
+.broadcast-page .action-bar > #btn-stop {
+  grid-column: 2;
+  font-size: 1.25rem;
+}
+
+#btn-go:has(#go-lamp:not([hidden])) {
+  border-color: var(--text);
+  color: var(--text);
+  background: var(--page);
+}
+
+#btn-go:has(#go-lamp:not([hidden])) > [data-text='btn.go'] {
+  display: none;
 }
 
 /* Listen: the bar is fixed to the screen bottom. main keeps room for it. */
@@ -606,9 +892,24 @@ form > div:has(> #f-repeat) {
   bottom: 0;
   left: 0;
   z-index: 10;
-  max-width: 40rem;
+  max-width: var(--measure);
   margin: 0 auto;
-  padding: var(--gap) 1rem;
+  padding: var(--gap) var(--gutter) calc(var(--gap) * 2);
+}
+
+.listen-page .action-bar > button {
+  min-height: max(56px, var(--target));
+}
+
+/* ---------- Listen: the receiver ---------- */
+
+.receiver {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: var(--gap);
+  padding: calc(var(--gap) * 2) 0 0;
+  text-align: center;
 }
 
 /* ---------- Speaker grille ---------- */
@@ -618,15 +919,15 @@ form > div:has(> #f-repeat) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--gap) 0;
+  width: 100%;
   color: var(--text);
   background: var(--page);
 }
 
 .grille {
   position: relative;
-  width: 12rem;
-  max-width: 100%;
+  width: 14rem;
+  max-width: 64%;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   background: var(--panel);
@@ -645,9 +946,35 @@ form > div:has(> #f-repeat) {
   background: var(--text);
 }
 
-/* Compact strip once an alert card exists. */
+/* ---------- Listening lamp and state line ---------- */
+
+.state-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+  min-height: var(--target);
+  font-weight: 600;
+}
+
+#state-line {
+  min-width: 0;
+}
+
+/* Compact strip once an alert card exists: the grille and the state share one
+   row, so the newest card starts high on the screen. */
+[data-has-cards] .receiver {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap) calc(var(--gap) * 2);
+  padding: 0;
+  text-align: left;
+}
+
 [data-has-cards] #level-meter,
 [data-has-cards] .speaker-grille {
+  width: auto;
   height: 4rem;
   padding: 0;
 }
@@ -655,17 +982,32 @@ form > div:has(> #f-repeat) {
 [data-has-cards] .grille {
   width: 4rem;
   height: 4rem;
+  max-width: none;
 }
 
-/* ---------- Listening lamp and state line ---------- */
+/* The state takes the rest of the row, or a row of its own when text is large. */
+[data-has-cards] .state-line {
+  flex: 1 1 12rem;
+  justify-content: flex-start;
+  min-width: 0;
+}
 
-#state-line,
-.state-line {
+[data-has-cards] .receiver > div:not(#level-meter):not(.state-line) {
+  flex: 1 1 100%;
+}
+
+/* ---------- Listen: settings and notes under the history ---------- */
+
+.listen-foot {
   display: flex;
-  align-items: center;
-  gap: var(--gap);
-  min-height: var(--target);
-  font-weight: 600;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--gap) * 2);
+  padding-top: calc(var(--gap) * 2);
+}
+
+.listen-foot > fieldset {
+  width: 100%;
 }
 
 /* ---------- Alert cards ---------- */
@@ -677,6 +1019,11 @@ form > div:has(> #f-repeat) {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* With no card yet the list takes no room, so it must not add a second gap. */
+#cards:empty {
+  margin-top: calc(var(--gap) * -2);
 }
 
 .card {
@@ -725,9 +1072,10 @@ form > div:has(> #f-repeat) {
 }
 
 .event-name {
+  min-width: 0;
   font-size: 2rem;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: var(--lh-tight);
 }
 
 .expired-label {
@@ -744,15 +1092,30 @@ form > div:has(> #f-repeat) {
   font-size: 1.125rem;
 }
 
+/* One column on a phone, two when the card is wide. */
 .card-rows {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: calc(var(--gap) / 2) calc(var(--gap) * 3);
   margin: 0;
 }
 
 .card-sent {
   font-weight: 600;
+}
+
+.card-voice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap);
+}
+
+/* On a panel a panel-coloured pill would vanish, so the card's button is ink. */
+.card-voice button {
+  border-color: var(--selected-bg);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
 }
 
 /* TEST banner: a full-width straight orange bar, ink text, first in the card. */
@@ -782,6 +1145,33 @@ form > div:has(> #f-repeat) {
   border-radius: 50%;
 }
 
+/* ---------- The TEST question ---------- */
+
+/* On a phone the sheet sits at the bottom, where the thumb is. */
+dialog {
+  width: calc(100% - 2 * var(--gutter));
+  max-width: 28rem;
+  margin: auto auto var(--gutter);
+  padding: 1.5rem var(--gutter);
+  border: var(--ring) solid var(--text);
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--page);
+  font-weight: 600;
+}
+
+dialog::backdrop {
+  background: var(--panel);
+  opacity: 0.9;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  margin-top: 1.5rem;
+}
+
 /* ---------- Arrival flash: a 24px frame with an orange and an ink band ---------- */
 
 .arrival-flash {
@@ -809,6 +1199,111 @@ form > div:has(> #f-repeat) {
   pointer-events: none;
 }
 
+/* ---------- Room to spare: tablets ---------- */
+
+@media (min-width: 40em) {
+  dialog {
+    margin: auto;
+    padding: 1.5rem;
+  }
+}
+
+/* ---------- Room to spare: two columns ---------- */
+
+@media (min-width: 60em) {
+  .listen-page[data-has-cards],
+  .broadcast-page {
+    --measure: 72rem;
+  }
+
+  /* Broadcast: the form on the left, what goes on air on the right. The deck
+     stays in view while the form scrolls, and scrolls inside itself on a short
+     screen, with the bar pinned to its foot. */
+  .broadcast-page .console {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    column-gap: 3rem;
+    align-items: start;
+  }
+
+  .broadcast-page .deck {
+    position: sticky;
+    top: var(--gap);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--gap) * 2);
+    max-height: calc(100vh - var(--gap) * 2);
+    margin: -6px;
+    padding: 6px 6px 0;
+    overflow-y: auto;
+  }
+
+  .broadcast-page .deck > .action-bar {
+    margin-top: auto;
+  }
+
+  /* Listen: the bar leaves the screen edge and sits under the state line. */
+  .listen-page .action-bar {
+    position: static;
+    width: 100%;
+    max-width: 22rem;
+    margin: 0;
+    padding: var(--gap) 0 0;
+  }
+
+  /* Listen with a history: the receiver on the left, the cards on the right.
+     The last row is the one that stretches, so the left column stays tight. */
+  .listen-page[data-has-cards] main {
+    display: grid;
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    gap: 0 3rem;
+    align-items: start;
+  }
+
+  .listen-page[data-has-cards] #error-line {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin-bottom: calc(var(--gap) * 2);
+  }
+
+  .listen-page[data-has-cards] .receiver {
+    display: grid;
+    grid-column: 1;
+    grid-row: 2;
+    gap: var(--gap);
+    padding: calc(var(--gap) * 2) 0 0;
+    text-align: center;
+  }
+
+  .listen-page[data-has-cards] #level-meter {
+    width: 100%;
+    height: auto;
+  }
+
+  .listen-page[data-has-cards] .grille {
+    width: 12rem;
+    height: auto;
+    max-width: 64%;
+  }
+
+  .listen-page[data-has-cards] .state-line {
+    justify-content: center;
+  }
+
+  .listen-page[data-has-cards] #cards {
+    grid-column: 2;
+    grid-row: 2 / -1;
+    padding-top: calc(var(--gap) * 2);
+  }
+
+  .listen-page[data-has-cards] .listen-foot {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: 2rem;
+  }
+}
+
 /* ---------- Motion: only here, only on a change the user caused, nothing that repeats ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
@@ -816,14 +1311,14 @@ form > div:has(> #f-repeat) {
     transition: transform 150ms ease-out;
   }
 
-  #f-test::before {
-    transition: transform 150ms ease-out;
+  input[type='checkbox']::before {
+    transition: transform 150ms ease-out, background-color 150ms ease-out;
   }
 
   button,
   .pill,
   .tile {
-    transition: background-color 150ms ease-out, color 150ms ease-out;
+    transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
   }
 }
 

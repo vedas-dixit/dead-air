@@ -9,39 +9,43 @@
   <body class="listen-page">
     <!--look:header-->
     <main>
-      <h1 data-text="listen.page.heading"></h1>
+      <h1 class="sr-only" data-text="listen.page.heading"></h1>
 
       <div id="error-line" role="alert"></div>
 
-      <div class="state-line">
-        <span id="listening-lamp" class="lamp" hidden></span>
-        <div id="state-line" aria-live="polite"></div>
+      <!-- The receiver: grille, lamp and state, then the notes that belong to listening. -->
+      <div class="receiver">
+        <div id="level-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label=""></div>
+        <div class="state-line">
+          <span id="listening-lamp" class="lamp" hidden></span>
+          <div id="state-line" aria-live="polite"></div>
+        </div>
+        <div id="unreadable-line" aria-live="polite"></div>
+        <div id="keep-open-line"></div>
+        <div id="history-unkept-line"></div>
+        <div class="action-bar">
+          <button id="btn-start" type="button" data-text="listen.btn.start"></button>
+          <button id="btn-stop" type="button" data-text="listen.btn.stop"></button>
+        </div>
       </div>
-      <div id="level-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label=""></div>
-      <div id="unreadable-line" aria-live="polite"></div>
-      <div id="keep-open-line"></div>
-      <div id="history-unkept-line"></div>
 
-      <section>
-        <div id="cards"></div>
+      <div id="cards"></div>
+
+      <div class="listen-foot">
         <fieldset id="alert-settings">
           <legend data-text="listen.settings.heading"></legend>
-          <div>
+          <div class="switch-row">
             <input id="set-flash" type="checkbox" role="switch" />
             <label for="set-flash" data-text="listen.setting.flash"></label>
           </div>
-          <div id="set-vibrate-row">
+          <div id="set-vibrate-row" class="switch-row">
             <input id="set-vibrate" type="checkbox" role="switch" />
             <label for="set-vibrate" data-text="listen.setting.vibrate"></label>
           </div>
         </fieldset>
         <button id="btn-clear" type="button" data-text="listen.btn.clear"></button>
-      </section>
-      <div id="offline-line" aria-live="polite"></div>
-      <p id="storage-note" aria-live="polite" hidden></p>
-      <div class="action-bar">
-        <button id="btn-start" type="button" data-text="listen.btn.start"></button>
-        <button id="btn-stop" type="button" data-text="listen.btn.stop"></button>
+        <div id="offline-line" aria-live="polite"></div>
+        <p id="storage-note" aria-live="polite" hidden></p>
       </div>
     </main>
     <script type="module" src="./main.ts"></script>

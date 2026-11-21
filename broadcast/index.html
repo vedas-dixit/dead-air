@@ -6,119 +6,135 @@
     <title data-text="page.title">Dead Air</title>
     <link rel="manifest" href="%BASE_URL%manifest.webmanifest" />
   </head>
-  <body>
+  <body class="broadcast-page">
     <!--look:header-->
     <main>
-      <h1 data-text="page.heading"></h1>
+      <h1 class="sr-only" data-text="page.heading"></h1>
 
-      <div id="banner" role="alert"></div>
-      <div id="status" aria-live="polite"></div>
+      <form id="alert-form" class="console" autocomplete="off" novalidate>
+        <!-- What the alert says. -->
+        <div class="fields">
+          <h2 class="sr-only" data-text="form.heading"></h2>
 
-      <form id="alert-form" autocomplete="off" novalidate>
-        <h2 data-text="form.heading"></h2>
+          <fieldset id="f-event" class="tile-grid">
+            <legend data-text="form.event"></legend>
+          </fieldset>
 
-        <fieldset id="f-event" class="tile-grid">
-          <legend data-text="form.event"></legend>
-        </fieldset>
-
-        <div>
-          <label for="f-urgency" data-text="form.urgency"></label>
-          <select id="f-urgency" name="urgency">
-            <option value="" selected data-text="form.choose"></option>
-          </select>
-        </div>
-
-        <div>
-          <label for="f-severity" data-text="form.severity"></label>
-          <select id="f-severity" name="severity">
-            <option value="" selected data-text="form.choose"></option>
-          </select>
-        </div>
-
-        <div>
-          <label for="f-action" data-text="form.action"></label>
-          <select id="f-action" name="action">
-            <option value="" selected data-text="form.choose"></option>
-          </select>
-        </div>
-
-        <div>
-          <label for="f-place" data-text="form.placeName"></label>
-          <input id="f-place" name="placeName" type="text" autocomplete="off" aria-describedby="place-left" />
-          <span id="place-left"></span>
-        </div>
-
-        <fieldset>
-          <legend data-text="form.mapPoint"></legend>
-          <div>
-            <label for="f-lat" data-text="form.latitude"></label>
-            <input id="f-lat" name="latitude" type="text" inputmode="decimal" autocomplete="off" />
+          <div class="field-row">
+            <div class="field">
+              <label for="f-urgency" data-text="form.urgency"></label>
+              <select id="f-urgency" name="urgency">
+                <option value="" selected data-text="form.choose"></option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-severity" data-text="form.severity"></label>
+              <select id="f-severity" name="severity">
+                <option value="" selected data-text="form.choose"></option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label for="f-lon" data-text="form.longitude"></label>
-            <input id="f-lon" name="longitude" type="text" inputmode="decimal" autocomplete="off" />
+
+          <div class="field-row">
+            <div class="field">
+              <label for="f-action" data-text="form.action"></label>
+              <select id="f-action" name="action">
+                <option value="" selected data-text="form.choose"></option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-place" data-text="form.placeName"></label>
+              <input id="f-place" name="placeName" type="text" autocomplete="off" aria-describedby="place-left" />
+              <span id="place-left"></span>
+            </div>
           </div>
-          <button id="btn-location" type="button" data-text="btn.location"></button>
-        </fieldset>
 
-        <div>
-          <label for="f-valid" data-text="form.validFor"></label>
-          <select id="f-valid" name="validFor">
-            <option value="m15"></option>
-            <option value="m30"></option>
-            <option value="h1" selected></option>
-            <option value="h2"></option>
-            <option value="h3"></option>
-            <option value="h6"></option>
-            <option value="h12"></option>
-            <option value="h24"></option>
-            <option value="h48"></option>
-          </select>
+          <fieldset class="map-point">
+            <legend data-text="form.mapPoint"></legend>
+            <div class="stack">
+              <div class="field-row">
+                <div class="field">
+                  <label for="f-lat" data-text="form.latitude"></label>
+                  <input id="f-lat" name="latitude" type="text" inputmode="decimal" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-lon" data-text="form.longitude"></label>
+                  <input id="f-lon" name="longitude" type="text" inputmode="decimal" autocomplete="off" />
+                </div>
+              </div>
+              <button id="btn-location" type="button" data-text="btn.location"></button>
+            </div>
+          </fieldset>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="f-valid" data-text="form.validFor"></label>
+              <select id="f-valid" name="validFor">
+                <option value="m15"></option>
+                <option value="m30"></option>
+                <option value="h1" selected></option>
+                <option value="h2"></option>
+                <option value="h3"></option>
+                <option value="h6"></option>
+                <option value="h12"></option>
+                <option value="h24"></option>
+                <option value="h48"></option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-station" data-text="form.stationId"></label>
+              <input id="f-station" name="stationId" type="text" inputmode="numeric" autocomplete="off" />
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label for="f-station" data-text="form.stationId"></label>
-          <input id="f-station" name="stationId" type="text" inputmode="numeric" autocomplete="off" />
-        </div>
+        <!-- How it goes out: the two switches, the line to read, the preview, then the transmitter bar. -->
+        <div class="deck">
+          <div class="switches">
+            <div class="switch-row">
+              <input id="f-test" name="test" type="checkbox" role="switch" checked />
+              <div class="switch-text">
+                <span id="test-state"></span>
+                <label for="f-test" data-text="switch.test"></label>
+              </div>
+            </div>
+            <div class="switch-row">
+              <input id="f-repeat" name="repeat" type="checkbox" />
+              <label for="f-repeat" data-text="switch.repeat"></label>
+            </div>
+          </div>
 
-        <div>
-          <input id="f-test" name="test" type="checkbox" role="switch" checked />
-          <span id="test-state"></span>
-          <label for="f-test" data-text="switch.test"></label>
-        </div>
+          <section class="deck-block">
+            <h2 class="label" data-text="sayfirst.heading"></h2>
+            <div id="say-first"></div>
+          </section>
 
-        <div>
-          <input id="f-repeat" name="repeat" type="checkbox" />
-          <label for="f-repeat" data-text="switch.repeat"></label>
-        </div>
+          <section class="deck-block">
+            <h2 class="label" data-text="preview.heading"></h2>
+            <div id="preview"></div>
+          </section>
 
-        <div class="action-bar">
-          <button id="btn-go" type="button">
-            <span id="go-lamp" class="lamp" aria-hidden="true" hidden></span>
-            <span data-text="btn.go"></span>
-            <span id="go-onair"></span>
-          </button>
-          <button id="btn-stop" type="button" data-text="btn.stop"></button>
           <button id="btn-save" type="button" data-text="btn.save"></button>
+
+          <div id="status" aria-live="polite"></div>
+          <div id="repeat-info"></div>
+
+          <div class="action-bar">
+            <div id="banner" role="alert"></div>
+            <div id="countdown"></div>
+            <button id="btn-go" type="button">
+              <span id="go-lamp" class="lamp" aria-hidden="true" hidden></span>
+              <span data-text="btn.go"></span>
+              <span id="go-onair"></span>
+            </button>
+            <button id="btn-stop" type="button" data-text="btn.stop"></button>
+          </div>
         </div>
       </form>
 
-      <div id="countdown"></div>
-      <div id="repeat-info"></div>
-
-      <section>
-        <h2 data-text="preview.heading"></h2>
-        <div id="preview"></div>
-      </section>
-
-      <section>
-        <h2 data-text="sayfirst.heading"></h2>
-        <div id="say-first"></div>
-      </section>
-
       <dialog id="dialog-test">
         <p data-text="test.dialog"></p>
-        <form method="dialog">
+        <form method="dialog" class="dialog-actions">
           <button id="dialog-confirm" type="button" data-text="test.dialog.confirm"></button>
           <button id="dialog-cancel" type="button" data-text="test.dialog.cancel"></button>
         </form>
