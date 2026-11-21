@@ -26,7 +26,7 @@ describe('arrival constants', () => {
 
 interface FakeEl {
   attrs: Record<string, string>;
-  style: { cssText: string; boxShadow: string };
+  className: string;
   textContent: string;
   children: FakeEl[];
   removed: boolean;
@@ -38,7 +38,7 @@ interface FakeEl {
 function makeEl(parent?: FakeEl[]): FakeEl {
   const el: FakeEl = {
     attrs: {},
-    style: { cssText: '', boxShadow: '' },
+    className: '',
     textContent: '',
     children: [],
     removed: false,
@@ -102,14 +102,34 @@ describe('web arrival flash layer', () => {
     vi.unstubAllGlobals();
   });
 
-  it('layer is aria-hidden, pointer-events none and has no text', () => {
+  it('layer is div.arrival-flash[aria-hidden=true] with one arrival-flash-inner child, no text, no inline style', () => {
     const t = setup({});
     t.arrival.signal('current');
     expect(t.layers).toHaveLength(1);
-    expect(t.layers[0].attrs['aria-hidden']).toBe('true');
-    expect(t.layers[0].style.cssText).toContain('pointer-events:none');
-    expect(t.layers[0].textContent).toBe('');
-    expect(t.layers[0].children).toHaveLength(0);
+    const layer = t.layers[0];
+    expect(layer.className).toBe('arrival-flash');
+    expect(layer.attrs['aria-hidden']).toBe('true');
+    expect(layer.attrs.style).toBeUndefined();
+    expect(layer.textContent).toBe('');
+    expect(layer.children).toHaveLength(1);
+    expect(layer.children[0].className).toBe('arrival-flash-inner');
+    expect(layer.children[0].attrs.style).toBeUndefined();
+    expect(layer.children[0].textContent).toBe('');
+  });
+
+  it('each pulse sets data-on "true" then "false"', () => {
+    const t = setup({});
+    t.arrival.signal('current');
+    const layer = t.layers[0];
+    const seen: (string | undefined)[] = [];
+    vi.advanceTimersByTime(0);
+    for (const p of FLASH_PLAN) {
+      seen.push(layer.attrs['data-on']); // pulse start has fired
+      vi.advanceTimersByTime(p.onMs);
+      seen.push(layer.attrs['data-on']); // pulse end has fired
+      vi.advanceTimersByTime(p.offMs);
+    }
+    expect(seen).toEqual(FLASH_PLAN.flatMap(() => ['true', 'false']));
   });
 
   it('removes the layer after the flash plan ends', () => {

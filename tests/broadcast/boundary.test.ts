@@ -30,7 +30,7 @@ function mentions(text: string, name: string): boolean {
 const broadcastFiles = listTs('src/broadcast');
 const domFiles = broadcastFiles.filter((f) => f.startsWith('src/broadcast/dom/'));
 const pureBroadcast = broadcastFiles.filter((f) => !f.startsWith('src/broadcast/dom/'));
-const sharedFiles = listTs('src/shared');
+const sharedFiles = listTs('src/shared').filter((f) => !f.startsWith('src/shared/ui/dom/'));
 const pageFiles = [...broadcastFiles, 'broadcast/main.ts'];
 const allFiles = [...broadcastFiles, ...sharedFiles, 'broadcast/main.ts'];
 

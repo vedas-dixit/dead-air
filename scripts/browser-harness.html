@@ -107,6 +107,15 @@
           el.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
+        // The event control is a fieldset of radio tiles: check the tile and fire change.
+        function pickEvent(value) {
+          var radio = $('f-event').querySelector('input[type="radio"][name="event"][value="' + value + '"]');
+          if (!radio) throw new Error('event picker has no radio ' + value);
+          radio.checked = true;
+          radio.dispatchEvent(new Event('input', { bubbles: true }));
+          radio.dispatchEvent(new Event('change', { bubbles: true }));
+          if (!radio.checked) throw new Error('radio ' + value + ' did not stay checked');
+        }
         async function run() {
           await new Promise(function (resolve, reject) {
             frame.addEventListener('load', function onLoad() {
@@ -138,7 +147,7 @@
           if (!$('f-test').checked) throw new Error('TEST switch is not on at the start');
 
           // Fill the form with DOM events. The test switch stays on.
-          setValue('f-event', 'flood');
+          pickEvent('flood');
           setValue('f-urgency', 'immediate');
           setValue('f-severity', 'severe');
           setValue('f-action', 'evacuate');

@@ -36,22 +36,28 @@ if (chrome === null) {
   process.exit(2);
 }
 
-// 1. Build without BASE_PATH into the temp folder.
+// 1. Full build without BASE_PATH into the temp folder.
 const env = { ...process.env };
 delete env.BASE_PATH;
 delete env.NODE_ENV;
 for (const key of Object.keys(env)) if (key.startsWith('VITEST')) delete env[key];
 console.log(`Building into ${path.relative(root, outDir)} ...`);
-const build = spawnSync(
-  process.execPath,
+// Same steps as `npm run build`, aimed at the temp folder: vite build, offline post-build (sw.js,
+// offline-files.json), offline check, sound-test copy.
+const steps = [
   [path.join(root, 'node_modules', 'vite', 'bin', 'vite.js'), 'build', '--outDir', outDir, '--emptyOutDir'],
-  { cwd: root, env, encoding: 'utf8' },
-);
-if (build.status !== 0) {
-  console.log('NOT RUN: vite build failed.');
-  console.log(build.stdout);
-  console.log(build.stderr);
-  process.exit(2);
+  [path.join(root, 'build', 'offline-postbuild.mjs'), outDir],
+  [path.join(root, 'build', 'offline-check.mjs'), outDir],
+  [path.join(root, 'build', 'copy-sound-test.mjs'), outDir],
+];
+for (const step of steps) {
+  const build = spawnSync(process.execPath, step, { cwd: root, env, encoding: 'utf8' });
+  if (build.status !== 0) {
+    console.log(`NOT RUN: ${path.basename(step[0])} failed.`);
+    console.log(build.stdout);
+    console.log(build.stderr);
+    process.exit(2);
+  }
 }
 mkdirSync(outDir, { recursive: true });
 copyFileSync(path.join(root, 'scripts', 'browser-harness.html'), path.join(outDir, 'harness.html'));

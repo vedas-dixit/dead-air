@@ -4,7 +4,7 @@
 
 This is spec 3 of 10. It builds the Broadcast page at `/broadcast/`. A sender fills in a short form. The page builds the alert bytes with the message code, turns them into sound with the sound link, checks the sound by decoding it in memory, and plays it. The page also shows a sentence for the sender to read aloud, a preview of what a listener will see, a repeat option and a WAV download.
 
-The page uses the existing `src/message-code/` and `src/sound-link/` modules through their `index.ts` files and does not edit them. The UI is plain. The page is plain TypeScript with direct DOM code and no UI framework (no React, Vue or similar), as the tech rules state. The Teletext look comes in spec 8. All user-facing text is English and lives in one strings file so other languages can be added in spec 7.
+The page uses the existing `src/message-code/` and `src/sound-link/` modules through their `index.ts` files and does not edit them. The UI is plain. The page is plain TypeScript with direct DOM code and no UI framework (no React, Vue or similar), as the tech rules state. The radio look comes in spec 8. All user-facing text is English and lives in one strings file so other languages can be added in spec 7.
 
 Files this spec owns: `broadcast/`, its own strings file, and helpers in a shared folder (`src/shared/`) that the Listen page will also use. This spec does not edit `src/message-code/`, `src/sound-link/`, `listen/` or `sound-test/`. A needed change to any of them is raised as a question first.
 
@@ -14,7 +14,7 @@ Facts taken from the existing code, which these requirements rely on:
 - `encodePlaceName` is not exported. The page measures the place name by calling `encodeAlert` and reading the length of the result: place name bytes = message length minus 21.
 - `bytesToAudio` accepts 21 to 40 bytes. `loadSoundLink` loads a fresh copy of ggwave on every call. A link allows one encoder and 3 listeners.
 - The ggwave 0.4.0 file embeds its engine as base64 data and contains `require("fs")` and `require("path")` calls in a Node-only branch. It makes no network request for a `.wasm` file. The project has no DOM library in `tsconfig.json` yet, and no React.
-- Promise 6 needs an icon for every alert type. This spec shows text labels only. Icons arrive with the Teletext look (spec 8), so promise 6 is not met on this page until then. This spec records the gap in a report file (Requirement 15).
+- Promise 6 needs an icon for every alert type. This spec shows text labels only. Icons arrive with the radio look (spec 8), so promise 6 is not met on this page until then. This spec records the gap in a report file (Requirement 15).
 
 ## Glossary
 
@@ -333,7 +333,7 @@ All questions are answered. This section is a record of the owner's decisions.
 1. **No map point (Requirements 3, 8 and 15).** Answered: the map point is optional. Both boxes empty means null and null, sent with the No_Map_Point_Flag. 0, 0 is never used for "no point".
 2. **Counter and duplicates (Requirements 4, 7 and 12).** Answered: each Go_On_Air press is a new alert with a new sent minute and the next counter. Repeats keep identical bytes. Save as sound file reuses the last Broadcast if the Form is unchanged, otherwise it builds a new one with a new counter.
 3. **Valid-for list (Requirement 1).** Answered: the nine fixed choices stay.
-4. **Icons and promise 6 (Requirement 8).** Answered: text labels only now. Icons arrive with the Teletext look in spec 8. The gap is recorded in the Report_File.
+4. **Icons and promise 6 (Requirement 8).** Answered: text labels only now. Icons arrive with the radio look in spec 8. The gap is recorded in the Report_File.
 5. **Hidden tab and wake lock (Requirement 11).** Answered: yes, use the screen wake lock while repeat is running, with the notice and the catch-up round as fallback.
 6. **Sample rate mismatch (Requirement 10).** Answered: the Link loads once at 48000 before any tap. If the Audio_Context runs at another rate, play the same samples as an `AudioBuffer` at the Link rate and let the browser resample.
 7. **React (Tech rules).** Answered: no. Plain TypeScript with direct DOM code and no UI framework.

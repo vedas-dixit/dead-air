@@ -3,29 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-text="listen.page.title"></title>
+    <title data-text="listen.page.title">Dead Air</title>
     <link rel="manifest" href="%BASE_URL%manifest.webmanifest" />
   </head>
-  <body>
+  <body class="listen-page">
+    <!--look:header-->
     <main>
       <h1 data-text="listen.page.heading"></h1>
-      <nav>
-        <a id="link-home" href="%BASE_URL%" data-text="nav.home"></a>
-        <a id="link-broadcast" href="%BASE_URL%broadcast/" data-text="listen.nav.broadcast"></a>
-      </nav>
-      <div id="language-switch" role="group"></div>
 
       <div id="error-line" role="alert"></div>
 
-      <div>
-        <button id="btn-start" type="button" data-text="listen.btn.start"></button>
-        <button id="btn-stop" type="button" data-text="listen.btn.stop"></button>
+      <div class="state-line">
+        <span id="listening-lamp" class="lamp" hidden></span>
+        <div id="state-line" aria-live="polite"></div>
       </div>
-
-      <div id="state-line" aria-live="polite"></div>
-      <div id="level-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="">
-        <div id="level-bar"></div>
-      </div>
+      <div id="level-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label=""></div>
       <div id="unreadable-line" aria-live="polite"></div>
       <div id="keep-open-line"></div>
       <div id="history-unkept-line"></div>
@@ -47,6 +39,10 @@
       </section>
       <div id="offline-line" aria-live="polite"></div>
       <p id="storage-note" aria-live="polite" hidden></p>
+      <div class="action-bar">
+        <button id="btn-start" type="button" data-text="listen.btn.start"></button>
+        <button id="btn-stop" type="button" data-text="listen.btn.stop"></button>
+      </div>
     </main>
     <script type="module" src="./main.ts"></script>
   </body>

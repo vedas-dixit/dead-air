@@ -4,6 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { headerHtml } from '../../src/shared/ui/header';
 import { ELEMENT_IDS } from '../../src/broadcast/dom/ids';
 import { ACTIONS, EVENT_TYPES, SEVERITIES, URGENCIES } from '../../src/message-code/index';
 import { stringsEn } from '../../src/broadcast/strings.en';
@@ -121,7 +122,11 @@ describe('strings', () => {
 // Task 14.7 appends describe('markup') below this line.
 
 describe('markup', () => {
-  const html = readFileSync(join(process.cwd(), 'broadcast', 'index.html'), 'utf8');
+  // The build fills the header marker with the shared header, which owns the language switch and the links.
+  const html = readFileSync(join(process.cwd(), 'broadcast', 'index.html'), 'utf8').replace(
+    '<!--look:header-->',
+    headerHtml({ page: 'broadcast', base: '/' }),
+  );
 
   function countMatches(re: RegExp): number {
     return [...html.matchAll(re)].length;
@@ -149,10 +154,10 @@ describe('markup', () => {
     expect(html).not.toMatch(/<img[\s>/]/i);
   });
 
-  it('has exactly two links, both relative: ../ and ../listen/', () => {
+  it('has exactly three links, all from the shared header: home, Listen and Broadcast', () => {
     const hrefs = [...html.matchAll(/<a\s[^>]*href="([^"]*)"/g)].map((m) => m[1]);
-    expect(countMatches(/<a[\s>]/g)).toBe(2);
-    expect(hrefs).toEqual(['../', '../listen/']);
+    expect(countMatches(/<a[\s>]/g)).toBe(3);
+    expect(hrefs).toEqual(['/', '/listen/', '/broadcast/']);
   });
 
   it('has no inline event handler attributes', () => {

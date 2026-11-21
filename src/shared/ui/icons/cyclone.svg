@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+  <path fill="currentColor" fill-rule="evenodd" d="M24 3a21 21 0 1 0 0 42a21 21 0 1 0 0-42ZM24 8a16 16 0 1 1 0 32a16 16 0 1 1 0-32ZM24 13a11 11 0 1 0 0 22a11 11 0 1 0 0-22ZM24 18a6 6 0 1 1 0 12a6 6 0 1 1 0-12Z"/>
+  <circle cx="24" cy="24" r="3" fill="#FF5D1F"/>
+</svg>

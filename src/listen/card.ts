@@ -1,7 +1,7 @@
 // Listen page card view: turns one history entry into plain text for the DOM layer.
 // Checks expiry on every call. Text only, no HTML. No DOM, no browser API.
 import { checkExpiry } from '../message-code/index';
-import type { ExpiryStatus } from '../message-code/index';
+import type { ExpiryStatus, EventType } from '../message-code/index';
 import { unitsToDegreesText } from '../broadcast/map-point';
 import type { Strings } from '../broadcast/strings.types';
 import { labelFor } from '../shared/labels';
@@ -29,6 +29,8 @@ export interface CardView {
   clockLine: string | null; // listen.clock.line for sent-in-future or clock-unknown
   heardText: string;
   sentence: string | null; // buildAlertSentence text, null when it fails
+  event: EventType; // event type, for the icon tile and name
+  expiredLabel: string | null; // card.expired text when expired, else null
 }
 
 export function buildCardView(
@@ -81,5 +83,7 @@ export function buildCardView(
         ? text(strings, 'listen.heard.one')
         : text(strings, 'listen.heard.many', { n: entry.heardCount }),
     sentence: built.ok ? built.text : null,
+    event: alert.event,
+    expiredLabel: expired ? text(strings, 'card.expired') : null,
   };
 }

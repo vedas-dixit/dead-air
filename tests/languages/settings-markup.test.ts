@@ -3,10 +3,12 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { headerHtml } from '../../src/shared/ui/header';
 import { utf8Decode } from '../../src/message-code/utf8';
 
 const bytes = new Uint8Array(readFileSync(join(process.cwd(), 'listen', 'index.html')));
-const html = utf8Decode(bytes) ?? '';
+// The build fills the header marker; the language switch comes from the shared header.
+const html = (utf8Decode(bytes) ?? '').replace('<!--look:header-->', headerHtml({ page: 'listen', base: '/' }));
 
 function indexOfId(id: string): number {
   return html.search(new RegExp(`\\sid="${id}"`));

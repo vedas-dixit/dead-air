@@ -13,6 +13,7 @@
     "check:browser": "node scripts/check-broadcast-browser.mjs"
   },
   "devDependencies": {
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@modelcontextprotocol/sdk": "1.32.2",
     "fast-check": "4.10.3",
     "typescript": "7.0.2",

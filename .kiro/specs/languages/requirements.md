@@ -19,7 +19,7 @@ Facts taken from the existing code that these requirements rely on:
 - `src/shared/time.ts` writes times as `YYYY-MM-DD HH:MM UTC+hh:mm` with Latin digits. This spec keeps that format in both languages.
 - `tests/broadcast/strings.test.ts` checks the English file only.
 - The offline build (`build/offline-check.mjs`) fails the build when an app page asks for anything from another site, and the offline File_List has a 2 MiB limit.
-- Promise 6 asks for an icon and text for every alert type in every shipped language. The alert-type icons belong to the Teletext look (spec 8). This spec delivers the text and records the icon gap in the Report_File (Requirement 14).
+- Promise 6 asks for an icon and text for every alert type in every shipped language. The alert-type icons belong to the radio look (spec 8). This spec delivers the text and records the icon gap in the Report_File (Requirement 14).
 
 Files this spec owns: a new `src/languages/` folder, a new `tests/languages/` folder, `docs/translation-check.md`, the Reviewed_List, the generator script for that file under `tools/`, and `.kiro/specs/languages/`.
 
@@ -316,7 +316,7 @@ Files owned by other specs that this spec needs to edit. The user (project owner
 2. THE tests of the existing specs SHALL pass after this spec's changes with only edits that the owner of each spec has approved.
 3. THE message code, the sound link and the sound output SHALL be unchanged by this spec.
 4. THE Report_File SHALL list each file of another spec that this spec edited, with the approval.
-5. THE Report_File SHALL record that the alert-type icons of promise 6 are not part of this spec and are due in the Teletext look (spec 8), and SHALL record that Hindi and English are the only Languages that have text for every alert type.
+5. THE Report_File SHALL record that the alert-type icons of promise 6 are not part of this spec and are due in the radio look (spec 8), and SHALL record that Hindi and English are the only Languages that have text for every alert type.
 6. THE Report_File SHALL record the result of a manual check on a real phone for Hindi display, voice availability with the network off, the hidden Read_Aloud_Button when no voice exists, the flash and the vibration, or SHALL state that no phone was available and which parts remain unchecked.
 7. THE language property tests SHALL include: the Alert_Sentence contains all four labels and the Place_Name for every valid `Alert` and Language; the Spoken_Text contains the test sentence for every test alert and the `expired` label for every expired alert; Device_Language choice matches the primary subtag for any list of language tags; the Language_Store round trip returns the Language_Code that was written; and the Spoken_Age boundaries of Requirement 8, criterion 17 (1 minute 59 seconds and 2 minutes, 119 and 120 minutes, 47 hours 59 minutes and 48 hours) for every Language, with n always 2 or more in minutes, hours and days.
 8. THE Language_Store round trip SHALL return the Language_Code that was written for every Language_Code in the Language_Catalog, and SHALL return no Language for any other string.

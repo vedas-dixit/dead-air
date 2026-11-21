@@ -4,6 +4,11 @@
 import type { Strings, TextKey } from '../../broadcast/strings.types';
 import type { SpeechUi } from '../../languages/speech';
 import type { CardView } from '../card';
+import { cardLayout } from '../card-layout';
+import { cardLook } from '../../shared/ui/card-look';
+import { eventFace } from '../../shared/ui/event-face';
+import { iconNode } from '../../shared/ui/dom/icon-node';
+import type { EventType } from '../../message-code/index';
 import type { ListenUi } from '../ui-state';
 import { ELEMENT_IDS } from './ids';
 
@@ -16,6 +21,13 @@ export interface ListenRenderer {
   /** The two alert-setting switches, for mount.ts. */
   readonly flashSwitch: HTMLInputElement;
   readonly vibrateSwitch: HTMLInputElement;
+}
+
+/** Optional parts. `level` draws the meter (the grille); without it only the ARIA attributes are set. */
+export interface ListenRendererOptions {
+  level?: { push(percent: number): void };
+  /** Builds the icon node of an event. Defaults to the bundled icon. */
+  icon?: (event: EventType) => Node;
 }
 
 function byId<T extends HTMLElement>(doc: Document, id: string): T {
@@ -63,64 +75,93 @@ function cardSignature(card: CardView): string {
     card.presentedAsCurrent,
     card.greyedOut,
     card.expiredWord,
+    card.event,
+    card.expiredLabel,
     card.clockLine,
     card.heardText,
   ]);
 }
 
-function buildCardElement(doc: Document, card: CardView, strings: Strings): HTMLElement {
+function buildCardElement(
+  doc: Document,
+  card: CardView,
+  strings: Strings,
+  icon: (event: EventType) => Node,
+): HTMLElement {
   const article = doc.createElement('article');
   article.setAttribute('data-key', card.key);
   article.setAttribute('data-status', card.expiryStatus);
-  article.classList.add('card');
-  if (card.presentedAsCurrent) article.classList.add('card-live');
-  if (card.greyedOut) article.classList.add('card-grey');
-
-  if (card.testBanner !== null) {
-    const banner = doc.createElement('div');
-    banner.className = 'test-banner';
-    banner.setAttribute('role', 'status');
-    banner.textContent = card.testBanner;
-    article.appendChild(banner);
+  article.className = cardLook(card).classes.join(' ');
+  const face = eventFace(card.event, strings);
+  const text = (tag: string, className: string, value: string): HTMLElement => {
+    const node = doc.createElement(tag);
+    node.className = className;
+    node.textContent = value;
+    return node;
+  };
+  let head: HTMLElement | null = null;
+  for (const part of cardLayout(card)) {
+    switch (part) {
+      case 'test-banner': {
+        const banner = text('div', 'test-banner', card.testBanner ?? '');
+        banner.setAttribute('role', 'status');
+        article.appendChild(banner);
+        break;
+      }
+      case 'icon-tile': {
+        head = doc.createElement('div');
+        head.className = 'card-head';
+        const tile = doc.createElement('span');
+        tile.className = 'icon-tile';
+        tile.appendChild(icon(card.event));
+        head.appendChild(tile);
+        article.appendChild(head);
+        break;
+      }
+      case 'event-name': {
+        const name = text('span', 'event-name', face.name);
+        name.setAttribute('dir', 'auto');
+        (head ?? article).appendChild(name);
+        break;
+      }
+      case 'expired-label':
+        article.appendChild(text('div', 'expired-label', card.expiredLabel ?? ''));
+        break;
+      case 'sentence': {
+        const line = text('div', 'sentence', card.sentence ?? '');
+        line.setAttribute('dir', 'auto');
+        article.appendChild(line);
+        break;
+      }
+      case 'rows': {
+        const rows = doc.createElement('div');
+        rows.className = 'card-rows';
+        for (const r of card.rows) {
+          const div = doc.createElement('div');
+          if (r.dirAuto === true) div.setAttribute('dir', 'auto');
+          const label = doc.createElement('strong');
+          label.textContent = r.label;
+          const val = doc.createElement('span');
+          val.textContent = r.value;
+          div.append(label, doc.createTextNode(': '), val);
+          rows.appendChild(div);
+        }
+        article.appendChild(rows);
+        break;
+      }
+      case 'sent':
+        article.appendChild(text('div', 'card-sent', card.sentText));
+        break;
+      case 'clock':
+        article.appendChild(text('div', 'card-clock', card.clockLine ?? ''));
+        break;
+      case 'heard':
+        article.appendChild(text('div', 'card-heard', card.heardText));
+        break;
+      case 'voice':
+        break; // built below
+    }
   }
-  if (card.expiredWord !== null) {
-    const word = doc.createElement('div');
-    word.className = 'card-expired';
-    word.textContent = card.expiredWord;
-    article.appendChild(word);
-  }
-  if (card.sentence !== null) {
-    const line = doc.createElement('div');
-    line.className = 'card-sentence';
-    line.setAttribute('dir', 'auto');
-    line.textContent = card.sentence;
-    article.appendChild(line);
-  }
-  for (const r of card.rows) {
-    const div = doc.createElement('div');
-    if (r.dirAuto === true) div.setAttribute('dir', 'auto');
-    const label = doc.createElement('strong');
-    label.textContent = r.label;
-    const val = doc.createElement('span');
-    val.textContent = r.value;
-    div.append(label, doc.createTextNode(': '), val);
-    article.appendChild(div);
-  }
-  const sent = doc.createElement('div');
-  sent.className = 'card-sent';
-  sent.textContent = card.sentText;
-  article.appendChild(sent);
-  if (card.clockLine !== null) {
-    const clock = doc.createElement('div');
-    clock.className = 'card-clock';
-    clock.textContent = card.clockLine;
-    article.appendChild(clock);
-  }
-  const heard = doc.createElement('div');
-  heard.className = 'card-heard';
-  heard.textContent = card.heardText;
-  article.appendChild(heard);
-
   const voice = doc.createElement('div');
   voice.className = 'card-voice';
   voice.setAttribute('data-read', card.key);
@@ -162,7 +203,13 @@ function applySpeech(node: HTMLElement, ui: SpeechUi | null, strings: Strings): 
   setText(button, label);
 }
 
-export function createListenRenderer(doc: Document, initialStrings: Strings): ListenRenderer {
+export function createListenRenderer(
+  doc: Document,
+  initialStrings: Strings,
+  options: ListenRendererOptions = {},
+): ListenRenderer {
+  const level = options.level;
+  const icon = options.icon ?? iconNode;
   let strings = initialStrings;
   bindStaticText(doc, strings);
 
@@ -173,7 +220,7 @@ export function createListenRenderer(doc: Document, initialStrings: Strings): Li
     clear: byId<HTMLButtonElement>(doc, ELEMENT_IDS.clear),
     stateLine: byId<HTMLElement>(doc, ELEMENT_IDS.stateLine),
     meter: byId<HTMLElement>(doc, ELEMENT_IDS.levelMeter),
-    bar: byId<HTMLElement>(doc, ELEMENT_IDS.levelBar),
+    lamp: byId<HTMLElement>(doc, ELEMENT_IDS.listeningLamp),
     unreadable: byId<HTMLElement>(doc, ELEMENT_IDS.unreadableLine),
     keepOpen: byId<HTMLElement>(doc, ELEMENT_IDS.keepOpenLine),
     unkept: byId<HTMLElement>(doc, ELEMENT_IDS.historyUnkeptLine),
@@ -202,8 +249,8 @@ export function createListenRenderer(doc: Document, initialStrings: Strings): Li
     if (p === null) return;
     if (p.percent !== lastPercent) {
       lastPercent = p.percent;
-      el.meter.setAttribute('aria-valuenow', String(p.percent));
-      el.bar.style.width = `${p.percent}%`;
+      if (level !== undefined) level.push(p.percent);
+      else el.meter.setAttribute('aria-valuenow', String(p.percent));
     }
     if (p.label !== lastLabel) {
       lastLabel = p.label;
@@ -228,7 +275,7 @@ export function createListenRenderer(doc: Document, initialStrings: Strings): Li
     for (let i = 0; i < cards.length; i++) {
       const sig = cardSignature(cards[i]);
       const old = shown[i];
-      next.push(old !== undefined && old.sig === sig ? old : { sig, node: buildCardElement(doc, cards[i], strings) });
+      next.push(old !== undefined && old.sig === sig ? old : { sig, node: buildCardElement(doc, cards[i], strings, icon) });
       if (!(old !== undefined && old.sig === sig)) applySpeech(next[i].node, lastSpeech, strings);
     }
     // Touch the container only when a node differs at its position.
@@ -246,6 +293,7 @@ export function createListenRenderer(doc: Document, initialStrings: Strings): Li
     el.stateLine.setAttribute('data-state', ui.state);
 
     // Start is shown unless listening. Taps while starting are ignored by the controller.
+    setHidden(el.lamp, !ui.running);
     setHidden(el.start, ui.running);
     setHidden(el.stop, !ui.running);
     setDisabled(el.clear, !ui.clearEnabled);
@@ -258,6 +306,12 @@ export function createListenRenderer(doc: Document, initialStrings: Strings): Li
     setLine(el.unkept, ui.historyUnkeptText);
 
     renderCards(ui.cards);
+    // The page-level flag lets the stylesheet shrink the grille once a card exists.
+    const page = doc.body as HTMLElement | null | undefined;
+    if (page) {
+      if (ui.cards.length > 0) page.setAttribute('data-has-cards', '');
+      else page.removeAttribute('data-has-cards');
+    }
   }
 
   function setStrings(nextStrings: Strings): void {

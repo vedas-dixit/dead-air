@@ -1,7 +1,6 @@
 import type { ExpiryStatus } from '../../message-code/types';
 import {
   decideArrival,
-  FLASH_FRAME_PX,
   FLASH_PLAN,
   VIBRATE_PATTERN_MS,
   type AlertSettings,
@@ -21,7 +20,6 @@ export interface ArrivalEnv {
 }
 
 const WINDOW_MS = 1000;
-const FRAME_SHADOW = `inset 0 0 0 ${FLASH_FRAME_PX}px #ffffff`;
 
 function defaultEnv(): ArrivalEnv {
   return {
@@ -51,9 +49,11 @@ export function createWebArrival(getSettings: () => AlertSettings, env?: Partial
     if (!planned) return;
     starts.push(...planned);
     const el = e.doc.createElement('div');
+    el.className = 'arrival-flash';
     el.setAttribute('aria-hidden', 'true');
-    el.style.cssText =
-      'position:fixed;top:0;right:0;bottom:0;left:0;pointer-events:none;background:transparent;z-index:2147483647;box-shadow:none;';
+    const inner = e.doc.createElement('div');
+    inner.className = 'arrival-flash-inner';
+    el.appendChild(inner);
     e.doc.body.appendChild(el);
     layer = el;
     const mine = el;
@@ -62,12 +62,12 @@ export function createWebArrival(getSettings: () => AlertSettings, env?: Partial
       const startAt = at;
       timers.push(
         setTimeout(() => {
-          mine.style.boxShadow = FRAME_SHADOW;
+          mine.setAttribute('data-on', 'true');
         }, startAt),
       );
       timers.push(
         setTimeout(() => {
-          mine.style.boxShadow = 'none';
+          mine.setAttribute('data-on', 'false');
           if (i === FLASH_PLAN.length - 1 && layer === mine) removeLayer();
         }, startAt + pulse.onMs),
       );

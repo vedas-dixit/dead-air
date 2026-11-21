@@ -2,15 +2,13 @@
 // render.ts and mount.ts look elements up by these names.
 
 export const ELEMENT_IDS = {
-  linkHome: 'link-home',
-  linkBroadcast: 'link-broadcast',
   errorLine: 'error-line',
   start: 'btn-start',
   stop: 'btn-stop',
   clear: 'btn-clear',
   stateLine: 'state-line',
   levelMeter: 'level-meter',
-  levelBar: 'level-bar',
+  listeningLamp: 'listening-lamp',
   unreadableLine: 'unreadable-line',
   keepOpenLine: 'keep-open-line',
   historyUnkeptLine: 'history-unkept-line',

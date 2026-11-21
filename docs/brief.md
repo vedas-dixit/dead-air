@@ -1,6 +1,6 @@
 What Dead Air is
 Dead Air is a web app that sends short emergency alerts from one device to nearby phones through sound. It is for moments when the internet and mobile networks are down but a speaker, a radio or a loudspeaker still works.
-It is a hackathon entry for Kiroween 2026, in the Resurrection category. The old tech it brings back is the modem screech, Teletext, and data broadcast over radio.
+It is a hackathon entry for Kiroween 2026, in the Resurrection category. The old tech it revives is the modem screech and data broadcast over radio. It wears the face of a mid-century radio.
 Who uses it
 • Sender: a control room, a community radio host, or a volunteer with a megaphone. They fill in a short form and press "Go on air". The device plays a few seconds of sound.
 • Listener: anyone nearby with a phone that has opened the app once before. The phone hears the sound and shows the alert in the listener's language.
@@ -8,7 +8,7 @@ The pieces
 1.  Message code. Turns an alert into 21 to 40 bytes and back. Pure functions with no browser APIs, so it is easy to test.
 2.  Listen page. Microphone in, decode, check, show. Keeps a history. When nothing has been heard, it says "Dead air. Last heard N min ago."
 3.  Broadcast page. The form, a "say this first" line for the sender to read aloud, Go on air, repeat every minute, save as a sound file.
-4.  The look. Teletext style. This comes later. Keep the UI plain until the look spec.
+4.  The look: the radio look. This comes later. Keep the UI plain until the look spec.
 Site map
 One site with three addresses. The front page and the app are separated by path, not by domain.
 • / is the front page: the cover photo, the story in a few lines, buttons to the two app pages, and how to try it. It is a normal web page and it is built last.
@@ -54,7 +54,7 @@ Sound rules
 • Never assume a transmission arrived intact. Everything received goes through the check.
 • ggwave carries about 8 to 16 bytes per second, so payloads stay small.
 How we work
-• One spec at a time, in this order: message code, sound link, Broadcast page, Listen page, Kiro's ears, offline, languages and read aloud, the Teletext look, pass it on, front page.
+• One spec at a time, in this order: message code, sound link, Broadcast page, Listen page, Kiro's ears, offline, languages and read aloud, the radio look, pass it on, front page.
 • Requirements first, then design, then tasks. Wait for approval between phases.
 • The message code gets property tests for three things: any alert survives encode then decode, any single changed byte is caught, and an expired alert is never reported as current.
 • Stay inside the current spec. Ask before changing files that belong to another one.

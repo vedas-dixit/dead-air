@@ -51,6 +51,8 @@ class FakeNode {
   }
 }
 
+// The real icon builder needs a browser document, so the node test supplies a fake node.
+const FAKE_ICON = { icon: () => new FakeNode('svg') as unknown as Node };
 function makeDoc() {
   const byId = new Map<string, FakeNode>();
   for (const id of ALL_ELEMENT_IDS) byId.set(id, new FakeNode('div'));
@@ -82,6 +84,8 @@ function card(key: string): CardView {
     clockLine: null,
     heardText: 'Heard',
     sentence: null,
+    event: 'flood',
+    expiredLabel: null,
   } as CardView;
 }
 
@@ -108,7 +112,7 @@ function speech(p: Partial<SpeechUi>): SpeechUi {
 
 function setup(keys: string[], strings = stringsEn) {
   const { doc, cards } = makeDoc();
-  const r = createListenRenderer(doc as unknown as Document, strings);
+  const r = createListenRenderer(doc as unknown as Document, strings, FAKE_ICON);
   r.render(listenUi(keys.map(card)));
   const voiceOf = (i: number) => {
     const voice = cards.children[i].querySelector('[data-read]') as FakeNode;
@@ -186,7 +190,7 @@ describe('card voice block', () => {
 
   it('a card built after renderSpeech gets the current voice block', () => {
     const { doc, cards } = makeDoc();
-    const r = createListenRenderer(doc as unknown as Document, stringsEn);
+    const r = createListenRenderer(doc as unknown as Document, stringsEn, FAKE_ICON);
     r.renderSpeech(speech({ block: 'missing' }));
     r.render(listenUi([card('late')]));
     const voice = cards.children[0].querySelector('[data-read]') as FakeNode;

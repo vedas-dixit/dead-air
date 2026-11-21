@@ -708,7 +708,7 @@ These are notes for later specs. This spec changes none of their files.
 
 - Broadcast (spec 3): sets `latitude: null` and `longitude: null` when the sender leaves the map point empty. It never fills in 0, 0 for an empty field.
 - Listen (spec 4): must show "no map point" when latitude and longitude are null, and must never show 0, 0 for that case. A real 0, 0 arrives as two numbers and is shown as a point.
-- The Teletext look spec (spec 8) uses the same rule for any place a map point is drawn.
+- The radio look spec (spec 8) uses the same rule for any place a map point is drawn.
 
 ### Not covered by automated tests
 

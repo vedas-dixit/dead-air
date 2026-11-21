@@ -1,6 +1,8 @@
 // Seeded white noise at a stated signal-to-noise ratio. Never calls Math.random.
 export const TAIL_SILENCE_SECONDS = 2;
 export const MAX_SEED = 4294967295;
+/** Signals with a lower RMS than this are treated as silent: noise scaled from them underflows. */
+export const MIN_SIGNAL_RMS = 1e-30;
 
 /** Returns a new array: the samples followed by 2 s of zeros. */
 export function appendTailSilence(samples: Float32Array, sampleRate: number): Float32Array {
@@ -44,7 +46,7 @@ export function addWhiteNoise(
   let sumSq = 0;
   for (let i = 0; i < n; i++) sumSq += clip[i]! * clip[i]!;
   const signalRms = n > 0 ? Math.sqrt(sumSq / n) : 0;
-  if (!(signalRms > 0)) return { ok: false, reason: 'silent-signal' };
+  if (!(signalRms >= MIN_SIGNAL_RMS)) return { ok: false, reason: 'silent-signal' };
   const targetNoiseRms = signalRms * Math.pow(10, -snrDb / 20);
 
   const rng = mulberry32(seed);

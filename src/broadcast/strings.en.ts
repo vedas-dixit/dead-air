@@ -245,5 +245,11 @@ export const stringsEn: Strings = {
     'listen.settings.heading': 'Alert signals',
     'listen.setting.flash': 'Flash the screen when a new alert arrives',
     'listen.setting.vibrate': 'Vibrate when a new alert arrives',
+    'nav.switch.listen': 'Listen',
+    'nav.switch.broadcast': 'Broadcast',
+    'switch.test.on': 'TEST ON',
+    'switch.test.off': 'TEST OFF',
+    'btn.onair': 'On air',
+    'card.expired': 'No longer current',
   },
 };

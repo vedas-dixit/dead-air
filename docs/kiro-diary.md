@@ -165,3 +165,56 @@ Problems found and fixed:
 Not verified yet:
 - Kiro connecting to the server in a real session. The protocol is tested with a child process, not with Kiro.
 - Anything on a real speaker, a real phone or in a real room.
+
+## Spec 7: Languages and read aloud (21 Nov 2026)
+
+Files: `.kiro/specs/languages/` (requirements, design, tasks and `report.md`). Code: `src/languages/` (logic, no DOM) and `src/languages/dom/` (browser adapters). Tests: `tests/languages/`. Review files: `docs/translation-check.md` and `docs/translation-reviewed.json`. It was added in one commit, `7a2a3f9`, "Add languages: Hindi text, language switch, read aloud, flash and vibrate alerts, translation check". The message code, the sound link and `tools/ears/` were not edited.
+
+What was built:
+- **Hindi next to English** on `/listen` and `/broadcast`. The alert on the air is only codes, so each language builds its words and sentence from the codes with its own `Strings` object. Hindi is in `src/languages/strings.hi.ts`, and `src/languages/catalog.ts` lists every language. A third language needs one file and one catalog entry.
+- **Language choice:** the stored value first, then the phone's language, then English. A visible language switch stays at the top of both pages, and the choice is kept.
+- **Alert sentence** built from the codes by one function. The Listen card, the Say_First line and the spoken text share it, so they agree word for word where they share a part. Place names stay exactly as sent.
+- **Read aloud** with an on-device voice only, through `speechSynthesis`. A card shows the button, a "voice missing" line, or nothing. The spoken text says how long ago the alert was sent, and says so when it is expired.
+- **Flash and vibrate** on a new alert, each with its own switch below the alert cards. The flash is 2 pulses in 400 ms and never exceeds 3 in any second. The vibration pattern is 400, 150, 400 ms.
+- **Translation check file,** `docs/translation-check.md`, made by `npm run translations:check` from the two language files and `docs/translation-reviewed.json`. The reviewed list starts empty, so every Hindi entry is marked `needs human check`.
+
+Decisions:
+- **Hindi is imported statically in the catalog,** so it lands in the page's own JavaScript and the offline check covers it. No extra request.
+- **One new sentence key, `sentence.main`,** plus the existing `sayfirst.test` and `sayfirst.place` templates. `say-first.ts` stays unchanged.
+- **A language change re-labels stored Broadcast messages** by looking up the old label in the old language and writing the matching label of the new one. The language test checks that labels are unique within a label group, because the lookup depends on it.
+- **A single value decides the voice block on a card,** so the help line and the "voice missing" line can never show together.
+- **The flash gate drops a flash that would break the limit** and does not queue it.
+- **No web font is added.** A page with `lang="hi"` uses the phone's own Devanagari font.
+
+Edits to files of other specs, each approved by the owner (full list in `report.md`): Broadcast strings, controller, render, mount, ids and `broadcast/index.html`; Listen controller, card, render, mount, ids and `listen/index.html`; `src/offline/dom/offline-line.ts`; the five tsconfig files; `package.json`; `.gitignore`. Approved during the run: `src/offline/allow-list.ts` and `src/offline/check.ts` (the ggwave fetch entries now match any identifier through a pattern), `.kiro/specs/offline/report.md`, `tests/offline/boundary.test.ts`, and exclude entries in `tsconfig.json` for three tests that need DOM types.
+
+Problems and gaps recorded in `report.md`:
+- **No real-device check has been run.** The five checks (Hindi display, read aloud with the network off, button hidden with no voice, flash and vibration, Android with no Hindi voice) are written as steps and marked "not run".
+- **Chrome on Android can list a voice whose language is not installed** and then speak with an English voice. The page cannot detect this.
+- **Every Hindi entry needs a native speaker's check.**
+- **The product name is spelled two ways in Hindi.** `listen.page.title` is in Devanagari and `page.title` keeps Latin "Dead Air". A reviewer should decide which to keep.
+- **Alert-type icons (promise 6) are not part of this spec** and are due in the radio look (spec 8).
+- **Only Hindi and English have text for every alert type.**
+- **The translation-check heading is fixed as "Hindi translation check".**
+- **`tests/ears/noise.property.test.ts`, Property 5, failed once in a full run.** It is not a file of this spec and passed in the recorded run.
+
+Final test count (task 21.1 run): 130 test files and 1364 tests passed, none failed (`npx vitest --run`). All 11 `tsc` projects passed, `npm run build` passed (11 saved files, 244377 bytes, limit 2097152) and `npm run translations:check` reported the files up to date.
+
+## Spec 8: The radio look
+
+Files: `.kiro/specs/radio-look/` (requirements, design and tasks).
+
+The look was first called the Teletext look. It is now the radio look. Teletext is a style and not a revived technology. Dead Air revives the modem screech and data broadcast over radio, and the product wears the face of a mid-century radio, so the name of the look now says that. Earlier specs still say "Teletext look" in their finished text, and those lines were left as written.
+
+What was built:
+- **Nine event icons,** one for each alert type, so every alert type has an icon (promise 6). The Broadcast page, which had text labels only, now shows them too.
+- **IBM Plex Mono, bundled** with the app and saved for offline use. No font is loaded from another site (promise 4).
+- **A speaker grille** on the pages.
+- **A header with a page switch** between Listen and Broadcast.
+
+Fixes of leftovers from the Languages spec (spec 7):
+- **Read aloud tap.** Fixed.
+- **Latin "Dead Air" name.** The Hindi Listen page title was in Devanagari while the other title kept Latin "Dead Air". The name is now Latin in both, and the Listen page title is static text.
+- **Flaky noise test.** `tests/ears/noise.property.test.ts`, Property 5, had failed once in a full run during spec 7. The fix is in `tools/ears/noise.ts`.
+
+Note: `tests/look/wording.test.ts` skips this file, so the word "Teletext" is allowed here.

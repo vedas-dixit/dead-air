@@ -2,10 +2,10 @@
 import { describe, it, expect } from 'vitest';
 import fc from 'fast-check';
 import { readFileSync } from 'node:fs';
-import { TAIL_SILENCE_SECONDS, addWhiteNoise, appendTailSilence, deriveTrySeed } from '../../tools/ears/noise';
+import { MIN_SIGNAL_RMS, TAIL_SILENCE_SECONDS, addWhiteNoise, appendTailSilence, deriveTrySeed } from '../../tools/ears/noise';
 import { samplesArb } from './generators';
 
-const nonSilentArb = samplesArb.filter((s) => s.some((v) => v !== 0)).filter((s) => s.length >= 100 || true);
+const nonSilentArb = samplesArb.filter((s) => rmsOf(s, s.length) >= MIN_SIGNAL_RMS);
 const seedArb = fc.integer({ min: 0, max: 4294967295 });
 const dbArb = fc.double({ min: -60, max: 60, noNaN: true });
 
@@ -91,6 +91,7 @@ describe('addWhiteNoise', () => {
 
   it('examples: silent signals, high SNR, tail silence, no Math.random', () => {
     expect(addWhiteNoise(new Float32Array(0), 0, 0, 1)).toEqual({ ok: false, reason: 'silent-signal' });
+    expect(addWhiteNoise(new Float32Array([1.4e-45]), 1, 0, 1)).toEqual({ ok: false, reason: 'silent-signal' });
     const zeros = addWhiteNoise(new Float32Array(100), 100, 0, 1);
     expect(zeros).toEqual({ ok: false, reason: 'silent-signal' });
     expect('samples' in zeros).toBe(false);

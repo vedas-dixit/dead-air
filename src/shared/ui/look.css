@@ -1,0 +1,835 @@
+/* Dead Air: the radio look. One stylesheet for all pages.
+   Colours are named once per theme in the token blocks below. Nothing else in
+   this file names a colour value. Orange and olive are shapes, never text. */
+
+/* ---------- Fonts (IBM Plex Mono, Latin subset, this site only) ---------- */
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../../../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('../../../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ---------- Theme tokens: light ---------- */
+
+:root {
+  --page: #eae4d9;
+  --text: #111111;
+  --panel: #c6beac;
+  --panel-expired: #ddd6c8;
+  --selected-bg: #111111;
+  --selected-fg: #eae4d9;
+  --orange: #ff5d1f;
+  --olive: #5b6e53;
+  --muted: #6b6558;
+
+  --target: max(48px, 3rem);
+  --gap: 8px;
+  --radius: 12px;
+  --pill: 999px;
+  --ring: 3px;
+  --font-latin: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-system: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Devanagari', 'Noto Sans', sans-serif;
+
+  color-scheme: light;
+}
+
+/* ---------- Theme tokens: night ---------- */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #111111;
+    --text: #eae4d9;
+    --panel: #26231f;
+    --panel-expired: #1b1916;
+    --selected-bg: #eae4d9;
+    --selected-fg: #111111;
+    --orange: #ff5d1f;
+    --olive: #8fa586;
+    --muted: #b9b2a2;
+
+    color-scheme: dark;
+  }
+
+  /* Text on orange is always the dark ink, which is the page colour at night. */
+  .test-banner,
+  .surface-banner {
+    color: var(--page);
+  }
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--page);
+  font-family: var(--font-latin);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--gap) 1rem 6rem;
+  color: var(--text);
+  background: var(--page);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--text);
+  background: var(--page);
+}
+
+/* Hindi uses the phone's own font. No capitals, no letter spacing. */
+:lang(hi) {
+  font-family: var(--font-system);
+  line-height: 1.6;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Small labels: capitals with wide spacing. */
+label,
+legend,
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+:lang(hi) label,
+:lang(hi) legend,
+:lang(hi) .label,
+label:lang(hi),
+legend:lang(hi),
+.label:lang(hi) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ---------- Surfaces: colour and background always set together ---------- */
+
+.surface-page {
+  color: var(--text);
+  background: var(--page);
+}
+
+.surface-panel {
+  color: var(--text);
+  background: var(--panel);
+}
+
+.surface-expired {
+  color: var(--text);
+  background: var(--panel-expired);
+}
+
+.surface-selected {
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+.surface-banner {
+  color: var(--text);
+  background: var(--orange);
+}
+
+/* Secondary text. Only on the page background, never on a panel. */
+.muted-line {
+  color: var(--muted);
+  background: var(--page);
+}
+
+/* ---------- Focus ---------- */
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: var(--ring) solid var(--text);
+  outline-offset: 3px;
+}
+
+/* ---------- Targets ---------- */
+
+button,
+select,
+input[type='text'],
+input[type='search'],
+input[type='number'],
+.pill,
+.page-switch a {
+  min-height: var(--target);
+}
+
+/* ---------- Buttons and pills ---------- */
+
+button,
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+  min-width: var(--target);
+  padding: 0.5rem 1.25rem;
+  border: 0;
+  border-radius: var(--pill);
+  color: var(--text);
+  background: var(--panel);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button[hidden],
+.pill[hidden] {
+  display: none;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+/* Primary actions: ink pill, paper text. */
+.btn-primary,
+#btn-start,
+#btn-go {
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+/* ---------- Fields ---------- */
+
+input[type='text'],
+input[type='search'],
+input[type='number'],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--panel);
+  font: inherit;
+  font-weight: 400;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 2);
+}
+
+form > div,
+fieldset > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+legend {
+  padding: 0 0 var(--gap);
+}
+
+.field-error {
+  color: var(--text);
+  background: var(--page);
+  font-weight: 600;
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap) calc(var(--gap) * 2);
+  padding: var(--gap) 0;
+  color: var(--text);
+  background: var(--page);
+}
+
+.site-header .app-name {
+  min-height: var(--target);
+  display: inline-flex;
+  align-items: center;
+  color: var(--text);
+  background: var(--page);
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Page_Switch: a pill track, a round knob, both labels in text. */
+.page-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: var(--pill);
+  color: var(--text);
+  background: var(--panel);
+}
+
+.page-switch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  border-radius: var(--pill);
+  background: var(--selected-bg);
+}
+
+.page-switch[data-position='broadcast']::before {
+  transform: translateX(100%);
+}
+
+.page-switch a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target);
+  padding: 0.25rem 1rem;
+  border-radius: var(--pill);
+  color: var(--text);
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.page-switch a[aria-current='page'] {
+  color: var(--selected-fg);
+}
+
+/* Front page: two plain pills and an empty slot kept for a language switch. */
+.front-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.language-slot {
+  display: inline-block;
+  min-width: var(--target);
+  min-height: var(--target);
+  margin-left: auto;
+}
+
+#language-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  margin-left: auto;
+}
+
+#language-switch button {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+#language-switch button[aria-pressed='true'],
+#language-switch [aria-current='true'] {
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+/* ---------- Event picker ---------- */
+
+.tile-grid,
+#event-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  gap: var(--gap);
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+  min-width: var(--target);
+  min-height: 6rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--panel);
+  text-align: center;
+  cursor: pointer;
+}
+
+.tile input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tile .tile-icon {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.tile .tile-icon svg,
+.icon-tile svg {
+  width: 100%;
+  height: 100%;
+}
+
+.tile .tile-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* Selected tile: inverted, plus a round dot in the corner. */
+.tile:has(input:checked) {
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+.tile:has(input:checked)::after {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--selected-fg);
+}
+
+.tile:has(input:focus-visible) {
+  outline: var(--ring) solid var(--text);
+  outline-offset: 3px;
+}
+
+/* ---------- Lamps ---------- */
+
+.lamp {
+  display: inline-block;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: var(--ring) solid var(--text);
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+.lamp[hidden] {
+  display: none;
+}
+
+.lamp[data-lit='false'] {
+  background: transparent;
+}
+
+/* ---------- Test toggle: a pill switch with a lamp and a text state ---------- */
+
+#f-test {
+  position: relative;
+  flex: none;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 4.5rem;
+  height: var(--target);
+  margin: 0;
+  border-radius: var(--pill);
+  color: var(--text);
+  background: var(--panel);
+  cursor: pointer;
+}
+
+#f-test::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 6px;
+  width: calc(var(--target) - 12px);
+  border-radius: 50%;
+  background: var(--text);
+}
+
+#f-test:checked::before {
+  transform: translateX(calc(4.5rem - var(--target)));
+}
+
+/* The lamp sits at the open end of the track and shows only when on. */
+#f-test::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.5rem;
+  border: var(--ring) solid var(--text);
+  border-radius: 50%;
+  background: var(--orange);
+  display: none;
+}
+
+#f-test:checked::after {
+  display: block;
+  right: auto;
+  left: 0.5rem;
+}
+
+#test-state {
+  font-weight: 600;
+}
+
+/* A row that holds a switch, its state text and its label. */
+.switch-row,
+form > div:has(> input[role='switch']),
+form > div:has(> #f-repeat) {
+  flex-direction: row;
+  align-items: center;
+  gap: calc(var(--gap) * 2);
+  min-height: var(--target);
+}
+
+#f-repeat {
+  width: var(--target);
+  height: var(--target);
+  margin: 0;
+  accent-color: var(--text);
+}
+
+/* ---------- Go on air, action bar ---------- */
+
+#btn-go {
+  width: 100%;
+  min-height: 4.5rem;
+  font-size: 1.25rem;
+}
+
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  padding: var(--gap) 0;
+  color: var(--text);
+  background: var(--page);
+}
+
+.action-bar > button,
+.action-bar > .pill {
+  flex: 1 1 auto;
+}
+
+.action-bar > #btn-go {
+  flex: 1 1 100%;
+}
+
+/* Listen: the bar is fixed to the screen bottom. main keeps room for it. */
+.action-bar[data-fixed],
+.listen-page .action-bar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--gap) 1rem;
+}
+
+/* ---------- Speaker grille ---------- */
+
+#level-meter,
+.speaker-grille {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap) 0;
+  color: var(--text);
+  background: var(--page);
+}
+
+.grille {
+  position: relative;
+  width: 12rem;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: var(--panel);
+}
+
+.grille .dot {
+  position: absolute;
+  width: 6%;
+  aspect-ratio: 1 / 1;
+  margin: -3% 0 0 -3%;
+  border-radius: 50%;
+  background: var(--page);
+}
+
+.grille .dot[data-lit]:not([data-lit='false']) {
+  background: var(--text);
+}
+
+/* Compact strip once an alert card exists. */
+[data-has-cards] #level-meter,
+[data-has-cards] .speaker-grille {
+  height: 4rem;
+  padding: 0;
+}
+
+[data-has-cards] .grille {
+  width: 4rem;
+  height: 4rem;
+}
+
+/* ---------- Listening lamp and state line ---------- */
+
+#state-line,
+.state-line {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  min-height: var(--target);
+  font-weight: 600;
+}
+
+/* ---------- Alert cards ---------- */
+
+#cards {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding: 1rem;
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--panel);
+  overflow-wrap: anywhere;
+}
+
+.card-live {
+  color: var(--text);
+  background: var(--panel);
+}
+
+.card-expired {
+  color: var(--text);
+  background: var(--panel-expired);
+}
+
+.card-unverified {
+  color: var(--text);
+  background: var(--panel);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--gap) * 2);
+}
+
+.icon-tile {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+.event-name {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.expired-label {
+  align-self: flex-start;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--pill);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.sentence {
+  font-size: 1.125rem;
+}
+
+.card-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  margin: 0;
+}
+
+.card-sent {
+  font-weight: 600;
+}
+
+/* TEST banner: a full-width straight orange bar, ink text, first in the card. */
+.test-banner {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  color: var(--text);
+  background: var(--orange);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+:lang(hi) .test-banner {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* All-clear mark: an olive ring, a shape only. */
+.mark-clear {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: var(--ring) solid var(--olive);
+  border-radius: 50%;
+}
+
+/* ---------- Arrival flash: a 24px frame with an orange and an ink band ---------- */
+
+.arrival-flash {
+  display: none;
+}
+
+.arrival-flash[data-on='true'] {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  border: 12px solid var(--orange);
+  pointer-events: none;
+}
+
+.arrival-flash-inner {
+  display: none;
+}
+
+.arrival-flash[data-on='true'] .arrival-flash-inner {
+  display: block;
+  position: absolute;
+  inset: 0;
+  border: 12px solid var(--text);
+  pointer-events: none;
+}
+
+/* ---------- Motion: only here, only on a change the user caused, nothing that repeats ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-switch::before {
+    transition: transform 150ms ease-out;
+  }
+
+  #f-test::before {
+    transition: transform 150ms ease-out;
+  }
+
+  button,
+  .pill,
+  .tile {
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrival-flash,
+  .arrival-flash[data-on='true'] {
+    display: none;
+  }
+}

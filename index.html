@@ -5,8 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dead Air</title>
     <link rel="manifest" href="%BASE_URL%manifest.webmanifest" />
+    <link rel="stylesheet" href="./src/shared/ui/look.css" />
   </head>
   <body>
+    <header class="site-header">
+      <a class="app-name" href="%BASE_URL%">Dead Air</a>
+      <nav class="front-links">
+        <a class="pill" href="%BASE_URL%listen/">Listen</a>
+        <a class="pill" href="%BASE_URL%broadcast/">Broadcast</a>
+      </nav>
+      <span class="language-slot"></span>
+    </header>
     <h1>Dead Air</h1>
     <nav>
       <a href="./listen/">Listen</a>

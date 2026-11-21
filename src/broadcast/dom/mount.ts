@@ -20,6 +20,7 @@ import { webDownloadPlatform } from './web-download';
 import { createGeolocationProvider } from './web-location';
 import { getWebStorage, isSecureContext, offsetMinutes, webClock, webTimers } from './web-platform';
 import { createWakeLockProvider } from './web-wake-lock';
+import { readPicker } from '../../shared/ui/dom/event-picker';
 import { createPersistence } from '../../offline/dom/persist';
 
 function byId<T extends HTMLElement>(id: string): T {
@@ -125,7 +126,6 @@ export function mount(): () => void {
 
   // Text and select fields.
   const fields: Array<[string, keyof RawForm]> = [
-    [ELEMENT_IDS.event, 'event'],
     [ELEMENT_IDS.urgency, 'urgency'],
     [ELEMENT_IDS.severity, 'severity'],
     [ELEMENT_IDS.action, 'action'],
@@ -146,6 +146,16 @@ export function mount(): () => void {
     on(input, 'input', handler);
     on(input, 'change', handler);
   }
+
+  // Event picker: one change listener on the fieldset.
+  const picker = byId<HTMLFieldSetElement>(ELEMENT_IDS.event);
+  on(picker, 'change', () =>
+    guard(() => {
+      const value = readPicker(picker);
+      if (controller.getState().form.event === value) return;
+      controller.setField('event', value as never);
+    }),
+  );
 
   // TEST switch. The box follows the controller: turning TEST off only takes effect after confirm.
   on(testBox, 'change', () => guard(() => controller.requestTest(testBox.checked)));

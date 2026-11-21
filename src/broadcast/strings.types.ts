@@ -168,6 +168,13 @@ export const TEXT_KEYS = [
   'listen.settings.heading',
   'listen.setting.flash',
   'listen.setting.vibrate',
+  // Radio look
+  'nav.switch.listen',
+  'nav.switch.broadcast',
+  'switch.test.on',
+  'switch.test.off',
+  'btn.onair',
+  'card.expired',
 ] as const;
 
 export type TextKey = (typeof TEXT_KEYS)[number];
@@ -309,6 +316,12 @@ export const PLACEHOLDERS: Readonly<Record<TextKey, readonly string[]>> = {
   'listen.settings.heading': [],
   'listen.setting.flash': [],
   'listen.setting.vibrate': [],
+  'nav.switch.listen': [],
+  'nav.switch.broadcast': [],
+  'switch.test.on': [],
+  'switch.test.off': [],
+  'btn.onair': [],
+  'card.expired': [],
 };
 
 export interface Strings {

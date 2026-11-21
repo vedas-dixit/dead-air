@@ -47,4 +47,6 @@ export const LOADER_CALL_LIST: readonly LoaderCall[] = [
   { file: GGWAVE_FILE, call: 'fetch(<identifier>,{credentials:`same-origin`})', pattern: GGWAVE_FETCH_CALL, occurrence: 2, reason: GGWAVE_FETCH },
 ];
 
-export const ALLOWED_URLS: readonly AllowedUrl[] = [];
+export const ALLOWED_URLS: readonly AllowedUrl[] = [
+  { url: 'http://www.w3.org/2000/svg', reason: 'XML namespace name inside the bundled icon SVGs. It is an identifier, never fetched.' },
+];

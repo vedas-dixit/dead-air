@@ -3,7 +3,7 @@
 This text is machine-written. Only entries marked `checked` were checked by a native speaker. Review all other entries before real use.
 
 Checked: 0
-Needs human check: 211
+Needs human check: 217
 
 ## Strings
 | Key | English | Hindi | Status |
@@ -165,7 +165,7 @@ Needs human check: 211
 | text.sayfirst.place | Place: {place}. | जगह: {place}। | needs human check |
 | text.sayfirst.time | Sent at {time}. Valid for {duration}. | भेजने का समय {time}। {duration} तक मान्य। | needs human check |
 | text.err.sayfirst | The line to read aloud cannot be built. | पढ़कर सुनाने वाली पंक्ति नहीं बन सकी। | needs human check |
-| text.listen.page.title | Dead Air: Listen | डेड एयर: सुनें | needs human check |
+| text.listen.page.title | Dead Air: Listen | Dead Air: सुनें | needs human check |
 | text.listen.page.heading | Listen for alerts | चेतावनियाँ सुनें | needs human check |
 | text.listen.nav.broadcast | Go to Broadcast | प्रसारण पृष्ठ पर जाएँ | needs human check |
 | text.listen.btn.start | Start listening | सुनना शुरू करें | needs human check |
@@ -210,6 +210,12 @@ Needs human check: 211
 | text.listen.settings.heading | Alert signals | चेतावनी संकेत | needs human check |
 | text.listen.setting.flash | Flash the screen when a new alert arrives | नई चेतावनी आने पर स्क्रीन चमकाएँ | needs human check |
 | text.listen.setting.vibrate | Vibrate when a new alert arrives | नई चेतावनी आने पर फ़ोन कंपन करे | needs human check |
+| text.nav.switch.listen | Listen | सुनें | needs human check |
+| text.nav.switch.broadcast | Broadcast | प्रसारण | needs human check |
+| text.switch.test.on | TEST ON | टेस्ट चालू | needs human check |
+| text.switch.test.off | TEST OFF | टेस्ट बंद | needs human check |
+| text.btn.onair | On air | प्रसारण जारी | needs human check |
+| text.card.expired | No longer current | अब मान्य नहीं | needs human check |
 
 ## Sample sentences (test alerts)
 | Key | English | Hindi | Status |

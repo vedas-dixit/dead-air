@@ -7,13 +7,9 @@
     <link rel="manifest" href="%BASE_URL%manifest.webmanifest" />
   </head>
   <body>
+    <!--look:header-->
     <main>
       <h1 data-text="page.heading"></h1>
-      <nav>
-        <a href="../" data-text="nav.home"></a>
-        <a href="../listen/" data-text="nav.listen"></a>
-      </nav>
-      <div id="language-switch" role="group"></div>
 
       <div id="banner" role="alert"></div>
       <div id="status" aria-live="polite"></div>
@@ -21,12 +17,9 @@
       <form id="alert-form" autocomplete="off" novalidate>
         <h2 data-text="form.heading"></h2>
 
-        <div>
-          <label for="f-event" data-text="form.event"></label>
-          <select id="f-event" name="event">
-            <option value="" selected data-text="form.choose"></option>
-          </select>
-        </div>
+        <fieldset id="f-event" class="tile-grid">
+          <legend data-text="form.event"></legend>
+        </fieldset>
 
         <div>
           <label for="f-urgency" data-text="form.urgency"></label>
@@ -90,6 +83,7 @@
 
         <div>
           <input id="f-test" name="test" type="checkbox" role="switch" checked />
+          <span id="test-state"></span>
           <label for="f-test" data-text="switch.test"></label>
         </div>
 
@@ -98,8 +92,12 @@
           <label for="f-repeat" data-text="switch.repeat"></label>
         </div>
 
-        <div>
-          <button id="btn-go" type="button" data-text="btn.go"></button>
+        <div class="action-bar">
+          <button id="btn-go" type="button">
+            <span id="go-lamp" class="lamp" aria-hidden="true" hidden></span>
+            <span data-text="btn.go"></span>
+            <span id="go-onair"></span>
+          </button>
           <button id="btn-stop" type="button" data-text="btn.stop"></button>
           <button id="btn-save" type="button" data-text="btn.save"></button>
         </div>

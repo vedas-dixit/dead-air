@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { ALL_ELEMENT_IDS as BROADCAST_IDS } from '../../src/broadcast/dom/ids';
 import { TEXT_KEYS } from '../../src/broadcast/strings.types';
 import { ALL_ELEMENT_IDS as LISTEN_IDS } from '../../src/listen/dom/ids';
+import { headerHtml } from '../../src/shared/ui/header';
 import { utf8Decode } from '../../src/message-code/utf8';
 
 function readPage(dir: string): string {
@@ -33,8 +34,10 @@ for (const page of pages) {
     });
 
     it('contains every id from its ids file exactly once', () => {
+      // The build fills the header marker with the shared header, which owns three ids.
+      const built = html.replace('<!--look:header-->', headerHtml({ page: page.name as 'listen' | 'broadcast', base: '/' }));
       for (const id of page.ids) {
-        expect([...html.matchAll(new RegExp(`\\sid="${id}"`, 'g'))].length, id).toBe(1);
+        expect([...built.matchAll(new RegExp(`\\sid="${id}"`, 'g'))].length, id).toBe(1);
       }
     });
 
@@ -45,7 +48,7 @@ for (const page of pages) {
       const staticTitle = (inner as string).trim();
       if (staticTitle !== '') {
         expect(staticTitle).toBe('Dead Air');
-        expect(attrs).toMatch(/\sdata-text="page\.title"/);
+        expect(attrs).toMatch(/\sdata-text="(listen\.)?page\.title"/);
       }
       const body = html
         .replace(/<!--[\s\S]*?-->/g, '')
@@ -70,7 +73,8 @@ for (const page of pages) {
     });
 
     it('has the language-switch element', () => {
-      expect([...html.matchAll(/\sid="language-switch"/g)].length).toBe(1);
+      const built = html.replace('<!--look:header-->', headerHtml({ page: page.name as 'listen' | 'broadcast', base: '/' }));
+      expect([...built.matchAll(/\sid="language-switch"/g)].length).toBe(1);
     });
   });
 }

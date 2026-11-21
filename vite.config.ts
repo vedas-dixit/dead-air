@@ -1,6 +1,7 @@
 import { loadEnv } from 'vite';
 import { defineConfig } from 'vitest/config';
 import { resolveBase } from './build/base-path.ts';
+import { lookHeaderPlugin } from './build/look-header-plugin.ts';
 import { checkBase } from './src/offline/paths.ts';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', ''); // also reads process environment variables
@@ -11,7 +12,10 @@ export default defineConfig(({ mode }) => {
   }
   return {
     base, // the only place `base` is set
+    plugins: [lookHeaderPlugin()],
     build: {
+      // Fonts are always emitted as files (never inlined); other assets keep the default.
+      assetsInlineLimit: (file: string) => (file.endsWith('.woff2') ? false : undefined),
       modulePreload: { polyfill: false },
       rollupOptions: {
         // Three real pages. Paths are relative to the project root.

@@ -10,6 +10,10 @@ import type { FieldError, RawForm } from '../form';
 import type { PreviewModel } from '../preview';
 import type { Msg, Strings, TextKey } from '../strings.types';
 import { VALID_FOR } from '../valid-for';
+import { fillEventPicker, writePicker } from '../../shared/ui/dom/event-picker';
+import { iconNode } from '../../shared/ui/dom/icon-node';
+import { eventFace } from '../../shared/ui/event-face';
+import type { EventType } from '../../message-code/index';
 import { ELEMENT_IDS } from './ids';
 
 export interface Renderer {
@@ -90,7 +94,7 @@ export function bindStaticText(doc: Document, strings: Strings): void {
     if (switchGroup.getAttribute('aria-label') !== label) switchGroup.setAttribute('aria-label', label);
   }
 
-  fillSelect(doc, byId<HTMLSelectElement>(doc, ELEMENT_IDS.event), EVENT_TYPES, strings.labels.event);
+  fillEventPicker(doc, byId<HTMLFieldSetElement>(doc, ELEMENT_IDS.event), strings);
   fillSelect(doc, byId<HTMLSelectElement>(doc, ELEMENT_IDS.urgency), URGENCIES, strings.labels.urgency);
   fillSelect(doc, byId<HTMLSelectElement>(doc, ELEMENT_IDS.severity), SEVERITIES, strings.labels.severity);
   fillSelect(doc, byId<HTMLSelectElement>(doc, ELEMENT_IDS.action), ACTIONS, strings.labels.action);
@@ -112,7 +116,10 @@ export function createRenderer(doc: Document, initialStrings: Strings): Renderer
 
   const el = {
     form: byId<HTMLFormElement>(doc, ELEMENT_IDS.form),
-    event: byId<HTMLSelectElement>(doc, ELEMENT_IDS.event),
+    event: byId<HTMLFieldSetElement>(doc, ELEMENT_IDS.event),
+    testState: byId<HTMLElement>(doc, ELEMENT_IDS.testState),
+    goLamp: byId<HTMLElement>(doc, ELEMENT_IDS.goLamp),
+    goOnAir: byId<HTMLElement>(doc, ELEMENT_IDS.goOnAir),
     urgency: byId<HTMLSelectElement>(doc, ELEMENT_IDS.urgency),
     severity: byId<HTMLSelectElement>(doc, ELEMENT_IDS.severity),
     action: byId<HTMLSelectElement>(doc, ELEMENT_IDS.action),
@@ -295,7 +302,21 @@ export function createRenderer(doc: Document, initialStrings: Strings): Renderer
     el.preview.appendChild(statusRow);
     row(statusRow, 'preview.status', statusLabel);
 
-    row(el.preview, 'preview.event', labelFor(strings.labels.event, p.event) ?? p.event);
+    if ((EVENT_TYPES as readonly string[]).includes(p.event)) {
+      const face = eventFace(p.event as EventType, strings);
+      const head = doc.createElement('div');
+      head.className = 'card-head';
+      const tile = doc.createElement('span');
+      tile.className = 'icon-tile';
+      tile.appendChild(iconNode(face.event));
+      const name = doc.createElement('span');
+      name.className = 'event-name';
+      name.textContent = face.name;
+      head.append(tile, name);
+      el.preview.appendChild(head);
+    } else {
+      row(el.preview, 'preview.event', p.event);
+    }
     row(el.preview, 'preview.urgency', labelFor(strings.labels.urgency, p.urgency) ?? p.urgency);
     row(el.preview, 'preview.severity', labelFor(strings.labels.severity, p.severity) ?? p.severity);
     row(el.preview, 'preview.action', labelFor(strings.labels.action, p.action) ?? p.action);
@@ -334,7 +355,7 @@ export function createRenderer(doc: Document, initialStrings: Strings): Renderer
     prevForm = state.form;
 
     // Static values follow the state (this only writes when the box differs).
-    syncValue(el.event, state.form.event);
+    writePicker(el.event, state.form.event);
     syncValue(el.urgency, state.form.urgency);
     syncValue(el.severity, state.form.severity);
     syncValue(el.action, state.form.action);
@@ -344,6 +365,10 @@ export function createRenderer(doc: Document, initialStrings: Strings): Renderer
     syncValue(el.valid, state.form.validFor);
     syncValue(el.station, state.form.stationId);
     if (el.test.checked !== state.form.test) el.test.checked = state.form.test;
+    setText(el.testState, textOf(strings, state.form.test ? 'switch.test.on' : 'switch.test.off'));
+    const onAir = state.phase === 'on-air';
+    setHidden(el.goLamp, !onAir);
+    setText(el.goOnAir, onAir ? textOf(strings, 'btn.onair') : '');
     if (el.repeat.checked !== state.form.repeat) el.repeat.checked = state.form.repeat;
 
     // Control states.

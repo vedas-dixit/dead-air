@@ -194,7 +194,7 @@ export const stringsHi: Strings = {
     'sayfirst.time': 'भेजने का समय {time}। {duration} तक मान्य।',
     'err.sayfirst': 'पढ़कर सुनाने वाली पंक्ति नहीं बन सकी।',
     // Listen page
-    'listen.page.title': 'डेड एयर: सुनें',
+    'listen.page.title': 'Dead Air: सुनें',
     'listen.page.heading': 'चेतावनियाँ सुनें',
     'listen.nav.broadcast': 'प्रसारण पृष्ठ पर जाएँ',
     'listen.btn.start': 'सुनना शुरू करें',
@@ -246,5 +246,11 @@ export const stringsHi: Strings = {
     'listen.settings.heading': 'चेतावनी संकेत',
     'listen.setting.flash': 'नई चेतावनी आने पर स्क्रीन चमकाएँ',
     'listen.setting.vibrate': 'नई चेतावनी आने पर फ़ोन कंपन करे',
+    'nav.switch.listen': 'सुनें',
+    'nav.switch.broadcast': 'प्रसारण',
+    'switch.test.on': 'टेस्ट चालू',
+    'switch.test.off': 'टेस्ट बंद',
+    'btn.onair': 'प्रसारण जारी',
+    'card.expired': 'अब मान्य नहीं',
   },
 };

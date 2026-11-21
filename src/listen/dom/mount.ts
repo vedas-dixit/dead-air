@@ -17,6 +17,8 @@ import { createListenController } from '../controller';
 import type { ListenController } from '../controller';
 import type { SoundLinkLoader } from '../providers';
 import { ELEMENT_IDS } from './ids';
+import { readButtonKey } from './read-tap';
+import { createGrille, prefersReducedMotion } from '../../shared/ui/dom/grille';
 import { createListenRenderer } from './render';
 import { createWebMicrophone } from './web-microphone';
 import { webClock, webIntervals, webVisibility } from './web-platform';
@@ -56,7 +58,13 @@ export function mount(): () => void {
     onNewAlert: ({ expiry }) => arrival.signal(expiry),
   });
 
-  const renderer = createListenRenderer(document, strings);
+  const grille = createGrille(document, byId(ELEMENT_IDS.levelMeter), {
+    now: () => performance.now(),
+    setTimer: (fn, ms) => setTimeout(fn, ms),
+    clearTimer: (h) => clearTimeout(h as ReturnType<typeof setTimeout>),
+    reducedMotion: () => prefersReducedMotion(window),
+  });
+  const renderer = createListenRenderer(document, strings, { level: grille });
   const unsubscribe = controller.subscribe((ui) => renderer.render(ui));
   renderer.render(controller.snapshot());
 
@@ -124,12 +132,7 @@ export function mount(): () => void {
 
   // Read aloud: one delegated listener for every card.
   on(byId(ELEMENT_IDS.cards), 'click', (ev) => {
-    const target = ev.target as Element | null;
-    const hit = target?.closest?.('[data-read], [data-part="button"]') ?? null;
-    if (hit === null) return;
-    const key = (hit.closest('[data-read]') ?? hit.closest('[data-key]'))?.getAttribute(
-      hit.closest('[data-read]') !== null ? 'data-read' : 'data-key',
-    );
+    const key = readButtonKey(ev.target);
     if (key) safe(() => speech.tap(key));
   });
 
@@ -161,6 +164,7 @@ export function mount(): () => void {
     unmountSwitch();
     speech.dispose();
     arrival.dispose();
+    grille.dispose();
   };
   window.addEventListener('pagehide', teardown);
   return teardown;

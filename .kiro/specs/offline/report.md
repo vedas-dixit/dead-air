@@ -108,4 +108,6 @@ Reason: Emscripten loader path in ggwave for fetching a wasm file by URL. ggwave
 
 ## ALLOWED_URLS
 
-Copied from src/offline/allow-list.ts. ALLOWED_URLS is currently empty: there are 0 entries. No non-request URL string has been accepted.
+Copied from src/offline/allow-list.ts. ALLOWED_URLS has 1 entry (added by spec 8, approved by the user):
+
+- `http://www.w3.org/2000/svg`. Reason: XML namespace name inside the bundled icon SVGs. It is an identifier, never fetched.

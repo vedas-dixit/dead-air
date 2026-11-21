@@ -5,6 +5,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
+import { ALLOWED_URLS } from '../../src/offline/allow-list.ts';
 
 const ROOT = process.cwd();
 const VITE = join(ROOT, 'node_modules', 'vite', 'bin', 'vite.js');
@@ -46,6 +47,10 @@ function urlsIn(html: string): string[] {
   return [...html.matchAll(/\b(?:src|href)\s*=\s*"([^"]*)"/g)].map((m) => m[1]);
 }
 
+// The SVG namespace name inside the bundled icon strings. It is an identifier, never requested.
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
+// Every string this test ignores must be in the same ALLOWED_URLS list the offline check uses.
+const IGNORED_URLS = [SVG_NAMESPACE];
 const VITE_HELP_LINK = 'https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility';
 const builds: Built[] = [];
 
@@ -80,6 +85,10 @@ describe.each([
     expect(rest.filter((l) => /error|warn/i.test(l))).toEqual([]);
   });
 
+  it('ignores only strings that are in ALLOWED_URLS', () => {
+    const allowed = ALLOWED_URLS.map((a) => a.url);
+    for (const u of IGNORED_URLS) expect(allowed, u).toContain(u);
+  });
   it('writes the three pages', () => {
     for (const p of ['index.html', 'listen/index.html', 'broadcast/index.html']) {
       expect(existsSync(join(b.out, p)), p).toBe(true);
@@ -107,8 +116,9 @@ describe.each([
         expect(existsSync(join(target, 'index.html')), u).toBe(true);
       }
     }
-    expect(urls).toContain('../');
-    expect(urls).toContain('../listen/');
+    // The shared header links use the base (home and Listen).
+    expect(urls).toContain(b.base);
+    expect(urls).toContain(`${b.base}listen/`);
   });
 
   it('the bundle holds the ggwave engine and is larger than 100 kB', () => {
@@ -123,7 +133,7 @@ describe.each([
     for (const f of files) {
       // The engine's browser stubs for path and fs hold an error message with Vite's help link.
       // It is text in a message that is never shown or fetched. Only that exact link is allowed.
-      const t = text(f).split(VITE_HELP_LINK).join('');
+      const t = text(f).split(VITE_HELP_LINK).join('').split(SVG_NAMESPACE).join('');
       expect(/https?:\/\//.test(t), `${f} URL`).toBe(false);
       // `.wasmBinary` is a property name inside the engine, so only a file name counts.
       expect(/\.wasm(?![A-Za-z0-9_$])/.test(t), `${f} .wasm`).toBe(false);

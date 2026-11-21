@@ -166,7 +166,7 @@ export function createHandlers(deps: Deps): Handlers {
       let clip = appendTailSilence(wav.samples, wav.sampleRate);
       if (noiseDb !== null) {
         const noisy = addWhiteNoise(clip, wav.samples.length, noiseDb, seed);
-        if (!noisy.ok) return toolError('silent-signal', 'The file is silent, so noise at a signal-to-noise ratio is undefined.');
+        if (!noisy.ok) return toolError('silent-signal', 'The file is silent or too quiet, so noise at a signal-to-noise ratio is undefined.');
         clip = noisy.samples;
       }
       const heard = hearSamples(got.link, clip, deps.now());
@@ -209,7 +209,7 @@ export function createHandlers(deps: Deps): Handlers {
       const wrongFields = new Set<string>();
       for (let i = 0; i < tries; i++) {
         const noisy = addWhiteNoise(clip, clean.length, noiseDb, deriveTrySeed(seed, i));
-        if (!noisy.ok) return toolError('silent-signal', 'The clean audio is silent.');
+        if (!noisy.ok) return toolError('silent-signal', 'The clean audio is silent or too quiet.');
         const heard = hearSamples(got.link, noisy.samples, nowMs);
         if (!heard.ok) return toolError('engine-error', 'The decoder failed.');
         const result = classifyTry(prepared.alert, heard.payloads);

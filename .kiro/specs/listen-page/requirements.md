@@ -4,7 +4,7 @@
 
 This is spec 4 of 10. It builds the Listen page at `/listen/`. After a person taps "Start listening", the page listens on the microphone, gives the audio to the Sound_Link, and sends every payload the Sound_Link returns through the Message_Code decode. A payload that passes the check is shown as an alert card. A payload that fails shows only a short "could not read it" line. The page keeps a history of heard alerts on the device, shows what state it is in, shows a live level meter, keeps the screen awake while listening, and tries to listen again when the page becomes visible after being hidden.
 
-The page reuses `src/message-code/` and `src/sound-link/` through their `index.ts` files and the shared helpers in `src/shared/`. The UI is plain. The page is plain TypeScript with direct DOM code and no UI framework. The Teletext look comes in spec 8. Text is English only and lives in the existing strings file (`src/broadcast/strings.en.ts`).
+The page reuses `src/message-code/` and `src/sound-link/` through their `index.ts` files and the shared helpers in `src/shared/`. The UI is plain. The page is plain TypeScript with direct DOM code and no UI framework. The radio look comes in spec 8. Text is English only and lives in the existing strings file (`src/broadcast/strings.en.ts`).
 
 Files this spec owns: `listen/` and a new folder `src/listen/`. Files owned by other specs are not edited, with one approved exception: adding new `listen.*` keys to `src/broadcast/strings.types.ts` and `src/broadcast/strings.en.ts`. Existing keys and labels are reused as they are.
 
@@ -18,7 +18,7 @@ Facts taken from the existing code, which these requirements rely on:
 - `Alert.latitude` and `Alert.longitude` are both `null` when the alert has no map point, and both integers in units of 0.0001 degree otherwise. `unitsToDegreesText` in `src/broadcast/map-point.ts` turns units into degrees text with 4 decimals. The Broadcast preview (`src/broadcast/preview.ts`) shows the urgency with `labels.urgency` and shows the map point only when it exists. The Strings_File has `labels.urgency`.
 - `src/broadcast/dom/web-wake-lock.ts` wraps `navigator.wakeLock` in a provider and belongs to the broadcast spec. `src/shared/` has no wake lock helper, so this spec writes its own provider under `src/listen/`.
 - `src/shared/time.ts` has `formatLocal`, `formatUtc` and `formatClock`. `src/shared/fill.ts` has `fillTemplate`.
-- Promise 6 needs an icon for every alert type. This spec shows text only. Icons arrive with the Teletext look (spec 8). The gap is recorded in the Report_File (Requirement 15).
+- Promise 6 needs an icon for every alert type. This spec shows text only. Icons arrive with the radio look (spec 8). The gap is recorded in the Report_File (Requirement 15).
 
 ## Glossary
 

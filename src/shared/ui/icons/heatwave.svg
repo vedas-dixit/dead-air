@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+  <circle cx="24" cy="24" r="10" fill="currentColor"/>
+  <g stroke="currentColor" stroke-width="4" fill="none">
+    <path d="M24 3v7"/><path d="M24 3v7" transform="rotate(45 24 24)"/><path d="M24 3v7" transform="rotate(90 24 24)"/><path d="M24 3v7" transform="rotate(135 24 24)"/>
+    <path d="M24 3v7" transform="rotate(180 24 24)"/><path d="M24 3v7" transform="rotate(225 24 24)"/><path d="M24 3v7" transform="rotate(270 24 24)"/>
+  </g>
+  <path d="M24 3v7" stroke="#FF5D1F" stroke-width="4" fill="none" transform="rotate(315 24 24)"/>
+</svg>
