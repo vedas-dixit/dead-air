@@ -1,6 +1,6 @@
 // Wires the Broadcast page: loads the sound link once, builds the controller with the real
 // platform pieces, draws its state and binds the DOM events to its actions.
-// No network request, no microphone, no service worker, no logging of samples or positions.
+// No network request, no microphone, no logging of samples or positions. The service worker is in src/offline.
 // The AudioContext is made only inside the Go on air tap (controller.goOnAir calls audio.unlock
 // as its first step), so the click handler calls goOnAir directly with no await before it.
 import { loadSoundLink } from '../../sound-link/index';
@@ -17,6 +17,7 @@ import { webDownloadPlatform } from './web-download';
 import { createGeolocationProvider } from './web-location';
 import { getWebStorage, isSecureContext, offsetMinutes, webClock, webTimers } from './web-platform';
 import { createWakeLockProvider } from './web-wake-lock';
+import { createPersistence } from '../../offline/dom/persist';
 
 function byId<T extends HTMLElement>(id: string): T {
   const el = document.getElementById(id);
@@ -140,6 +141,8 @@ export function mount(): () => void {
 
   // Buttons. goOnAir is called straight from the click, so the audio unlock runs inside the tap.
   on(byId<HTMLButtonElement>(ELEMENT_IDS.go), 'click', () => guard(() => controller.goOnAir()));
+  const persistence = createPersistence(document, strings);
+  on(byId<HTMLButtonElement>(ELEMENT_IDS.go), 'click', () => persistence.firstPress());
   on(byId<HTMLButtonElement>(ELEMENT_IDS.stop), 'click', () => guard(() => controller.stop()));
   on(byId<HTMLButtonElement>(ELEMENT_IDS.save), 'click', () => guard(() => controller.save()));
   on(byId<HTMLButtonElement>(ELEMENT_IDS.location), 'click', () => guard(() => controller.useLocation()));

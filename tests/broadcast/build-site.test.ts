@@ -93,7 +93,8 @@ describe.each([
   });
 
   it('every src and href resolves under the output with the base stripped', () => {
-    const urls = urlsIn(html);
+    // Offline spec: manifest.webmanifest is written by build/offline-postbuild.mjs, not by vite build alone.
+    const urls = urlsIn(html).filter((u) => !u.endsWith('manifest.webmanifest'));
     expect(urls.length).toBeGreaterThan(0);
     for (const u of urls) {
       if (u.startsWith('/')) {
@@ -126,7 +127,11 @@ describe.each([
       expect(/https?:\/\//.test(t), `${f} URL`).toBe(false);
       // `.wasmBinary` is a property name inside the engine, so only a file name counts.
       expect(/\.wasm(?![A-Za-z0-9_$])/.test(t), `${f} .wasm`).toBe(false);
-      expect(t.includes('serviceWorker'), `${f} serviceWorker`).toBe(false);
+      // Offline spec: the shared offline chunks (persist-*, register-*) hold the registration code.
+      // Any other file, including the broadcast bundle, still must not mention a service worker.
+      if (!/[\\/]assets[\\/](persist|register)-[^\\/]*\.js$/.test(f)) {
+        expect(t.includes('serviceWorker'), `${f} serviceWorker`).toBe(false);
+      }
       expect(t.includes('getUserMedia'), `${f} getUserMedia`).toBe(false);
       // The externalized stubs for path and fs are fine. A live require call is not.
       expect(/\brequire\s*\(\s*["'](?:fs|path)["']\s*\)/.test(t), `${f} require`).toBe(false);
@@ -139,7 +144,8 @@ describe.each([
   });
 
   it('the front page and listen page still build and link their own pages', () => {
-    const home = urlsIn(text(join(b.out, 'index.html')));
+    // Offline spec: ignore the manifest link, which only exists after build/offline-postbuild.mjs.
+    const home = urlsIn(text(join(b.out, 'index.html'))).filter((u) => u.startsWith('./'));
     expect(home).toContain('./listen/');
     expect(home).toContain('./broadcast/');
     const listen = urlsIn(text(join(b.out, 'listen', 'index.html')));
@@ -158,7 +164,13 @@ describe.each([
     for (const p of ['index.html', 'listen/index.html']) {
       const t = text(join(b.out, p));
       // The real Listen page loads its own bundle from assets/. The front page loads none.
-      if (p === 'index.html') expect(t).not.toContain('assets/');
+      // Offline spec: the front page now loads the small shared offline registration. It must never load the engine.
+      if (p === 'index.html') {
+        for (const u of urlsIn(t).filter((x) => x.includes('assets/'))) {
+          const f = join(b.out, u.slice(b.base.length));
+          expect(text(f), u).not.toContain('AGFzbQ');
+        }
+      }
       expect(/\.(png|jpe?g|gif|webp|svg)/i.test(t), p).toBe(false);
     }
     expect(/\.(png|jpe?g|gif|webp|svg)/i.test(text(join(b.out, 'broadcast', 'index.html')))).toBe(false);

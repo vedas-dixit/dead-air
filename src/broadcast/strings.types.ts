@@ -148,6 +148,10 @@ export const TEXT_KEYS = [
   'listen.mic.stopped',
   'listen.mic.failed',
   'listen.fallback',
+  // Offline
+  'offline.unsaved',
+  'offline.saved',
+  'offline.storageNote',
 ] as const;
 
 export type TextKey = (typeof TEXT_KEYS)[number];
@@ -271,6 +275,9 @@ export const PLACEHOLDERS: Readonly<Record<TextKey, readonly string[]>> = {
   'listen.mic.stopped': [],
   'listen.mic.failed': [],
   'listen.fallback': [],
+  'offline.unsaved': [],
+  'offline.saved': [],
+  'offline.storageNote': [],
 };
 
 export interface Strings {

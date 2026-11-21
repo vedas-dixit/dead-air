@@ -3,7 +3,7 @@
 // On load this creates no AudioContext and makes no microphone request. Both happen only
 // inside the Start tap (controller.tapStart calls audio.open() as its first step, so the
 // click handler calls tapStart directly with no await before it).
-// No network request, no service worker, no logging of samples.
+// No network request, no logging of samples. The service worker is in src/offline.
 import { loadSoundLink } from '../../sound-link/index';
 import { stringsEn } from '../../broadcast/strings.en';
 import { createListenController } from '../controller';
@@ -15,6 +15,7 @@ import { createWebMicrophone } from './web-microphone';
 import { webClock, webIntervals, webVisibility } from './web-platform';
 import { createStorageProvider } from './web-storage';
 import { createWakeLockProvider } from './web-wake-lock';
+import { createPersistence } from '../../offline/dom/persist';
 
 const TICK_MS = 1000;
 
@@ -63,6 +64,8 @@ export function mount(): () => void {
   }
 
   on(byId(ELEMENT_IDS.start), 'click', () => safe(() => controller.tapStart()));
+  const persistence = createPersistence(document, strings);
+  on(byId(ELEMENT_IDS.start), 'click', () => persistence.firstPress());
   on(byId(ELEMENT_IDS.stop), 'click', () => safe(() => controller.tapStop()));
   on(byId(ELEMENT_IDS.clear), 'click', () => safe(() => controller.tapClear()));
 

@@ -222,5 +222,10 @@ export const stringsEn: Strings = {
     'listen.mic.stopped': 'The microphone stopped. Tap "Start listening" to try again.',
     'listen.mic.failed': 'The microphone could not be started. Tap "Start listening" to try again.',
     'listen.fallback': 'Something went wrong showing this text.',
+    // Offline
+    'offline.unsaved': 'Open this page once with internet to save it',
+    'offline.saved': 'Saved for offline use',
+    'offline.storageNote':
+      'Your browser may clear this saved copy if you do not use the app. Add it to your Home Screen to keep it.',
   },
 };
