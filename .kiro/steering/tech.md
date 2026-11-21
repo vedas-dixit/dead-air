@@ -7,8 +7,8 @@
 - Keep dependencies few. Ask before adding a new one.
 
 ## Hosting
-- GitHub Pages under the `/dead-air/` path for now.
-- It will later move to its own subdomain. Asset paths and the service worker scope must work both under a sub-path and at the root of a domain. Do not hard-code `/dead-air/` anywhere. Derive it from the Vite `base` setting.
+- GitHub Pages, served at the root of the custom domain `deadair.vedasdixit.com`. There is no sub-path. The deploy workflow builds with an empty `BASE_PATH`.
+- Asset paths and the service worker scope must still work both at the root of a domain and under a sub-path (for example `https://<user>.github.io/<repo>/`, built with `BASE_PATH=<repo>`). Do not hard-code a sub-path such as `/dead-air/` anywhere. Derive it from the Vite `base` setting.
 
 ## Offline
 - A service worker saves every file the app needs on the first visit, then serves from that saved copy.

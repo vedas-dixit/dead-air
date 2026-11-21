@@ -42,7 +42,7 @@ This is a starting point. Spec 1 turns it into exact rules. Suggest changes if s
 Reject any message with an unknown version or a failed check. Spec 1 decided that a 2-byte check is not strong enough for promise 1, so the check is 4 bytes.
 Tech rules
 • Vite and TypeScript, with plain DOM code. No UI framework (no React, Vue or similar). No backend.
-• Hosted on GitHub Pages under the /dead-air/ path, for now. It will later move to its own subdomain, so asset paths and the service worker scope must work both under a sub-path and at the root of a domain.
+• Hosted on GitHub Pages at the root of the custom domain deadair.vedasdixit.com (no sub-path; the deploy builds with an empty BASE_PATH). Asset paths and the service worker scope must still work both at the root of a domain and under a sub-path, so never hard-code a sub-path such as /dead-air/.
 • Sound uses the ggwave npm package (MIT license). Follow its official browser example in the ggwave repo, examples/ggwave-js, including how it sets sample rates.
 • Tests use Vitest, with fast-check for property tests.
 • Offline works through a service worker that saves every file the app needs on the first visit and then serves from that saved copy.
