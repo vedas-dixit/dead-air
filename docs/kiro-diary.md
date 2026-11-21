@@ -13,7 +13,13 @@ A running log of how Dead Air was built with Kiro.
 
 | Date | Sender device | Listener device | Distance | Room noise | Tries | Successes |
 |---|---|---|---|---|---|---|
-|  |  |  |  |  |  |  |
+| 21 Nov 2026 | MacBook Pro M4 built-in speakers, full volume, about 85 dB | Samsung Galaxy S25 Ultra | 8 ft (2.4 m) | Indoors, some distant household noise | Not counted | Both plays heard every time, no errors |
+| 21 Nov 2026 | MacBook Pro M4 built-in speakers, full volume, about 85 dB | Samsung Galaxy S25 Ultra | 15 ft (4.6 m) | Indoors, some distant household noise | Not counted | Alerts received, but sometimes only one of the two plays was heard |
+| 21 Nov 2026 | MacBook Pro M4 built-in speakers, full volume, about 85 dB | Samsung Galaxy S25 Ultra | 21 ft (6.4 m), next room through an open doorway | Indoors, some distant household noise | 4 | 3 of 4 alerts received, each on one play only |
+
+These results are informal. Exact counts over 10 presses per distance are still to do.
+
+Playing each alert twice is what kept alerts arriving when single plays were missed.
 
 ## Spec 1: Message code (19 Nov 2026)
 
