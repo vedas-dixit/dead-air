@@ -135,14 +135,14 @@ Needs_Human_Check, all listed in `docs/translation-check.md`:
 
 ## 10. Open points
 
-1. **User decision:** `.kiro/steering/style-rules.md` still says "fully visible without scrolling", while Requirement 9.1 is narrower. I did not edit the steering file, as the task forbids it. Please decide which text is right.
-2. **User confirmation:** the namespace-string exception in the promise 4 test (section 5).
-3. **Review:** the files edited outside the listed approvals (section 4).
+1. Resolved, see Follow-up item 3. Was: `.kiro/steering/style-rules.md` still says "fully visible without scrolling", while Requirement 9.1 is narrower. I did not edit the steering file, as the task forbids it. Please decide which text is right.
+2. Resolved, see Follow-up item 1. Was: the namespace-string exception in the promise 4 test (section 5).
+3. Resolved, see Follow-up item 2. Was: the files edited outside the listed approvals (section 4).
 4. `data-has-cards` is set on `document.body`, not on the cards parent, because the CSS selector needs it there.
 5. `css-lint` allows a 50 percent radius, for the round lamps and dots.
-6. No test checks that the arrival flash layer takes no taps. The rule `pointer-events: none` now lives only in `look.css`.
-7. `check:browser` still fails on `404 /sw.js` at baseline too. Fixing it means running the offline post-build in that script, which belongs to another spec.
-8. The visual look has not been checked in a browser, and the real-phone checks were not run (section 2).
+6. Resolved, see Follow-up item 4. Was: no test checks that the arrival flash layer takes no taps. The rule `pointer-events: none` now lives only in `look.css`.
+7. Resolved, see Follow-up item 5. Was: `check:browser` still fails on `404 /sw.js` at baseline too. Fixing it means running the offline post-build in that script, which belongs to another spec.
+8. The visual look was not checked in a browser by Kiro, and the real-phone checks were not run (section 2).
 
 ## Follow-up
 Decisions made by the user after the first report.
@@ -159,3 +159,24 @@ Results after the follow-up:
 | `npm run typecheck` | Clean |
 | `npm run build` | OK. Saved copy 15 files, 300,984 bytes. Offline check OK |
 | `npm run check:browser` | PASS. All requests 200, including `/sw.js` |
+
+## Layout reworked by hand (commit 9cdbfd9)
+
+After the first build, the user reworked the layout by hand, outside Kiro, on 22 Nov 2026. The commit changed `src/shared/ui/look.css`, `listen/index.html`, `broadcast/index.html` and `index.html`. No script, TypeScript or test file changed. The commit also added a `.DS_Store` file at the repository root.
+
+Reasons, from the commit message: the Broadcast bar covered the form, the header and page had no shared gutter, and tile names, switches and locked controls needed work. Wide screens also needed two columns.
+
+What the pages are now (the full rules are in `.kiro/steering/style-rules.md`):
+- **All pages:** phone first, one column up to 40rem with one 16 px gutter shared by the header and the page. One idiom for state: solid is live, on or pressable; hollow is idle, off or locked. Every checkbox is drawn as a pill switch. Locked buttons, fields and tiles go hollow. The Listen and Broadcast `h1` headings are kept for screen readers but not drawn.
+- **Broadcast:** the fields come first, paired side by side when there is room. Then the deck: the TEST and repeat switches, the say-first line, the preview, Save, the notes, and the bar. The bar is the last thing in the form and sticks to the screen bottom, with messages above the buttons. While sound plays, Go on air turns hollow and Stop appears beside it as the solid pill. The TEST question is a bottom sheet on a phone. From 60em the fields are on the left and the deck is on the right.
+- **Listen:** the receiver comes first (grille, lamp and state line, notes, Start and Stop), then the cards, then the settings, Clear history and the offline notes. On a phone Start and Stop are fixed to the screen bottom. With a card, the grille shrinks to a 4rem strip beside the state line. From 60em, with a card, the receiver and settings sit on the left and the cards on the right.
+- **Front page:** the name and links are now inside `main`.
+
+Docs updated to match: `.kiro/steering/style-rules.md` (Shape, Type, Size, a new Layout section, Header and Components) and `docs/kiro-diary.md` (a new entry).
+
+Results after the rework:
+| Command | Result |
+|---|---|
+| `npx vitest --run` | 155 files, 1507 tests, all passed |
+
+The markup tests that check each id appears exactly once still pass, so every id the scripts use is still in the pages. Kiro did not look at the reworked pages in a browser, and the real-phone checks in section 2 are still not run by Kiro.

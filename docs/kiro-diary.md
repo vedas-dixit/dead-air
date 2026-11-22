@@ -218,3 +218,15 @@ Fixes of leftovers from the Languages spec (spec 7):
 - **Flaky noise test.** `tests/ears/noise.property.test.ts`, Property 5, had failed once in a full run during spec 7. The fix is in `tools/ears/noise.ts`.
 
 Note: `tests/look/wording.test.ts` skips this file, so the word "Teletext" is allowed here.
+
+## Spec 8 follow-up: layout reworked by hand (22 Nov 2026)
+Files: `src/shared/ui/look.css`, `listen/index.html`, `broadcast/index.html`, `index.html`. Commit 9cdbfd9.
+After the first build of the radio look, the layout was reworked by hand, outside Kiro. Kiro had built the look from the style rules and checked it with tests, but had not looked at the pages in a browser. The tests check colours, sizes, ids and motion, not how a page reads and works on a screen, so they did not catch these problems:
+- **The bar covered the form.** On Broadcast the Go on air bar sat over the fields being filled in. It is now the last thing in the form and sticks to the screen bottom, so it covers nothing at the end of the page. Messages sit in the bar above the buttons, and the preview and say-first line come before it.
+- **No shared gutter.** The header and the page did not line up. They now sit in one column with one 16 px gutter.
+- **Tile names.** Names could break at any letter. They now wrap between words or hyphenate, with no capitals or letter spacing.
+- **Switches.** Only the TEST toggle looked like a switch. Now every checkbox is a pill switch: a hollow knob when off, a solid knob when on.
+- **Locked controls.** Controls locked while on air had no look of their own. They now go hollow, and the value stays readable. Solid means live and hollow means idle, the same idea as the lamps.
+- **Wide screens.** The pages stayed one narrow column. From 60em Broadcast puts the form on the left and what goes on air on the right. Listen, once it has a card, puts the receiver on the left and the cards on the right.
+No script, TypeScript or test file changed, and all tests still pass (155 files, 1507 tests). The style rules and the radio look report were updated afterwards to describe the pages as they are now.
+

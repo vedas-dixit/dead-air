@@ -80,7 +80,8 @@ Text and shape pairs, night theme:
 - One corner radius for every tile, card, field and panel: 12 px.
 - Buttons and switches are full pills (radius 999 px). The TEST banner is a straight bar with no radius.
 - Forbidden: shadows, gradients, glows, blur, outlines that fake a glow, textures, images used as decoration.
-- Separation comes from panel colour and space, not from lines or depth.
+- Separation comes from panel colour and space, not from lines or depth. Lines appear only as marks: the 3 px ring of a hollow control (see State), an ink bar on the left of a field error and of the say-first line, and the ink ring round the TEST question.
+- State, taken from the lamps: solid means live, hollow means idle. A lit lamp, a switch that is on and a button you can press are solid. An unlit lamp, a switch that is off and a locked control are hollow: a 3 px ring with the page colour inside. Buttons, fields and tiles carry a 3 px border in their own fill colour, so going hollow does not change their size.
 - Focus: 3 px solid ring, ink in light and paper at night, with a 3 px gap.
 - Selected tile: inverted in both themes. Light: ink fill, paper text and icon. Night: paper fill, ink text and icon. A round dot in the tile's corner also marks it, so selection never relies on colour alone.
 
@@ -90,7 +91,9 @@ Text and shape pairs, night theme:
 - At most 60 KB for all font files together, woff2, the package's unmodified Latin subset, using `unicode-range` so Hindi never falls into it.
 - No font is loaded from another site. No font loader script. This is the only font family the languages spec's tests allow (see the edit to those tests below).
 - Hindi uses the phone's own font (`system-ui` stack). The layout must hold in both languages: no fixed-height text boxes, no clipped lines, line height at least 1.5 for Hindi, and every screen checked in both.
+- Headings and other tight lines use line height 1.25 in Latin and 1.6 in Hindi. Latin text inside a Hindi page (the "English" button) keeps the bundled font.
 - Small labels: capitals with wide spacing (0.12em). Where a language has no capitals (Hindi), turn off capitalisation and set letter spacing to 0, because spacing breaks joined Devanagari letters. Use `:lang(hi)`.
+- Tile names and the words beside a switch are words to read, not small labels: no capitals and no letter spacing. Switch words are at body size. A long tile name wraps between words or hyphenates, never at any letter.
 - Record the font's licence (name, SIL Open Font License 1.1, source package and version) in `README.md`. Ship the package's `LICENSE` text and copyright line next to the font files, because the licence requires every copy to carry them. Do not modify or rename the font.
 
 ## Size
@@ -98,7 +101,7 @@ Text and shape pairs, night theme:
 - Large text. Body at least 1.125rem. Alert event name at least 2rem. Labels at least 0.875rem.
 - All sizes in `rem` so they follow the phone's own text size setting. No `px` font sizes, no `user-scalable=no`, no text-size locks. The layout must still work at 200% text size.
 - Touch targets at least 48 by 48 px with at least 8 px between neighbours. Tiles, switch positions, the language switch and every button follow this.
-- One thumb: the primary control of each page (Go on air, listening lamp and start button) sits in the lower half of the screen on a phone. Nothing important sits only in a top corner except the header switches, which stay within 48 px targets.
+- One thumb: on a phone the primary controls of each page (Go on air and Stop on Broadcast, Start and Stop on Listen) sit in a bar at the bottom of the screen. Nothing important sits only in a top corner except the header switches, which stay within 48 px targets.
 - Readable at arm's length: ink on paper at the sizes above, no light-weight type, no text under 0.875rem.
 
 ## Motion
@@ -109,9 +112,16 @@ Text and shape pairs, night theme:
 - Under `prefers-reduced-motion: reduce`: no flash and no transitions or easing. The grille is a meter, not decoration, so it still shows the level, stepping at most twice a second with no easing. State otherwise shows by text, lamp and shape.
 - No decorative animation, no loading spinners that loop, no animated backgrounds.
 
+## Layout
+
+- Phone first: one column, at most 40rem wide and centred. The header and the page share one 16 px gutter.
+- From 60em wide, the Broadcast page, and the Listen page once it has a card, open into two columns up to 72rem wide, like the face of a hi-fi. See Broadcast layout and Listen layout below.
+- The page headings (`h1`) of Listen and Broadcast are kept for screen readers and the page outline, but not drawn.
+- The `hidden` attribute always wins over any display rule. An empty message area takes no room.
+
 ## Header, on every page
 
-- Name, then a two-position switch between Listen and Broadcast drawn as a slide switch (a pill track with a round knob and both labels in text), then the language switch.
+- Name, then a two-position switch between Listen and Broadcast drawn as a slide switch (a pill track with a round knob and both labels in text), then the language switch. On a phone the switch takes the rest of the first row, up to 20rem, and the knob sits inside the track with a 4 px inset.
 - The current page is shown by knob position and by text, never by colour alone.
 - The switch is a pair of real links to `/listen` and `/broadcast`. It works without scripts and keyboard use works.
 
@@ -138,15 +148,24 @@ Text and shape pairs, night theme:
 
 ## Components
 
-- Broadcast event picker: a grid of nine tiles, each with icon and name, built as a group of radio buttons in a `fieldset` with a `legend`. Arrow keys move the choice, and screen readers announce name, position and state.
-- TEST toggle: a clear switch with a text state ("TEST ON" / "TEST OFF") and an orange lamp when on.
-- Go on air: the largest control on the Broadcast page, a full-width pill, with an orange on-air lamp while it plays and a text state.
+- Broadcast event picker: a grid of nine tiles, each with icon and name, built as a group of radio buttons in a `fieldset` with a `legend`. Arrow keys move the choice, and screen readers announce name, position and state. Three tiles across, a bank of nine. It falls to two across, then one, when a third of the row is too narrow for a tile (a very small phone, or large text). While on air the picker is locked: the tiles not chosen go hollow and the chosen tile stays solid.
+- Buttons: pills. Primary actions (Go on air, Start, and Cancel in the TEST question) are ink pills with paper text. Other buttons are panel pills. A button that cannot be pressed is hollow, with muted text on the page colour.
+- Fields: panel fill, 12 px radius. Locked while on air they go hollow and the value stays easy to read. An invalid field gets an ink border, and its error sits under it with an ink bar on its left.
+- Switches: every checkbox is drawn as a pill switch, 4.5rem by 48 px. Off is a hollow knob on the left, on is a solid knob on the right. The words sit beside it.
+- TEST toggle: a clear switch with a text state ("TEST ON" / "TEST OFF") above its label, and an orange lamp at the open end of the track when on.
+- Go on air: the largest control on the Broadcast page, a full-width pill at least 72 px high, with an orange on-air lamp while it plays and a text state. Its height is set in px so that at a large text size the bar does not take the screen away from the form. While sound plays it turns hollow and shows only the lamp and the on-air text, and Stop appears beside it as the solid pill. Stop is not drawn when there is nothing to stop.
+- Broadcast layout: one form in two parts. The fields come first: the event tiles; urgency and severity; action and place name; the map point (latitude and longitude, then the location button); valid for and station ID. Paired fields sit side by side when each gets at least 15rem, otherwise one under the other. Then the deck: the TEST and repeat switches, the say-first line, the preview, Save, the status and repeat notes, and the bar. The bar is the last thing in the form and sticks to the bottom of the screen, so it sits over the form only until the user scrolls to it, and at the end of the page it covers nothing. Messages (the banner, the real-alert notice, the go note and the countdown) sit in the bar above the buttons. From 60em the fields are on the left and the deck on the right, up to 24rem wide. The deck stays in view while the form scrolls, scrolls inside itself on a short screen, and keeps the bar pinned to its foot.
+- Say-first line: 1.25rem, bold, with a 6 px ink bar on its left that marks it as speech. Its block and heading are not drawn until there is a line.
+- Preview: drawn as the card a listener gets, on the panel, with a small "draft" label pill. Not drawn until there is something to show.
+- Banner and error line: the Broadcast banner, the real-alert notice and the Listen error line are ink panels with paper text, bold.
+- TEST question: on a phone a bottom sheet, where the thumb is. From 40em it is centred. Paper with an ink ring, buttons stacked, over a panel-coloured backdrop.
 - Listen meter: a round speaker grille made of dots that react to the live sound. It exposes `role="meter"` with a text value for screen readers, and stays a meter for them. It keeps working under reduced motion (see Motion).
-- Listen layout: once an alert has arrived, the top of the newest card is on screen without scrolling on a 360 by 640 px phone, at default text size: the TEST banner if there is one, the icon tile, the event name and the sentence line. Rows below may need a scroll. The grille shrinks to a compact strip to make room. There is no "Details" fold. Start and Stop may sit in a bar fixed to the bottom of the screen, within thumb reach, and the page leaves room so the bar never covers a card.
-- Alert card: a large icon tile, the event name in large type, then the rest. Sent time is always shown (promise 2).
+- Listen layout: the receiver comes first. It holds the grille (14rem, at most 64 percent of the width) centred, the listening lamp and state line under it, then the unreadable, keep-open and history notes, then Start and Stop. Then the cards, newest first. Then the foot: the alert settings (flash and vibrate switches), Clear history, and the offline line and storage note in muted 0.875rem text. On a phone Start and Stop sit in a bar fixed to the bottom of the screen, buttons at least 56 px high, and the page leaves room so the bar never covers a card. From 60em the bar sits under the state line instead.
+- Once an alert has arrived, the grille shrinks to 4rem and shares one row with the state line, so the top of the newest card is on screen without scrolling on a 360 by 640 px phone, at default text size: the TEST banner if there is one, the icon tile, the event name and the sentence line. Rows below may need a scroll. There is no "Details" fold. From 60em, once there is a card, the receiver and the foot sit in a left column up to 22rem wide, with the grille full size again, and the cards fill the right column.
+- Alert card: a large icon tile, the event name in large type, then the rest. Sent time is always shown (promise 2). The rows are one column on a phone and two when the card is wide (each at least 17rem). The card's read-aloud button is an ink pill, because a panel pill would vanish on the panel.
 - TEST banner (promise 3): a full-width orange bar, ink text, always the first thing in a test alert.
 - Expired alert: the expired panel colour and a visible "no longer current" label. No strike-through anywhere on it. Sent time stays easy to read.
-- Front page placeholder: same colours, type and shapes only. It loads no app code and no other site's files.
+- Front page placeholder: same colours, type and shapes only. The header, then the name and two links inside `main`. It loads no app code and no other site's files.
 
 ## Interface files only
 
