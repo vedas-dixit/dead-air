@@ -8,7 +8,8 @@ import { checkExpiry } from '../message-code/index';
 import type { ExpiryStatus } from '../message-code/index';
 import { alertKey } from './history';
 import { parseHistory, serializeHistory } from './history-store';
-import { levelOf } from './level';
+import { INITIAL_LEVEL_STATE, bandLevel } from './level';
+import type { LevelState } from './level';
 import { applyPayload, clearHistory, endSession as endModelSession, initialModel, startSession } from './model';
 import type { ListenModel } from './model';
 import type {
@@ -35,6 +36,12 @@ export interface ListenDeps {
   strings: Strings;
   /** Called once for each alert that is new to the History while a Session runs. */
   onNewAlert?: (e: { expiry: ExpiryStatus }) => void;
+  /** The level measurement. Defaults to bandLevel. A throw leaves the level as it was. */
+  levelFn?: (
+    state: LevelState,
+    samples: Float32Array,
+    sampleRate: number,
+  ) => { state: LevelState; level: number };
 }
 
 export interface ListenController {
@@ -67,6 +74,9 @@ export function createListenController(deps: ListenDeps): ListenController {
   let notice: Notice = 'none';
   let historyKept = deps.storage.available;
   let level = 0;
+  let levelState: LevelState = INITIAL_LEVEL_STATE;
+  let levelRate = 0; // sample rate of the owner handle
+  const levelFn = deps.levelFn ?? bandLevel;
 
   let link: SoundLink | null = null;
   let linkRate = 0;
@@ -157,6 +167,7 @@ export function createListenController(deps: ListenDeps): ListenController {
     releaseWake();
     model = endModelSession(model);
     level = 0;
+    levelState = INITIAL_LEVEL_STATE;
     phase = 'idle';
   }
 
@@ -169,7 +180,13 @@ export function createListenController(deps: ListenDeps): ListenController {
     return (samples) => {
       if (handle !== owner || phase !== 'running' || !listener) return;
       try {
-        level = levelOf(samples);
+        const m = levelFn(levelState, samples, levelRate);
+        levelState = m.state;
+        level = m.level;
+      } catch {
+        // The level is only a display. It keeps its last value and the decoder is still fed.
+      }
+      try {
         const r = listener.feed(samples);
         if (r.ok) {
           const before = model.history;
@@ -292,6 +309,7 @@ export function createListenController(deps: ListenDeps): ListenController {
     }
 
     handle = hnd;
+    levelRate = hnd.sampleRate;
     listener = lst;
     hnd.start(makeOnBlock(hnd), makeOnLost(hnd));
     model = startSession(model, deps.clock.now());

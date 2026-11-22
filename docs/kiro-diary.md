@@ -230,3 +230,21 @@ After the first build of the radio look, the layout was reworked by hand, outsid
 - **Wide screens.** The pages stayed one narrow column. From 60em Broadcast puts the form on the left and what goes on air on the right. Listen, once it has a card, puts the receiver on the left and the cards on the right.
 No script, TypeScript or test file changed, and all tests still pass (155 files, 1507 tests). The style rules and the radio look report were updated afterwards to describe the pages as they are now.
 
+## Listen grille: band level fix (22 Nov 2026)
+Files: `.kiro/specs/listen-grille-band-level/`, `src/listen/level-band.ts`, `src/listen/level.ts`, `src/listen/controller.ts`, `scripts/measure-link-band.mjs`.
+The grille on the Listen page was driven by the peak of each block of sound. A knock on the table or a cough beat a far-off broadcast, because the knock has a much higher peak even though it is not in the sound link's pitch range. The tests did not catch this. A real-room test with a real broadcast did. The unit tests only checked that louder sound gave a higher number, which was true and not the point.
+First idea: measure the sound link band and compare it with one 3 second average of the room. That version faded out during a repeated broadcast. The average rose toward the broadcast and took the grille down with it. The back-to-back test (the same TEST broadcast played twice in a row with no gap) caught it.
+The fix:
+- **Band measurement.** Only the sound link's pitch range is measured, with Goertzel filters, so a thump at 70 Hz counts for almost nothing.
+- **Decibels.** The level is how many dB the band sits above the room, not a linear peak.
+- **Room background that falls quickly and rises slowly.** It falls with a time constant of 1 s and rises with 20 s, and one block can pull it up by at most 4 dB. A broadcast therefore cannot talk the background up to its own level during a replay.
+- **Short smoothing of the shown level.** It jumps up at once and falls with 0.5 s, so the grille does not dip between tone frames.
+Measured numbers (all TEST alerts, ears tools):
+- **LINK_BAND 1800 to 6400 Hz.** Measured over 7 broadcasts at 48000 and 44100 Hz. The measured range was 1828 to 6375 Hz at 48000 Hz, rounded outwards.
+- **16 filters over two 512 windows.** With 8 to 12 filters there were gaps between the filters, and the level of one block swung by 23 to 43 dB. 16 filters, each run over the two halves of a 1024 block, are much steadier.
+- **Constants.** GATE 8 dB, SPAN 12 dB, TAU_DOWN 1 s, TAU_UP 20 s, CAP 4 dB, background floor -55 dB.
+- **Tau sweep.** TAU_DOWN of 0.5 s and 1 s pass every check. 2 s and 4 s are too slow to recover after a step down in the room. Counter-example, not shipped: TAU 3 s for both directions and no cap fades out during play 2 at gain 0.02, dark from block 210.
+- **Decode limit about -6 dB SNR.** `round_trip` decoded 20 of 20 at -6 dB and 6 of 20 at -12 dB. White noise is not a room.
+- **Lit dots per second, back-to-back play (3.6a).** A real WAV from `make_broadcast` was joined to itself with no gap, 4 s of quiet room noise (peak 0.002) before it, 1024-sample blocks at 48000 Hz, 37 dots in the grille. `hear_wav` heard 4 payloads, all with the check passed, at no added noise and at 10 dB. `round_trip` decoded 20 of 20 at 20 dB and at 10 dB. Mean dots per second at the in-memory test's gain 0.02: 34, 34, 34, 11, 31, 32, 32, 30, 32, 31, 8, 33, 32, 33 (seconds 4 to 17, the room before it at 0). At gain 0.2: 37 every second except 15 in the two seconds where the pause between the two repeats inside each play falls (seconds 7 and 14). Play 2 was as lit as play 1. The low seconds are the short gap inside the file, so the dots there drop to 3 to 5 and not to 0. This agrees with the in-memory test within a few dots, so the test is right.
+Known limits: a hard knock close to the microphone can still light the first few dots, a lasting 20 dB rise in room noise stays lit for roughly 100 s, and a broadcast already playing when listening starts shows 0 for that play.
+In a real room the grille now reacts to a close or loud broadcast, but a far one can still decode without lighting it. That is a known limit for now.
