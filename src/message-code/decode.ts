@@ -2,6 +2,8 @@ import { eventFromCode, unpackUsa } from './codes';
 import { crc32 } from './crc32';
 import {
   CHECK_BYTES,
+  EVENT_MASK,
+  HOP_SHIFT,
   FLAG_COMPACT_PLACE,
   FLAG_PASSED_ON,
   FLAG_TEST,
@@ -39,9 +41,10 @@ export function decodeMessage(input: unknown): DecodeResult {
   if (crc32(input, 0, checkStart) !== readU32(input, checkStart)) return reject('bad-check');
 
   const flags = input[OFFSET.versionFlags]!;
-  const event = eventFromCode(input[OFFSET.event]!);
+  const b1 = input[OFFSET.event]!;
+  const event = eventFromCode(b1 & EVENT_MASK);
   if (event === null) return reject('unknown-event');
-
+  const hopCount = b1 >>> HOP_SHIFT;
 
   const usa = unpackUsa(input[OFFSET.usa]!);
   if (usa === null) return reject('invalid-field');
@@ -74,6 +77,7 @@ export function decodeMessage(input: unknown): DecodeResult {
   const alert: Alert = {
     test: (flags & FLAG_TEST) !== 0,
     passedOn: (flags & FLAG_PASSED_ON) !== 0,
+    hopCount,
     event,
     urgency: usa.urgency,
     severity: usa.severity,

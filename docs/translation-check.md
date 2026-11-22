@@ -3,7 +3,7 @@
 This text is machine-written. Only entries marked `checked` were checked by a native speaker. Review all other entries before real use.
 
 Checked: 0
-Needs human check: 217
+Needs human check: 232
 
 ## Strings
 | Key | English | Hindi | Status |
@@ -48,6 +48,7 @@ Needs human check: 217
 | labels.validFor.h48 | 48 hours | 48 घंटे | needs human check |
 | labels.field.test | Test switch | टेस्ट स्विच | needs human check |
 | labels.field.passedOn | Passed on | आगे भेजा गया | needs human check |
+| labels.field.hopCount | Times passed on | आगे भेजने की संख्या | needs human check |
 | labels.field.event | Event | घटना | needs human check |
 | labels.field.urgency | Urgency | तात्कालिकता | needs human check |
 | labels.field.severity | Severity | गंभीरता | needs human check |
@@ -216,6 +217,20 @@ Needs human check: 217
 | text.switch.test.off | TEST OFF | टेस्ट बंद | needs human check |
 | text.btn.onair | On air | प्रसारण जारी | needs human check |
 | text.card.expired | No longer current | अब मान्य नहीं | needs human check |
+| text.listen.pass.btn | Pass it on | आगे बढ़ाएँ | needs human check |
+| text.listen.pass.line.one | Passed on 1 time | 1 बार आगे बढ़ाया गया | needs human check |
+| text.listen.pass.line.many | Passed on {n} times | {n} बार आगे बढ़ाया गया | needs human check |
+| text.listen.pass.max | This alert cannot be passed on again. | इस चेतावनी को दोबारा आगे नहीं बढ़ाया जा सकता। | needs human check |
+| text.listen.pass.playing | Playing this alert so people nearby can hear it. | यह चेतावनी चल रही है ताकि आसपास के लोग इसे सुन सकें। | needs human check |
+| text.listen.pass.stop | Stop | रोकें | needs human check |
+| text.listen.pass.volume | Turn your volume all the way up. | अपनी आवाज़ पूरी तरह बढ़ा दें। | needs human check |
+| text.listen.pass.paused | Not listening while this phone plays the alert. | यह फ़ोन चेतावनी चला रहा है, इसलिए सुनना बंद है। | needs human check |
+| text.listen.pass.start-reason | The alert is still playing. Tap Start listening when the sound has finished. | चेतावनी अभी चल रही है। आवाज़ खत्म होने पर "सुनना शुरू करें" दबाएँ। | needs human check |
+| text.listen.pass.err.load | The sound could not be loaded. Tap Pass it on to try again. | आवाज़ लोड नहीं हो सकी। दोबारा कोशिश के लिए "आगे बढ़ाएँ" दबाएँ। | needs human check |
+| text.listen.pass.err.not-current | This alert is no longer current, so nothing was played. Only a current alert can be passed on. | यह चेतावनी अब मान्य नहीं है, इसलिए कुछ नहीं चलाया गया। केवल मान्य चेतावनी ही आगे बढ़ाई जा सकती है। | needs human check |
+| text.listen.pass.err.expired-mid | This alert ended while it was playing, so it was not played a second time. It cannot be passed on any more. | चलते समय यह चेतावनी समाप्त हो गई, इसलिए इसे दूसरी बार नहीं चलाया गया। इसे अब आगे नहीं बढ़ाया जा सकता। | needs human check |
+| text.listen.pass.err.failed | The alert could not be passed on. Tap Pass it on to try again. | चेतावनी आगे नहीं बढ़ाई जा सकी। दोबारा कोशिश के लिए "आगे बढ़ाएँ" दबाएँ। | needs human check |
+| text.listen.pass.err.audio | This phone could not play sound. Turn the volume up, switch off silent mode, then tap Pass it on again. | यह फ़ोन आवाज़ नहीं चला सका। आवाज़ बढ़ाएँ, साइलेंट मोड बंद करें, फिर "आगे बढ़ाएँ" दोबारा दबाएँ। | needs human check |
 
 ## Sample sentences (test alerts)
 | Key | English | Hindi | Status |

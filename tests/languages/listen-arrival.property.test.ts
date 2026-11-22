@@ -15,6 +15,8 @@ import {
   FakeListenClock,
   FakeListenStorage,
   FakePageVisibility,
+  makeFakeHost,
+  makeFakeTimeouts,
   FakeSoundLinkLoader,
   FakeWakeLock,
   flushPromises,
@@ -59,7 +61,7 @@ describe('Property 18: Only a new, running-session alert signals', () => {
             loadLink: loader.load,
             storage,
             wake: new FakeWakeLock(),
-            visibility: new FakePageVisibility(true),
+            visibility: new FakePageVisibility(true), host: makeFakeHost(), timeouts: makeFakeTimeouts(),
             strings: stringsEn,
             onNewAlert: (e) => calls.push(e.expiry),
           });
@@ -101,7 +103,7 @@ describe('Property 18: Only a new, running-session alert signals', () => {
       loadLink: loader.load,
       storage: new FakeListenStorage(),
       wake: new FakeWakeLock(),
-      visibility: new FakePageVisibility(true),
+      visibility: new FakePageVisibility(true), host: makeFakeHost(), timeouts: makeFakeTimeouts(),
       strings: stringsEn,
       onNewAlert: (e) => calls.push(e),
     });

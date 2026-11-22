@@ -6,6 +6,8 @@
 // No network request, no logging of samples. The service worker is in src/offline.
 import { loadSoundLink } from '../../sound-link/index';
 import type { Strings } from '../../broadcast/strings.types';
+import type { Timers } from '../../broadcast/providers';
+import { createWebAudioHost } from '../../broadcast/dom/web-audio';
 import { createSpeechController } from '../../languages/speech';
 import { mountLanguageSwitch } from '../../languages/dom/language-switch';
 import { applyDocumentLanguage, createWebLanguageState } from '../../languages/dom/web-language';
@@ -18,6 +20,7 @@ import type { ListenController } from '../controller';
 import type { SoundLinkLoader } from '../providers';
 import { ELEMENT_IDS } from './ids';
 import { readButtonKey } from './read-tap';
+import { passButtonKey } from './pass-tap';
 import { createGrille, prefersReducedMotion } from '../../shared/ui/dom/grille';
 import { createListenRenderer } from './render';
 import { createWebMicrophone } from './web-microphone';
@@ -27,6 +30,11 @@ import { createWakeLockProvider } from './web-wake-lock';
 import { createPersistence } from '../../offline/dom/persist';
 
 const TICK_MS = 1000;
+
+const webTimeouts: Timers = {
+  setTimeout: (fn, ms) => setTimeout(fn, ms),
+  clearTimeout: (h) => clearTimeout(h as ReturnType<typeof setTimeout>),
+};
 
 function byId<T extends HTMLElement>(id: string): T {
   const el = document.getElementById(id);
@@ -54,6 +62,8 @@ export function mount(): () => void {
     storage: createStorageProvider(),
     wake: createWakeLockProvider(),
     visibility: webVisibility,
+    host: createWebAudioHost(),
+    timeouts: webTimeouts,
     strings,
     onNewAlert: ({ expiry }) => arrival.signal(expiry),
   });
@@ -120,6 +130,14 @@ export function mount(): () => void {
   on(byId(ELEMENT_IDS.start), 'click', () => persistence.firstPress());
   on(byId(ELEMENT_IDS.stop), 'click', () => safe(() => controller.tapStop()));
   on(byId(ELEMENT_IDS.clear), 'click', () => safe(() => controller.tapClear()));
+  on(byId(ELEMENT_IDS.passStop), 'click', () => safe(() => controller.tapPassStop()));
+
+  // Pass it on: one delegated listener for every card. tapPass is called with no await
+  // before it, so the audio unlock runs inside the tap.
+  on(byId(ELEMENT_IDS.cards), 'click', (ev) => {
+    const key = passButtonKey(ev.target);
+    if (key) safe(() => controller.tapPass(key));
+  });
 
   // Alert settings switches.
   renderer.flashSwitch.checked = alertSettings.get().flash;

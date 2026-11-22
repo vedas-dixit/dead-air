@@ -22,6 +22,29 @@ export type Notice =
   | 'engine.failed'
   | 'listen.hidden-stop';
 
+export type PassPhase = 'idle' | 'loading' | 'playing';
+
+/** The one pass failure line shown, or none. There is no check failure line: a failed self-check uses err.failed. */
+export type PassNotice =
+  | 'none'
+  | 'listen.pass.err.not-current'
+  | 'listen.pass.err.expired-mid'
+  | 'listen.pass.err.failed'
+  | 'listen.pass.err.audio'
+  | 'listen.pass.err.load';
+
+export interface PassUi {
+  phase: PassPhase;
+  statusText: string | null; // listen.pass.playing, only while playing
+  volumeText: string | null; // listen.pass.volume, only while playing
+  stopVisible: boolean; // only while playing
+  errorText: string | null; // the one Failure_Line
+  start: {
+    enabled: boolean; // false while a load runs, a Copy plays or the Echo_Guard lasts
+    reasonText: string | null; // listen.pass.start-reason exactly when a pass disables Start
+  };
+}
+
 export interface ListenUi {
   state: ListenState;
   stateText: string;
@@ -35,6 +58,7 @@ export interface ListenUi {
   keepOpenText: string | null; // only while running
   historyUnkeptText: string | null;
   clearEnabled: boolean; // cards.length > 0
+  pass: PassUi;
 }
 
 export interface ListenUiInput {
@@ -46,6 +70,7 @@ export interface ListenUiInput {
   nowMs: number;
   offsetMinutes: number;
   strings: Strings;
+  pass: { phase: PassPhase; guard: boolean; notice: PassNotice };
 }
 
 function clampLevel(level: number): number {
@@ -54,11 +79,13 @@ function clampLevel(level: number): number {
 }
 
 export function buildListenUi(input: ListenUiInput): ListenUi {
-  const { model, phase, notice, historyKept, nowMs, offsetMinutes, strings } = input;
+  const { model, phase, notice, historyKept, nowMs, offsetMinutes, strings, pass } = input;
+  const passing = pass.phase !== 'idle' || pass.guard;
+  const playing = pass.phase === 'playing';
   const running = phase === 'running';
   const level = running ? clampLevel(input.level) : 0;
   const line = buildStateLine(model, nowMs, strings);
-  const cards = model.history.map((e) => buildCardView(e, nowMs, offsetMinutes, strings));
+  const cards = model.history.map((e) => buildCardView(e, nowMs, offsetMinutes, strings, { phase: pass.phase }));
 
   return {
     state: line.state,
@@ -73,5 +100,17 @@ export function buildListenUi(input: ListenUiInput): ListenUi {
     keepOpenText: running ? text(strings, 'listen.keep-open') : null,
     historyUnkeptText: historyKept ? null : text(strings, 'listen.history.unkept'),
     clearEnabled: cards.length > 0,
+    pass: {
+      phase: pass.phase,
+      statusText: playing ? text(strings, 'listen.pass.playing') : null,
+      volumeText: playing ? text(strings, 'listen.pass.volume') : null,
+      stopVisible: playing,
+      errorText: pass.notice === 'none' ? null : text(strings, pass.notice),
+      start: {
+        // The Start_Button has no other disabling rule today; it is hidden while running.
+        enabled: !passing,
+        reasonText: passing ? text(strings, 'listen.pass.start-reason') : null,
+      },
+    },
   };
 }

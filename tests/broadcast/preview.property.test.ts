@@ -10,6 +10,7 @@ const SENT_MS = Date.UTC(2026, 10, 19, 10, 0);
 const base: Alert = {
   test: true,
   passedOn: false,
+  hopCount: 0,
   event: 'flood',
   urgency: 'unknown',
   severity: 'unknown',

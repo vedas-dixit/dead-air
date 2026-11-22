@@ -20,6 +20,7 @@ const entryArb = alertArb.map((generated) => {
     bytes: encodeOrThrow(alert),
     alert,
     heardCount: 1,
+    highestHop: alert.hopCount,
     firstHeardMs: 0,
     lastHeardMs: 0,
   } as HistoryEntry;
@@ -39,7 +40,7 @@ describe('card properties', () => {
           const nowMs = alert.sentMinute * 60_000 + delta;
           const views = LANGUAGES.map((lang) => ({
             lang,
-            view: buildCardView(entry, nowMs, offset, lang.strings),
+            view: buildCardView(entry, nowMs, offset, lang.strings, { phase: 'idle' }),
           }));
           const untilOf = (v: (typeof views)[number]['view'], untilLabel: string) =>
             v.rows.find((r) => r.label === untilLabel)?.value;

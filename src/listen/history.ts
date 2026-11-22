@@ -5,6 +5,7 @@ export interface HistoryEntry {
   readonly bytes: Uint8Array; // the payload that passed the check
   readonly alert: Alert; // decodeMessage(bytes).alert, never edited
   readonly heardCount: number; // >= 1
+  readonly highestHop: number; // highest hopCount heard for this key
   readonly firstHeardMs: number;
   readonly lastHeardMs: number;
 }
@@ -33,13 +34,21 @@ export function recordHeard(
   const index = h.findIndex((e) => alertKey(e.alert) === key);
   if (index >= 0) {
     return h.map((e, i) =>
-      i === index ? { ...e, heardCount: e.heardCount + 1, lastHeardMs: nowMs } : e,
+      i === index
+        ? {
+            ...e,
+            heardCount: e.heardCount + 1,
+            lastHeardMs: nowMs,
+            highestHop: Math.max(e.highestHop, alert.hopCount),
+          }
+        : e,
     );
   }
   const entry: HistoryEntry = {
     bytes: new Uint8Array(bytes),
     alert,
     heardCount: 1,
+    highestHop: alert.hopCount,
     firstHeardMs: nowMs,
     lastHeardMs: nowMs,
   };

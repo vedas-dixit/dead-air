@@ -148,7 +148,7 @@ The map point (latitude and longitude) is optional and is never sent as a fake 0
 1. IF the Version in byte 0 is not 1, THEN THE Decoder SHALL return a Rejection with the reason `unknown-version`.
 2. THE Decoder SHALL read the Version before it applies any other layout rule that depends on the Version.
 3. IF a Message uses a Version other than 1, THEN THE Decoder SHALL NOT attempt to read its other fields.
-4. THE Message_Code SHALL require a new Version number for any change to the layout, to the Check_Value or to the code lists in Requirement 2.
+4. THE Message_Code SHALL keep the Version when a change to the layout, to the Check_Value or to the code lists in Requirement 2 leaves every old byte form byte-for-byte unchanged and older apps reject the new form safely, and SHALL raise the Version otherwise. The optional map point (No_Map_Point_Flag) and the hop count in the high 4 bits of byte 1 (spec 9, pass-it-on) are the precedents for keeping the Version.
 
 ### Requirement 7: Untrusted input and rejection reasons
 

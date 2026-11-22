@@ -62,6 +62,7 @@ export function toAlert(model: FormModel, sentMinute: number, counter: number): 
   return {
     test: model.test,
     passedOn: false,
+    hopCount: 0,
     event: model.event,
     urgency: model.urgency,
     severity: model.severity,

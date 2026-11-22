@@ -21,6 +21,8 @@ import {
   FakeListenClock,
   FakeListenStorage,
   FakePageVisibility,
+  makeFakeHost,
+  makeFakeTimeouts,
   FakeSoundLinkLoader,
   FakeWakeLock,
   flushPromises,
@@ -40,6 +42,7 @@ function testAlert(): Alert {
   return {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'flood',
     urgency: 'immediate',
     severity: 'severe',
@@ -67,7 +70,7 @@ function setup(extraDeps: Record<string, unknown> = {}) {
     loadLink: loader.load,
     storage,
     wake: new FakeWakeLock(),
-    visibility: new FakePageVisibility(true),
+    visibility: new FakePageVisibility(true), host: makeFakeHost(), timeouts: makeFakeTimeouts(),
     strings: stringsEn,
     ...extraDeps,
   });
@@ -150,7 +153,7 @@ describe('3.2 the grille lights from the centre outwards', () => {
 
 describe('3.5 and 3.6 the meter value and its text', () => {
   const model = initialModel([]);
-  const base = { model, notice: 'none' as const, historyKept: true, nowMs: NOW, offsetMinutes: 0, strings: stringsEn };
+  const base = { model, notice: 'none' as const, historyKept: true, nowMs: NOW, offsetMinutes: 0, strings: stringsEn, pass: { phase: 'idle' as const, guard: false, notice: 'none' as const } };
 
   it.each<Phase>(['idle', 'starting'])('reports level 0 when the phase is %s', (phase) => {
     const ui = buildListenUi({ ...base, phase, level: 0.8 });

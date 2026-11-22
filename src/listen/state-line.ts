@@ -6,12 +6,13 @@ import { text } from './texts';
 
 export const DEAD_AIR_WINDOW_MS = 90_000;
 
-export type ListenState = 'not-listening' | 'listening' | 'dead-air';
+export type ListenState = 'not-listening' | 'listening' | 'dead-air' | 'paused';
 
 export function decideState(m: ListenModel, nowMs: number): ListenState {
   if (m.sessionStartMs === null) return 'not-listening';
+  if (m.pauseStartMs !== null) return 'paused';
   const base = m.lastPayloadMs ?? m.sessionStartMs;
-  return nowMs - base > DEAD_AIR_WINDOW_MS ? 'dead-air' : 'listening';
+  return nowMs - base - m.pausedMs > DEAD_AIR_WINDOW_MS ? 'dead-air' : 'listening';
 }
 
 /** Whole minutes between the two times, never below 0. */
@@ -32,6 +33,9 @@ export function buildStateLine(
       state,
       text: text(strings, nothingHeard ? 'listen.state.idle.none' : 'listen.state.idle'),
     };
+  }
+  if (state === 'paused') {
+    return { state, text: text(strings, 'listen.pass.paused') };
   }
   if (state === 'listening') {
     return { state, text: text(strings, 'listen.state.listening') };

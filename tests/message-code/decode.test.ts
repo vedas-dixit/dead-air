@@ -19,6 +19,7 @@ describe('decodeMessage: accepted message', () => {
     expect(r.alert).toEqual({
       test: true,
       passedOn: false,
+      hopCount: 0,
       event: 'flood',
       urgency: 'immediate',
       severity: 'extreme',
@@ -57,7 +58,7 @@ describe('decodeMessage: flags (Req 9.3, 9.4)', () => {
   ];
   for (const [byte, test, passedOn] of cases) {
     it(`byte 0 = 0x${byte.toString(16)} gives test=${test}, passedOn=${passedOn}`, () => {
-      const r = decodeMessage(buildRaw({ flagsByte: byte }));
+      const r = decodeMessage(buildRaw({ flagsByte: byte, hopCount: passedOn ? 1 : 0 }));
       expect(r.ok).toBe(true);
       if (r.ok) {
         expect(r.alert.test).toBe(test);

@@ -13,6 +13,7 @@ const MIN = 60_000;
 const ALERT: Alert = {
   test: false,
   passedOn: false,
+  hopCount: 0,
   event: 'flood',
   urgency: 'immediate',
   severity: 'severe',

@@ -190,6 +190,7 @@ describe('Build timing', () => {
     const alert: Alert = {
       test: true,
       passedOn: false,
+      hopCount: 0,
       event: 'flood',
       urgency: 'immediate',
       severity: 'severe',

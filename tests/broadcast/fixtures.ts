@@ -86,6 +86,7 @@ export const modelNoPoint: FormModel = {
 export const alertWithPoint: Alert = {
   test: true,
   passedOn: false,
+  hopCount: 0,
   event: 'flood',
   urgency: 'immediate',
   severity: 'severe',
@@ -103,6 +104,7 @@ export const alertWithPoint: Alert = {
 export const alertNoPoint: Alert = {
   test: true,
   passedOn: false,
+  hopCount: 0,
   event: 'cyclone',
   urgency: 'expected',
   severity: 'extreme',
@@ -120,6 +122,7 @@ export const alertNoPoint: Alert = {
 export const alertZeroPoint: Alert = {
   test: true,
   passedOn: false,
+  hopCount: 0,
   event: 'all-clear',
   urgency: 'past',
   severity: 'minor',

@@ -31,6 +31,8 @@ import {
   FakeListenClock,
   FakeListenStorage,
   FakePageVisibility,
+  makeFakeHost,
+  makeFakeTimeouts,
   FakeSoundLinkLoader,
   FakeWakeLock,
   flushPromises,
@@ -43,6 +45,7 @@ describe('Listen controller language', () => {
   const alert: Alert = {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'flood',
     urgency: 'immediate',
     severity: 'severe',
@@ -67,7 +70,7 @@ describe('Listen controller language', () => {
       loadLink: loader.load,
       storage: new FakeListenStorage(),
       wake: new FakeWakeLock(),
-      visibility: new FakePageVisibility(true),
+      visibility: new FakePageVisibility(true), host: makeFakeHost(), timeouts: makeFakeTimeouts(),
       strings: stringsEn,
     });
     return { ctl, clock, audio, loader };
@@ -100,10 +103,11 @@ describe('Listen controller language', () => {
     expect(seen).toEqual([1]); // subscribers are told once
 
     const entryView = buildCardView(
-      { bytes: encodeOrThrow(alert), alert, heardCount: 1, firstHeardMs: NOW, lastHeardMs: NOW },
+      { bytes: encodeOrThrow(alert), alert, heardCount: 1, highestHop: 0, firstHeardMs: NOW, lastHeardMs: NOW },
       NOW,
       0,
       stringsHi,
+      { phase: 'idle' },
     );
     expect(after.cards[0]!.rows.map((r) => r.label)).toEqual(entryView.rows.map((r) => r.label));
     expect(after.cards[0]!.testBanner).toBe(stringsHi.text['test.banner']);

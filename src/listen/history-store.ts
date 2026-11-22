@@ -23,13 +23,14 @@ function fromHex(text: unknown): Uint8Array | null {
   return out;
 }
 
-/** Stores bytes, count, first heard and last heard. Never decoded fields. */
+/** Stores bytes, count, highest hop, first heard and last heard. Never decoded fields, audio or Copy bytes. */
 export function serializeHistory(h: History): string {
   return JSON.stringify({
     v: 1,
     entries: h.map((e) => ({
       b: toHex(e.bytes),
       n: e.heardCount,
+      h: e.highestHop,
       f: e.firstHeardMs,
       l: e.lastHeardMs,
     })),
@@ -58,7 +59,7 @@ export function parseHistory(text: string | null): History {
     for (const raw of root.entries as unknown[]) {
       try {
         if (typeof raw !== 'object' || raw === null) continue;
-        const e = raw as { b?: unknown; n?: unknown; f?: unknown; l?: unknown };
+        const e = raw as { b?: unknown; n?: unknown; h?: unknown; f?: unknown; l?: unknown };
         const bytes = fromHex(e.b);
         if (bytes === null) continue;
         if (!isCount(e.n) || !isTime(e.f) || !isTime(e.l)) continue;
@@ -71,6 +72,10 @@ export function parseHistory(text: string | null): History {
           bytes,
           alert: r.alert,
           heardCount: e.n,
+          highestHop:
+            typeof e.h === 'number' && Number.isInteger(e.h) && e.h >= 0 && e.h <= 15
+              ? Math.max(e.h, r.alert.hopCount)
+              : r.alert.hopCount,
           firstHeardMs: e.f,
           lastHeardMs: e.l,
         });

@@ -140,9 +140,12 @@ export const placeNameArb = fc.oneof(
 );
 
 // Generated alerts use both TEST flag values (Requirement 12.5). They are never stored.
+// Every Hop_Count 0 to 15 is generated. passedOn always equals hopCount >= 1.
+export const hopCountArb = fc.integer({ min: 0, max: 15 });
+
 export const alertArb: fc.Arbitrary<Alert> = fc.record({
   test: fc.boolean(),
-  passedOn: fc.boolean(),
+  hopCount: hopCountArb,
   event: eventArb,
   urgency: urgencyArb,
   severity: severityArb,
@@ -152,7 +155,7 @@ export const alertArb: fc.Arbitrary<Alert> = fc.record({
   stationId: fc.integer({ min: 0, max: 65535 }),
   counter: fc.integer({ min: 0, max: 255 }),
   placeName: placeNameArb,
-}).chain((base) =>
+}).map((r) => ({ ...r, passedOn: r.hopCount >= 1 })).chain((base) =>
   // About one alert in four has no map point. Real points include the edges and a real 0, 0.
   fc
     .oneof(

@@ -17,7 +17,7 @@ import { cardLook } from '../../src/shared/ui/card-look';
 const MIN = 60_000;
 
 function toEntry(alert: HistoryEntry['alert']): HistoryEntry {
-  return { bytes: encodeOrThrow(alert), alert, heardCount: 1, firstHeardMs: 0, lastHeardMs: 0 };
+  return { bytes: encodeOrThrow(alert), alert, heardCount: 1, highestHop: alert.hopCount, firstHeardMs: 0, lastHeardMs: 0 };
 }
 
 // Any alert (test or not): the banner rule must hold for both.
@@ -44,7 +44,7 @@ describe('Property 10: card order and always-visible fields', () => {
   it('banner first only for test alerts, icon tile before name, sent always present', () => {
     fc.assert(
       fc.property(caseArb, ({ alert, nowMs, offset, language }) => {
-        const view = buildCardView(toEntry(alert), nowMs, offset, language.strings);
+        const view = buildCardView(toEntry(alert), nowMs, offset, language.strings, { phase: 'idle' });
         const parts = cardLayout(view);
         if (alert.test) {
           expect(parts[0]).toBe('test-banner');
@@ -79,7 +79,7 @@ describe('Property 11: an expired alert is never styled as current', () => {
     fc.assert(
       fc.property(caseArb, ({ alert, nowMs, offset, language }) => {
         const status = checkExpiry(alert, nowMs).status;
-        const view = buildCardView(toEntry(alert), nowMs, offset, language.strings);
+        const view = buildCardView(toEntry(alert), nowMs, offset, language.strings, { phase: 'idle' });
         const look = cardLook(view);
         expect(look.state === 'current').toBe(status === 'current');
         expect(look.state === 'expired').toBe(status === 'expired');

@@ -14,6 +14,8 @@ const modelArb: fc.Arbitrary<ListenModel> = fc.record({
   sessionStartMs: maybeTimeArb,
   lastPayloadMs: maybeTimeArb,
   lastHeardMs: maybeTimeArb,
+  pauseStartMs: fc.constant(null),
+  pausedMs: fc.constant(0),
 }) as fc.Arbitrary<ListenModel>;
 
 // Feature: listen-page, Property 9
@@ -68,6 +70,8 @@ describe('Feature: listen-page, Property 9: the state line shows exactly one sta
           sessionStartMs: 0,
           lastPayloadMs: null,
           lastHeardMs: now + ahead,
+          pauseStartMs: null,
+          pausedMs: 0,
         };
         fc.pre(now > 90_000);
         const line = buildStateLine(m, now, stringsEn);
@@ -79,7 +83,7 @@ describe('Feature: listen-page, Property 9: the state line shows exactly one sta
   });
 
   it('flips at exactly 90 seconds', () => {
-    const m: ListenModel = { history: [], unreadable: false, sessionStartMs: 1000, lastPayloadMs: null, lastHeardMs: null };
+    const m: ListenModel = { history: [], unreadable: false, sessionStartMs: 1000, lastPayloadMs: null, lastHeardMs: null, pauseStartMs: null, pausedMs: 0 };
     expect(decideState(m, 91_000)).toBe('listening');
     expect(decideState(m, 91_001)).toBe('dead-air');
   });
@@ -88,7 +92,7 @@ describe('Feature: listen-page, Property 9: the state line shows exactly one sta
 // Unit tests for the exact state texts.
 // **Validates: Requirements 10.5, 10.6, 10.7, 9.3**
 describe('state line texts', () => {
-  const base: ListenModel = { history: [], unreadable: false, sessionStartMs: 0, lastPayloadMs: null, lastHeardMs: null };
+  const base: ListenModel = { history: [], unreadable: false, sessionStartMs: 0, lastPayloadMs: null, lastHeardMs: null, pauseStartMs: null, pausedMs: 0 };
 
   it('says how many minutes ago the last alert was heard', () => {
     const m = { ...base, lastHeardMs: 10_000 };

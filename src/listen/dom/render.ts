@@ -79,6 +79,8 @@ function cardSignature(card: CardView): string {
     card.expiredLabel,
     card.clockLine,
     card.heardText,
+    card.passedOnLine,
+    card.passButton,
   ]);
 }
 
@@ -162,6 +164,22 @@ function buildCardElement(
         break; // built below
     }
   }
+  if (card.passedOnLine !== null) {
+    article.appendChild(text('div', 'card-passed', card.passedOnLine));
+  }
+  if (card.passButton !== null) {
+    const block = doc.createElement('div');
+    block.className = 'card-pass';
+    const btn = doc.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('data-part', 'pass');
+    btn.setAttribute('data-pass-key', card.key);
+    btn.textContent = card.passButton.label;
+    btn.disabled = !card.passButton.enabled;
+    block.appendChild(btn);
+    if (card.passButton.note !== null) block.appendChild(text('p', 'card-pass-note', card.passButton.note));
+    article.appendChild(block);
+  }
   const voice = doc.createElement('div');
   voice.className = 'card-voice';
   voice.setAttribute('data-read', card.key);
@@ -228,6 +246,11 @@ export function createListenRenderer(
     flash: byId<HTMLInputElement>(doc, ELEMENT_IDS.setFlash),
     vibrate: byId<HTMLInputElement>(doc, ELEMENT_IDS.setVibrate),
     vibrateRow: byId<HTMLElement>(doc, ELEMENT_IDS.setVibrateRow),
+    passStatus: byId<HTMLElement>(doc, ELEMENT_IDS.passStatusLine),
+    passVolume: byId<HTMLElement>(doc, ELEMENT_IDS.passVolumeLine),
+    passStop: byId<HTMLButtonElement>(doc, ELEMENT_IDS.passStop),
+    passError: byId<HTMLElement>(doc, ELEMENT_IDS.passErrorLine),
+    startReason: byId<HTMLElement>(doc, ELEMENT_IDS.startReasonLine),
   };
   // Vibration is hidden where the browser cannot do it.
   setHidden(el.vibrateRow, typeof navigator === 'undefined' || typeof navigator.vibrate !== 'function');
@@ -297,6 +320,12 @@ export function createListenRenderer(
     setHidden(el.start, ui.running);
     setHidden(el.stop, !ui.running);
     setDisabled(el.clear, !ui.clearEnabled);
+    setDisabled(el.start, !ui.pass.start.enabled);
+    setLine(el.startReason, ui.pass.start.reasonText);
+    setLine(el.passStatus, ui.pass.statusText);
+    setLine(el.passVolume, ui.pass.volumeText);
+    setLine(el.passError, ui.pass.errorText);
+    setHidden(el.passStop, !ui.pass.stopVisible);
 
     scheduleMeter(Math.round(Math.min(1, Math.max(0, ui.level)) * 100), ui.levelLabel);
 

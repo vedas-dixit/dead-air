@@ -20,6 +20,7 @@ const entryArb: fc.Arbitrary<HistoryEntry> = fc
     bytes: encodeOrThrow(alert),
     alert,
     heardCount,
+    highestHop: alert.hopCount,
     firstHeardMs: 0,
     lastHeardMs: 0,
   })) as fc.Arbitrary<HistoryEntry>;
@@ -55,7 +56,7 @@ describe('Feature: listen-page, Property 3: not current is never shown as curren
     fc.assert(
       fc.property(timedEntryArb, ([entry, nowMs, offset]) => {
         const status = checkExpiry(entry.alert, nowMs).status;
-        const view = buildCardView(entry, nowMs, offset, stringsEn);
+        const view = buildCardView(entry, nowMs, offset, stringsEn, { phase: 'idle' });
 
         expect(view.expiryStatus).toBe(status);
         expect(view.presentedAsCurrent).toBe(status === 'current');
@@ -87,6 +88,7 @@ describe('Feature: listen-page, Property 3: not current is never shown as curren
       bytes: new Uint8Array(0),
       alert: { stationId: 1, counter: 0, sentMinute: 1000, validSteps: 4, test: true },
       heardCount: 1,
+      highestHop: 0,
       firstHeardMs: 0,
       lastHeardMs: 0,
     } as unknown as HistoryEntry;
@@ -101,7 +103,7 @@ describe('Feature: listen-page, Property 3: not current is never shown as curren
 // **Validates: Requirements 4.5, 4.6, 4.7, 4.8**
 
 function toEntry(alert: HistoryEntry['alert'], heardCount: number): HistoryEntry {
-  return { bytes: encodeOrThrow(alert), alert, heardCount, firstHeardMs: 0, lastHeardMs: 0 };
+  return { bytes: encodeOrThrow(alert), alert, heardCount, highestHop: alert.hopCount, firstHeardMs: 0, lastHeardMs: 0 };
 }
 
 /** Test alerts in any state, some taken back through serializeHistory and parseHistory. */
@@ -125,7 +127,7 @@ describe('Feature: listen-page, Property 4: TEST banner and sent time always sho
     fc.assert(
       fc.property(bannerCaseArb, ({ entry, nowMs, offset }) => {
         expect(entry.alert.test).toBe(true);
-        const view = buildCardView(entry, nowMs, offset, stringsEn);
+        const view = buildCardView(entry, nowMs, offset, stringsEn, { phase: 'idle' });
         expect(view.testBanner).toBe(stringsEn.text['test.banner']);
         expect(view.testBanner).toBeTruthy();
         expect(view.sentText.length).toBeGreaterThan(0);
@@ -144,7 +146,7 @@ describe('Feature: listen-page, Property 4: TEST banner and sent time always sho
         (a, count, nowMs) => {
           // ALLOWED-NON-TEST: deliberate negative case, checked by fixtures.test.ts.
           const entry = toEntry({ ...a, test: false }, count);
-          const view = buildCardView(entry, nowMs, 0, stringsEn);
+          const view = buildCardView(entry, nowMs, 0, stringsEn, { phase: 'idle' });
           expect(view.testBanner).toBeNull();
           expect(view.sentText.length).toBeGreaterThan(0);
         },
@@ -180,7 +182,7 @@ describe('Feature: listen-page, Property 5: optional rows appear only when the d
           longitude: point ? point[1] : null,
           stationId,
         } as HistoryEntry['alert'];
-        const view = buildCardView(toEntry(alert, 1), 0, 0, stringsEn);
+        const view = buildCardView(toEntry(alert, 1), 0, 0, stringsEn, { phase: 'idle' });
         const labels = view.rows.map((r) => r.label);
         const placeLabel = stringsEn.text['preview.place'];
         const mapLabel = stringsEn.text['preview.map'];
@@ -202,6 +204,7 @@ describe('Feature: listen-page, Property 5: optional rows appear only when the d
 const fixedAlert: HistoryEntry['alert'] = {
   test: true,
   passedOn: false,
+  hopCount: 0,
   event: 'flood',
   urgency: 'immediate',
   severity: 'extreme',
@@ -219,13 +222,13 @@ describe('card unit tests', () => {
   const nowMs = fixedAlert.sentMinute * MS_PER_MINUTE;
 
   it('says "Heard 1 time" for one and "Heard N times" for more', () => {
-    expect(buildCardView(toEntry(fixedAlert, 1), nowMs, 0, stringsEn).heardText).toBe('Heard 1 time');
-    expect(buildCardView(toEntry(fixedAlert, 2), nowMs, 0, stringsEn).heardText).toBe('Heard 2 times');
-    expect(buildCardView(toEntry(fixedAlert, 17), nowMs, 0, stringsEn).heardText).toBe('Heard 17 times');
+    expect(buildCardView(toEntry(fixedAlert, 1), nowMs, 0, stringsEn, { phase: 'idle' }).heardText).toBe('Heard 1 time');
+    expect(buildCardView(toEntry(fixedAlert, 2), nowMs, 0, stringsEn, { phase: 'idle' }).heardText).toBe('Heard 2 times');
+    expect(buildCardView(toEntry(fixedAlert, 17), nowMs, 0, stringsEn, { phase: 'idle' }).heardText).toBe('Heard 17 times');
   });
 
   it('shows event, urgency, severity, action and sender ID with exact values', () => {
-    const view = buildCardView(toEntry(fixedAlert, 1), nowMs, 0, stringsEn);
+    const view = buildCardView(toEntry(fixedAlert, 1), nowMs, 0, stringsEn, { phase: 'idle' });
     const row = (label: string) => view.rows.find((r) => r.label === label)?.value;
     expect(row('Event')).toBe('Flood');
     expect(row('Urgency')).toBe('Immediate');
@@ -236,7 +239,7 @@ describe('card unit tests', () => {
 
   it('shows a map row of 0.0000 for a card at map point 0 and 0', () => {
     const alert = { ...fixedAlert, latitude: 0, longitude: 0 };
-    const view = buildCardView(toEntry(alert, 1), nowMs, 0, stringsEn);
+    const view = buildCardView(toEntry(alert, 1), nowMs, 0, stringsEn, { phase: 'idle' });
     const map = view.rows.find((r) => r.label === 'Map point');
     expect(map).toBeDefined();
     expect(map?.value).toContain('0.0000');

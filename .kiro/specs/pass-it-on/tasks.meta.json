@@ -1,0 +1,796 @@
+{
+  "pbtResults": {
+    "6.5 Write property tests for the History store": {
+      "status": "passed",
+      "lastRunTimestamp": 1795342814814
+    },
+    "6.6 Write property tests for the card view": {
+      "status": "passed",
+      "lastRunTimestamp": 1795342828630
+    },
+    "6.4 Write property tests for the History merge": {
+      "status": "passed",
+      "lastRunTimestamp": 1795342925542
+    },
+    "7.3 Write property tests for the pass logic and the pairing rule": {
+      "status": "passed",
+      "lastRunTimestamp": 1795343257126
+    },
+    "9.8 Write property tests for the pause, the Start_Button, the Pass_Button state and the link reload": {
+      "status": "passed",
+      "lastRunTimestamp": 1795345249383
+    }
+  },
+  "executionHistory": {
+    "1.1 Update the Message_Code test helpers for `hopCount`": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784333
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339827879
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339943926
+      }
+    ],
+    "1.2 Write the example tests for the new layout": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784366
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339957992
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340083166
+      }
+    ],
+    "1.3 Change the four Message_Code property tests to cover every Hop_Count": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784400
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339958713
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340083987
+      }
+    ],
+    "1.4 Run the changed tests against the unchanged source and record the failures": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784433
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340090294
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340141561
+      }
+    ],
+    "2.1 Add `hopCount` to the types and the layout constants": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784471
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340150275
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340200593
+      }
+    ],
+    "2.2 Add the hop count and pairing rules to `validateAlert`": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784504
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340201457
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340239883
+      }
+    ],
+    "2.3 Split byte 1 in the encoder and the decoder, and export the constant": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784536
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340240419
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340314129
+      }
+    ],
+    "2.4 Verify that message-code Requirement 6.4 already states the Version rule": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784568
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340248342
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340313422
+      }
+    ],
+    "2.5 Run the Message_Code tests and confirm they pass": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784599
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340323948
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341401000
+      }
+    ],
+    "3. Checkpoint - Message_Code change complete": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784629
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341411295
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341449880
+      }
+    ],
+    "4.1 Edit the Broadcast page sources": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784661
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341458362
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341550490
+      }
+    ],
+    "4.2 Edit the Languages source": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784691
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341458400
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341551289
+      }
+    ],
+    "4.3 Edit test literals of other specs": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784732
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341458888
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342067786
+      }
+    ],
+    "5.1 Add the new text keys and the English texts": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784758
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342089584
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342173529
+      }
+    ],
+    "5.2 Add the Hindi texts and record them as Needs_Human_Check": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784784
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342174292
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342266726
+      }
+    ],
+    "5.3 Write tests for the new strings": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784810
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342267347
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342394411
+      }
+    ],
+    "6.1 Track `highestHop` in the History": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784837
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342268135
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342395394
+      }
+    ],
+    "6.2 Save and load `highestHop` in the History store": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784868
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342411902
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342674314
+      }
+    ],
+    "6.3 Add the Passed_On_Line and the Pass_Button view to the card": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784898
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342411953
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342561351
+      }
+    ],
+    "6.4 Write property tests for the History merge": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784928
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342694454
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342977306
+      }
+    ],
+    "6.5 Write property tests for the History store": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784956
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342694520
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342978394
+      }
+    ],
+    "6.6 Write property tests for the card view": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339784989
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342695596
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342979221
+      }
+    ],
+    "7.1 Create `src/listen/pass.ts`": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785029
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342999295
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343148647
+      }
+    ],
+    "7.2 Create `src/listen/pass-run.ts`": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785060
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343000324
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343149506
+      }
+    ],
+    "7.3 Write property tests for the pass logic and the pairing rule": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785089
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343166374
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343300607
+      }
+    ],
+    "7.4 Write example tests for `prepareCopy` and the runner": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785117
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343167482
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343301698
+      }
+    ],
+    "7.5 Write the integration test through the real Sound_Link": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785145
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343168333
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343303048
+      }
+    ],
+    "8. Checkpoint - Pure logic, History and card": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785173
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343312997
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343459553
+      }
+    ],
+    "9.1 Add the providers": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785207
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343492991
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343820793
+      }
+    ],
+    "9.2 Add the pause to the model and the state line": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785236
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343493918
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343821776
+      }
+    ],
+    "9.3 Add the pass fields to the UI state": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785296
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343842807
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343965308
+      }
+    ],
+    "9.4 Add the link loading to the controller: `ensureLink(micRate)` and `ensurePlayLink()`": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785321
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343966410
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344076793
+      }
+    ],
+    "9.5 Add the pass flow to the controller": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785344
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344077613
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344258144
+      }
+    ],
+    "9.6 Add the DOM": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785369
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344258744
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344612101
+      }
+    ],
+    "9.7 Add styles only if the existing classes are not enough": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785394
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344612760
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344786485
+      }
+    ],
+    "9.8 Write property tests for the pause, the Start_Button, the Pass_Button state and the link reload": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785419
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344787289
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345330845
+      }
+    ],
+    "9.9 Write example tests for the controller flow": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785447
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344803747
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345330898
+      }
+    ],
+    "9.10 Write promise and offline tests": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785482
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795344787853
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345331114
+      }
+    ],
+    "10. Checkpoint - Controller and DOM": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785514
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345346198
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345401004
+      }
+    ],
+    "11.1 Write the code-side sections of the Report_File": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785546
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345401504
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345508866
+      }
+    ],
+    "11.2 Manual report task: real-phone checks to be reported": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785577
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345509422
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345531554
+      }
+    ],
+    "12. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795339785608
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345531633
+      },
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345630376
+      }
+    ],
+    "1. Change the Message_Code tests first and show them failing": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795340141594
+      }
+    ],
+    "2. Change the Message_Code source": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795341401034
+      }
+    ],
+    "4. Add `hopCount: 0` to Alert literals in other specs' files": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342067852
+      }
+    ],
+    "5. Strings in English and Hindi": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342394459
+      }
+    ],
+    "6. Listen history, store and card": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795342979255
+      }
+    ],
+    "7. Pure pass logic and the two-Play runner": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795343303086
+      }
+    ],
+    "9. Controller, UI state and DOM": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345331155
+      }
+    ],
+    "11. Report": [
+      {
+        "executionId": "4ab21701-7006-40dd-8816-4b482feb9eec",
+        "chatSessionId": "sess_74a3d3ec-0333-4ec9-a1be-320ae28c28bf",
+        "timestamp": 1795345531586
+      }
+    ]
+  }
+}

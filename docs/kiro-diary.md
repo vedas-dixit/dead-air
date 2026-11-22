@@ -128,6 +128,16 @@ Not verified yet (all listed in `report.md`):
 
 Final test count: 358 new tests, 841 in total in 44 files, all passing (`npm test`). Before this spec's own tests the total was 483, after the message code change. `npm test` prints two Node `MaxListenersExceededWarning` messages, which come from loading ggwave many times in tests.
 
+## Spec 4: Listen page (21 Nov 2026)
+Files: `src/listen/`, `listen/index.html`, `tests/listen/`. Commit 76b236a.
+After a tap on "Start listening" the page listens on the microphone, gives the audio to the sound link, and sends every payload through `decodeMessage`. A payload that passes the check shows as an alert card. A payload that fails shows only "Heard something but could not read it. Waiting for the repeat." (promise 1).
+- **Cards** show event, urgency, severity, action, sent time, valid-until time, sender ID, place name, map point when present, the TEST banner, and an Expired word with a greyed style. Expiry is checked again on every render and never read from storage (promise 2).
+- **History** is kept in `localStorage`, up to 100 cards. Stored bytes are decoded again on load and bad entries are dropped.
+- **State line** says "dead air" after 90 seconds of nothing. There is a live level meter, Clear history, a screen wake lock and a listen-again attempt when the page becomes visible again.
+- **Microphone** is requested with echo cancellation, noise suppression and auto gain control all off. Audio stays in memory and is discarded (promise 5).
+- **Tests:** 55 files, 944 tests, all fixtures are test alerts.
+- **Decision:** a payload with the same station, counter and sent minute but different bytes raises the count and keeps the first card's content.
+Known gaps at the time: no icons yet (promise 6, spec 8), no service worker yet (spec 6), only English (spec 7), and nothing tried on a real phone until the field tests above. One approved edit to a Broadcast test (`tests/broadcast/build-site.test.ts`), Listen-page assertions only.
 ## Spec 5: Kiro's ears (21 Nov 2026)
 What was built: a small local MCP server, `dead-air-ears`, in `tools/ears/`. It has three tools: `make_broadcast` (TEST alert JSON to a WAV file), `hear_wav` (WAV file, with optional noise, through the Listen page decoder path) and `round_trip` (make, add noise, decode, count over N tries). It reuses `src/message-code`, `src/sound-link` and `composeBroadcastAudio` and changes none of them.
 Where things are:
@@ -166,6 +176,14 @@ Not verified yet:
 - Kiro connecting to the server in a real session. The protocol is tested with a child process, not with Kiro.
 - Anything on a real speaker, a real phone or in a real room.
 
+## Spec 6: Offline (21 Nov 2026)
+Files: `src/offline/`, `tests/offline/`, `build/`. Commit 1a36431.
+A service worker saves every file the app needs on the first visit to any of the three pages, then serves from that saved copy. A manifest makes the Home Screen icon open `/listen`.
+- **The file list is built from the build output,** not written by hand, so a new file cannot be forgotten.
+- **Install is all or nothing.** Either every file is saved or none is. Old caches are removed on a new version and other storage (the History) is left alone.
+- **Own address only (promise 4).** An offline check scans the built files and fails on any request to another address. The only exceptions are listed in `src/offline/allow-list.ts` with a reason each: the worker's own fetches, the ggwave loader paths that never run because the wasm is embedded, and one SVG namespace name.
+- **Front page images are left out** of the saved copy to keep it small. It works with an empty `BASE_PATH` and with a sub-path.
+Not tested on a real phone: all eight real-device checks in `.kiro/specs/offline/report.md` are marked "not run on a real device". Tests cover only part of each.
 ## Spec 7: Languages and read aloud (21 Nov 2026)
 
 Files: `.kiro/specs/languages/` (requirements, design, tasks and `report.md`). Code: `src/languages/` (logic, no DOM) and `src/languages/dom/` (browser adapters). Tests: `tests/languages/`. Review files: `docs/translation-check.md` and `docs/translation-reviewed.json`. It was added in one commit, `7a2a3f9`, "Add languages: Hindi text, language switch, read aloud, flash and vibrate alerts, translation check". The message code, the sound link and `tools/ears/` were not edited.
@@ -248,3 +266,15 @@ Measured numbers (all TEST alerts, ears tools):
 - **Lit dots per second, back-to-back play (3.6a).** A real WAV from `make_broadcast` was joined to itself with no gap, 4 s of quiet room noise (peak 0.002) before it, 1024-sample blocks at 48000 Hz, 37 dots in the grille. `hear_wav` heard 4 payloads, all with the check passed, at no added noise and at 10 dB. `round_trip` decoded 20 of 20 at 20 dB and at 10 dB. Mean dots per second at the in-memory test's gain 0.02: 34, 34, 34, 11, 31, 32, 32, 30, 32, 31, 8, 33, 32, 33 (seconds 4 to 17, the room before it at 0). At gain 0.2: 37 every second except 15 in the two seconds where the pause between the two repeats inside each play falls (seconds 7 and 14). Play 2 was as lit as play 1. The low seconds are the short gap inside the file, so the dots there drop to 3 to 5 and not to 0. This agrees with the in-memory test within a few dots, so the test is right.
 Known limits: a hard knock close to the microphone can still light the first few dots, a lasting 20 dB rise in room noise stays lit for roughly 100 s, and a broadcast already playing when listening starts shows 0 for that play.
 In a real room the grille now reacts to a close or loud broadcast, but a far one can still decode without lighting it. That is a known limit for now.
+## Spec 9: Pass it on (22 Nov 2026)
+Files: `.kiro/specs/pass-it-on/`, `src/message-code/`, `src/listen/pass.ts`, `src/listen/pass-run.ts`, `src/listen/controller.ts`.
+A listener whose phone holds a current alert can tap "Pass it on" and play it again, so people out of range of the first speaker hear it.
+- **Message code change.** `hopCount` (0 to 15) sits in the high 4 bits of byte 1, and `passedOn` is set exactly when `hopCount` is 1 or more. Version stays 1: old messages are byte for byte the same, and an older app rejects a copy safely. Message-code Requirement 6.4 now says this.
+- **Tests first.** The changed message-code tests were run against the old source first and 21 failed. The names are in `report.md`.
+- **The copy is the same alert with one more hop.** Same station, counter, sent time and valid-for, so it counts as the same alert. The TEST flag is kept. Encoding is followed by a decode and a field-by-field compare before any sound plays.
+- **Expiry is checked three times:** at the tap, when the sound is ready, and between the two plays. An alert that ends in between is not played a second time.
+- **Echo guard.** While the phone plays the alert, listening is paused and its microphone input dropped, and for 1 second after. The phone therefore does not hear itself and count its own copy. The History keeps the highest hop count per alert.
+- **Decision:** a Session start reloads the sound link only when the sample rates differ. A tap on Pass it on uses the loaded link at whatever rate, or loads one.
+- **Texts:** 14 new `listen.pass.*` texts plus one field label, English and Hindi. The Hindi is not reviewed by a Hindi speaker (Needs_Human_Check).
+What went wrong on the way: the new field broke every `Alert` literal in other specs' tests, and `tools/ears` had a sample alert without it, which failed 23 tests until the owner approved editing that tool. Two guard tests (the import boundary and the "no `test: false`" scan) caught mistakes in the new code and were not weakened.
+All checks pass: typecheck, build, 173 test files, 1697 tests. Not tried on a real phone: a second phone showing "Passed on 1 time", whether 1 second of guard is enough, and a phone with the previous app ignoring a copy. All three are "Not tested" in `report.md`.

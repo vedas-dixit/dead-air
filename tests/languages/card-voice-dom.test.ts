@@ -86,6 +86,8 @@ function card(key: string): CardView {
     sentence: null,
     event: 'flood',
     expiredLabel: null,
+    passedOnLine: null,
+    passButton: null,
   } as CardView;
 }
 
@@ -102,6 +104,14 @@ function listenUi(cards: CardView[]): ListenUi {
     unreadableText: null,
     keepOpenText: null,
     historyUnkeptText: null,
+    pass: {
+      phase: 'idle',
+      statusText: null,
+      volumeText: null,
+      stopVisible: false,
+      errorText: null,
+      start: { enabled: true, reasonText: null },
+    },
     clearEnabled: cards.length > 0,
   } as ListenUi;
 }

@@ -23,6 +23,12 @@ import type {
 
 // The Broadcast wake lock fake already implements WakeLockProvider, which Listen reuses.
 export { FakeWakeLock, FakeWakeLockHandle, flushPromises } from '../broadcast/fakes';
+export { FakeAudioHost, FakePlayer, FakeTimers } from '../broadcast/fakes';
+import { FakeAudioHost, FakePlayer, FakeTimers } from '../broadcast/fakes';
+
+/** The host and timeouts ListenDeps needs. Unlock resolves true. */
+export const makeFakeHost = (): FakeAudioHost => new FakeAudioHost(new FakePlayer(new FakeTimers()));
+export const makeFakeTimeouts = (): FakeTimers => new FakeTimers();
 
 // ---------------------------------------------------------------- clock and timers
 

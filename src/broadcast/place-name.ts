@@ -10,6 +10,7 @@ function probe(placeName: string): Alert {
   return {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'flood',
     urgency: 'unknown',
     severity: 'unknown',

@@ -25,6 +25,7 @@ export const DEFAULT_TRIES = 20;
 export const SAMPLE_ALERT = {
   test: true,
   passedOn: false,
+  hopCount: 0,
   event: 'flood',
   urgency: 'immediate',
   severity: 'severe',

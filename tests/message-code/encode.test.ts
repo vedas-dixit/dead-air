@@ -6,6 +6,7 @@ import type { Alert } from '../../src/message-code';
 const BASE: Alert = {
   test: true,
   passedOn: false,
+  hopCount: 0,
   event: 'flood',
   urgency: 'immediate',
   severity: 'severe',
@@ -42,7 +43,7 @@ describe('encodeAlert: general', () => {
   it('writes version 1 in the high nibble of byte 0', () => {
     expect(VERSION).toBe(1);
     expect(encode()[0] >>> 4).toBe(1);
-    expect(encode({ placeName: 'नई दिल्ली', passedOn: true })[0] >>> 4).toBe(1);
+    expect(encode({ placeName: 'नई दिल्ली', passedOn: true, hopCount: 1 })[0] >>> 4).toBe(1);
   });
 
   it('does not mutate the input alert', () => {
@@ -143,7 +144,7 @@ describe('encodeAlert: place name length', () => {
   });
 
   it('gives 21 bytes for the empty name in compact-capable alerts too', () => {
-    expect(encode({ placeName: '', passedOn: true }).length).toBe(21);
+    expect(encode({ placeName: '', passedOn: true, hopCount: 1 }).length).toBe(21);
   });
 });
 
@@ -197,7 +198,7 @@ describe('encodeAlert: byte 0 flags', () => {
         const expected = 0x10 | (testFlag ? 0x08 : 0) | (passedOn ? 0x04 : 0) | (compact ? 0x02 : 0);
         it(`test=${testFlag} passedOn=${passedOn} compact=${compact} -> 0x${expected.toString(16)}`, () => {
           // The TEST-bit-clear case is specifically about the flag (promise 3).
-          const b = encode({ test: testFlag, passedOn, placeName: name });
+          const b = encode({ test: testFlag, passedOn, hopCount: passedOn ? 1 : 0, placeName: name });
           expect(b[0]).toBe(expected);
         });
       }
@@ -220,7 +221,7 @@ describe('encodeAlert: byte 0 flags', () => {
   });
 
   it('sets bit 0 only when there is no map point', () => {
-    expect(encode({ test: true, passedOn: true, placeName: 'नई दिल्ली' })[0] & 1).toBe(0);
+    expect(encode({ test: true, passedOn: true, hopCount: 1, placeName: 'नई दिल्ली' })[0] & 1).toBe(0);
     expect(encode({ test: true, latitude: null, longitude: null })[0] & 1).toBe(1);
   });
 });

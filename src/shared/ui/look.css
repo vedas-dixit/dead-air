@@ -763,7 +763,8 @@ input[type='checkbox']:disabled {
 /* ---------- Messages ---------- */
 
 #banner,
-#error-line {
+#error-line,
+#pass-error-line {
   padding: 0.75rem 1rem;
   border-radius: var(--radius);
   color: var(--selected-fg);
@@ -1111,8 +1112,20 @@ input[type='checkbox']:disabled {
   gap: var(--gap);
 }
 
+.card-pass {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap);
+}
+
+.card-pass-note {
+  margin: 0;
+}
+
 /* On a panel a panel-coloured pill would vanish, so the card's button is ink. */
-.card-voice button {
+.card-voice button,
+.card-pass button:enabled {
   border-color: var(--selected-bg);
   color: var(--selected-fg);
   background: var(--selected-bg);

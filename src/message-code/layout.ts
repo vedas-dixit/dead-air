@@ -18,6 +18,10 @@ export const OFFSET = {
   placeName: 17,
 } as const;
 
+export const HOP_SHIFT = 4;
+export const EVENT_MASK = 0b0000_1111;
+export const MAX_HOP_COUNT = 15;
+
 export const FLAG_TEST = 0b0000_1000; // bit 3
 export const FLAG_PASSED_ON = 0b0000_0100; // bit 2
 export const FLAG_COMPACT_PLACE = 0b0000_0010; // bit 1, Compact_Place_Name_Flag

@@ -105,6 +105,7 @@ describe('Say_First examples', () => {
   const base: Alert = {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'flood',
     urgency: 'immediate',
     severity: 'severe',

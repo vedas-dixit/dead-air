@@ -1,6 +1,6 @@
 // Generators for the Listen page tests. Every alert here is a test alert (TEST flag set).
 import * as fc from 'fast-check';
-import type { Alert } from '../../src/message-code';
+import { decodeMessage, type Alert } from '../../src/message-code';
 import { alertArb, encodeOrThrow } from '../message-code/generators';
 
 /** Any alert from the message-code generators, with the TEST flag always set. */
@@ -35,6 +35,29 @@ export const heardSequenceArb: fc.Arbitrary<HeardItem[]> = fc
     const items = pool.map((alert): HeardItem => ({ alert, bytes: encodeOrThrow(alert) }));
     return picks.map((p) => items[p % items.length]!);
   });
+
+/** A heard sequence and a second ordering of the same payloads. */
+export const reorderedSequenceArb: fc.Arbitrary<{ first: HeardItem[]; second: HeardItem[] }> =
+  heardSequenceArb.chain((first) =>
+    fc
+      .shuffledSubarray(first, { minLength: first.length, maxLength: first.length })
+      .map((second) => ({ first, second })),
+  );
+
+/** Byte sequences the decoder rejects: valid messages with one changed byte, or other arrays. */
+export const rejectedBytesArb: fc.Arbitrary<Uint8Array> = fc
+  .oneof(
+    fc
+      .tuple(testAlertArb, fc.nat(), fc.integer({ min: 1, max: 255 }))
+      .map(([alert, at, xor]) => {
+        const b = Uint8Array.from(encodeOrThrow(alert));
+        const i = at % b.length;
+        b[i] = b[i]! ^ xor;
+        return b;
+      }),
+    fc.uint8Array({ minLength: 0, maxLength: 60 }),
+  )
+  .filter((b) => !decodeMessage(b).ok);
 
 export interface ChangedByte {
   original: Uint8Array;

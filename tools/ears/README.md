@@ -34,7 +34,7 @@ Writes the same two-play WAV file the Broadcast page saves, into `tools/ears/out
 ```json
 {
   "alert": {
-    "test": true, "passedOn": false, "event": "flood", "urgency": "immediate",
+    "test": true, "passedOn": false, "hopCount": 0, "event": "flood", "urgency": "immediate",
     "severity": "severe", "action": "evacuate", "validSteps": 24,
     "latitude": 129716, "longitude": 775946, "stationId": 1234, "counter": 1,
     "placeName": "Riverside ward 4"
@@ -59,7 +59,7 @@ Runs a WAV file through the decoder the Listen page uses. A message that fails i
 Makes a broadcast, adds noise, decodes, and counts results over N tries. The same inputs give the same result.
 
 ```json
-{ "alert": { "test": true, "passedOn": false, "event": "flood", "urgency": "immediate", "severity": "severe", "action": "evacuate", "validSteps": 24, "latitude": 129716, "longitude": 775946, "stationId": 1234, "counter": 1, "placeName": "Riverside ward 4" }, "noiseDb": -10, "tries": 20 }
+{ "alert": { "test": true, "passedOn": false, "hopCount": 0, "event": "flood", "urgency": "immediate", "severity": "severe", "action": "evacuate", "validSteps": 24, "latitude": 129716, "longitude": 775946, "stationId": 1234, "counter": 1, "placeName": "Riverside ward 4" }, "noiseDb": -10, "tries": 20 }
 ```
 
 `tries` is 1 to 200 (default 20). `seed` defaults to 1. Each try ends as `ok`, `wrong-alert`, `check-failed` or `nothing-heard`. A `wrong-alert` count above zero puts a WARNING on the first line of the result.
@@ -67,7 +67,7 @@ Makes a broadcast, adds noise, decodes, and counts results over N tries. The sam
 ## Quick check without Kiro
 
 ```sh
-node tools/ears/build/ears.mjs --call round_trip '{"alert":{"test":true,"passedOn":false,"event":"flood","urgency":"immediate","severity":"severe","action":"evacuate","validSteps":24,"latitude":null,"longitude":null,"stationId":1,"counter":1,"placeName":"x"},"noiseDb":0,"tries":3}'
+node tools/ears/build/ears.mjs --call round_trip '{"alert":{"test":true,"passedOn":false,"hopCount":0,"event":"flood","urgency":"immediate","severity":"severe","action":"evacuate","validSteps":24,"latitude":null,"longitude":null,"stationId":1,"counter":1,"placeName":"x"},"noiseDb":0,"tries":3}'
 ```
 
 `--call <tool> <json>` runs one tool and prints the result. It does not start the MCP server.

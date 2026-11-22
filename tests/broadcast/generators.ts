@@ -228,6 +228,7 @@ export function alertFromModel(model: FormModel, sentMinute: number, counter: nu
   return {
     test: model.test,
     passedOn: false,
+    hopCount: 0,
     event: model.event,
     urgency: model.urgency,
     severity: model.severity,

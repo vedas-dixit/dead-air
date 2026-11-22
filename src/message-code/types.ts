@@ -8,6 +8,7 @@ export type Action = 'shelter' | 'evacuate' | 'prepare' | 'avoid' | 'monitor' | 
 export interface Alert {
   readonly test: boolean; // TEST_Flag
   readonly passedOn: boolean; // Passed_On_Flag
+  readonly hopCount: number; // integer, 0 to 15
   readonly event: EventType;
   readonly urgency: Urgency;
   readonly severity: Severity;

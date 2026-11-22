@@ -18,6 +18,11 @@ export const ELEMENT_IDS = {
   setFlash: 'set-flash',
   setVibrate: 'set-vibrate',
   setVibrateRow: 'set-vibrate-row',
+  passStatusLine: 'pass-status-line',
+  passVolumeLine: 'pass-volume-line',
+  passStop: 'btn-pass-stop',
+  passErrorLine: 'pass-error-line',
+  startReasonLine: 'start-reason-line',
 } as const;
 
 export type ElementKey = keyof typeof ELEMENT_IDS;

@@ -12,6 +12,8 @@ import {
   FakeListenClock,
   FakeListenStorage,
   FakePageVisibility,
+  makeFakeHost,
+  makeFakeTimeouts,
   FakeSoundLinkLoader,
   FakeWakeLock,
   flushPromises,
@@ -23,6 +25,7 @@ function testAlert(over: Partial<Alert> = {}): Alert {
   return {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'flood',
     urgency: 'immediate',
     severity: 'severe',
@@ -55,7 +58,7 @@ function setup(opts: { storage?: FakeListenStorage; wake?: FakeWakeLock } = {}) 
     loadLink: loader.load,
     storage,
     wake,
-    visibility,
+    visibility, host: makeFakeHost(), timeouts: makeFakeTimeouts(),
     strings: stringsEn,
   });
   return { ctl, clock, audio, loader, storage, wake };
@@ -393,7 +396,7 @@ describe('storage', () => {
       loadLink: loader.load,
       storage: keyed,
       wake: new FakeWakeLock(),
-      visibility: new FakePageVisibility(true),
+      visibility: new FakePageVisibility(true), host: makeFakeHost(), timeouts: makeFakeTimeouts(),
       strings: stringsEn,
     });
     await ctl.tapStart();
@@ -412,7 +415,7 @@ describe('storage', () => {
     for (const w of s.storage.writes) {
       const data = JSON.parse(w) as { v: number; entries: Array<Record<string, unknown>> };
       expect(data.v).toBe(1);
-      expect(Object.keys(data.entries[0]!).sort()).toEqual(['b', 'f', 'l', 'n']);
+      expect(Object.keys(data.entries[0]!).sort()).toEqual(['b', 'f', 'h', 'l', 'n']);
     }
   });
 });

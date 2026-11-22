@@ -8,8 +8,12 @@
 export interface RawMessageParts {
   /** Byte 0 (version nibble, TEST, passed-on, compact flag, No_Map_Point_Flag). Default 0x18: Version 1, TEST. */
   flagsByte?: number;
-  /** Event code, byte 1. Default 1. */
+  /** Event code, byte 1 when `hopCount` is 0 (any value is written as given, so tests can send a bad code). Default 1. */
   event?: number;
+  /** Hop count, high nibble of byte 1. Default 0. Ignored when `byte1` is given. */
+  hopCount?: number;
+  /** The whole of byte 1, as given. Overrides `event` and `hopCount`. The CRC-32 is still correct. */
+  byte1?: number;
   /** Packed urgency, severity and action value, byte 2. Default 0. */
   usa?: number;
   /** Sent minute, unsigned 32-bit big-endian. Default 29000000. */
@@ -49,6 +53,8 @@ export function buildRaw(parts: RawMessageParts = {}): Uint8Array {
   const {
     flagsByte = 0x18,
     event = 1,
+    hopCount = 0,
+    byte1,
     usa = 0,
     sentMinute = 29000000,
     validSteps = 4,
@@ -64,7 +70,7 @@ export function buildRaw(parts: RawMessageParts = {}): Uint8Array {
   const out = new Uint8Array(17 + n + 4);
 
   out[0] = flagsByte & 0xff;
-  out[1] = event & 0xff;
+  out[1] = byte1 !== undefined ? byte1 & 0xff : ((hopCount & 0x0f) << 4 | event) & 0xff;
   out[2] = usa & 0xff;
 
   const m = sentMinute >>> 0;

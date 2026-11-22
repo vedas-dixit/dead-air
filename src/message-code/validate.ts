@@ -20,6 +20,8 @@ export function validateAlert(a: unknown): keyof Alert | null {
 
   if (typeof r.test !== 'boolean') return 'test';
   if (typeof r.passedOn !== 'boolean') return 'passedOn';
+  if (!isIntInRange(r.hopCount, 0, 15)) return 'hopCount';
+  if (r.passedOn !== (r.hopCount as number >= 1)) return 'passedOn';
   if (!isMember(EVENT_TYPES, r.event)) return 'event';
   if (!isMember(URGENCIES, r.urgency)) return 'urgency';
   if (!isMember(SEVERITIES, r.severity)) return 'severity';

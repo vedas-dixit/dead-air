@@ -9,6 +9,7 @@ import {
   FLAG_NO_MAP_POINT,
   FLAG_PASSED_ON,
   FLAG_TEST,
+  HOP_SHIFT,
   OFFSET,
   VERSION,
   writeI24,
@@ -40,7 +41,7 @@ export function encodeAlert(alert: Alert): EncodeResult {
   if (!hasPoint) flags |= FLAG_NO_MAP_POINT;
 
   out[OFFSET.versionFlags] = flags;
-  out[OFFSET.event] = EVENT_CODES[alert.event];
+  out[OFFSET.event] = (alert.hopCount << HOP_SHIFT) | EVENT_CODES[alert.event];
   out[OFFSET.usa] = packUsa(alert.urgency, alert.severity, alert.action);
   writeU32(out, OFFSET.sentMinute, alert.sentMinute);
   out[OFFSET.validSteps] = alert.validSteps;

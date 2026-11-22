@@ -33,7 +33,7 @@ describe('Feature: listen-page, Property 6: saving then loading the history give
         const parsed = JSON.parse(text) as { entries: Record<string, unknown>[] };
         expect(Object.keys(parsed).sort()).toEqual(['entries', 'v']);
         for (const e of parsed.entries) {
-          expect(Object.keys(e).sort()).toEqual(['b', 'f', 'l', 'n']);
+          expect(Object.keys(e).sort()).toEqual(['b', 'f', 'h', 'l', 'n']);
         }
       }),
       { numRuns: 100 },

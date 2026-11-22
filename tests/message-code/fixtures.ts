@@ -9,6 +9,7 @@ export const TEST_FIXTURES: readonly Alert[] = [
   {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'flood',
     urgency: 'immediate',
     severity: 'severe',
@@ -25,6 +26,7 @@ export const TEST_FIXTURES: readonly Alert[] = [
   {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'cyclone',
     urgency: 'expected',
     severity: 'extreme',
@@ -41,6 +43,7 @@ export const TEST_FIXTURES: readonly Alert[] = [
   {
     test: true,
     passedOn: true,
+    hopCount: 3,
     event: 'earthquake',
     urgency: 'past',
     severity: 'minor',
@@ -57,6 +60,7 @@ export const TEST_FIXTURES: readonly Alert[] = [
   {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'all-clear',
     urgency: 'unknown',
     severity: 'unknown',

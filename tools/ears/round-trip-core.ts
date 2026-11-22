@@ -11,7 +11,7 @@ export interface TryResult {
 }
 
 export const ALERT_FIELDS: readonly (keyof Alert)[] = [
-  'test', 'passedOn', 'event', 'urgency', 'severity', 'action', 'sentMinute', 'validSteps',
+  'test', 'passedOn', 'hopCount', 'event', 'urgency', 'severity', 'action', 'sentMinute', 'validSteps',
   'latitude', 'longitude', 'stationId', 'counter', 'placeName',
 ];
 

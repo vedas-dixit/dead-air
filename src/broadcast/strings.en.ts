@@ -57,6 +57,7 @@ export const stringsEn: Strings = {
     field: {
       test: 'Test switch',
       passedOn: 'Passed on',
+      hopCount: 'Times passed on',
       event: 'Event',
       urgency: 'Urgency',
       severity: 'Severity',
@@ -251,5 +252,23 @@ export const stringsEn: Strings = {
     'switch.test.off': 'TEST OFF',
     'btn.onair': 'On air',
     'card.expired': 'No longer current',
+    'listen.pass.btn': 'Pass it on',
+    'listen.pass.line.one': 'Passed on 1 time',
+    'listen.pass.line.many': 'Passed on {n} times',
+    'listen.pass.max': 'This alert cannot be passed on again.',
+    'listen.pass.playing': 'Playing this alert so people nearby can hear it.',
+    'listen.pass.stop': 'Stop',
+    'listen.pass.volume': 'Turn your volume all the way up.',
+    'listen.pass.paused': 'Not listening while this phone plays the alert.',
+    'listen.pass.start-reason':
+      'The alert is still playing. Tap Start listening when the sound has finished.',
+    'listen.pass.err.load': 'The sound could not be loaded. Tap Pass it on to try again.',
+    'listen.pass.err.not-current':
+      'This alert is no longer current, so nothing was played. Only a current alert can be passed on.',
+    'listen.pass.err.expired-mid':
+      'This alert ended while it was playing, so it was not played a second time. It cannot be passed on any more.',
+    'listen.pass.err.failed': 'The alert could not be passed on. Tap Pass it on to try again.',
+    'listen.pass.err.audio':
+      'This phone could not play sound. Turn the volume up, switch off silent mode, then tap Pass it on again.',
   },
 };

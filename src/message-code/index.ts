@@ -18,6 +18,7 @@ export {
   MIN_MESSAGE_BYTES,
   MAX_MESSAGE_BYTES,
   PLACE_NAME_MAX_BYTES,
+  MAX_HOP_COUNT,
 } from './layout';
 export type {
   EventType,

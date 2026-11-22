@@ -28,7 +28,9 @@ function expectedFormLength(placeName: string, compact: boolean): number {
 describe('message-code properties', () => {
   describe('Property 1: round trip', () => {
     // Feature: message-code, Property 1: Encode then decode returns the original alert
+    // Feature: pass-it-on, Property 1: Hop count round trip (Hop_Count 0 to 15 via alertArb)
     // **Validates: Requirements 1.2, 1.3, 1.4, 1.5, 1.7, 3.1, 4.1, 4.2, 4.4, 8.1, 9.3, 9.4, 9.5, 10.1, 10.4, 10.12**
+    // **Validates (pass-it-on): Requirements 1.2, 1.4, 2.1, 3.3**
     it('decodes an encoded alert back to the original, with length 21 plus the place-name form', () => {
       fc.assert(
         fc.property(alertArb, (alert) => {
@@ -51,7 +53,9 @@ describe('message-code properties', () => {
 
   describe('Property 2: single changed byte', () => {
     // Feature: message-code, Property 2: Any single changed byte is rejected
+    // Feature: pass-it-on, Property 2: Any single changed byte is caught (includes the high nibble of byte 1)
     // **Validates: Requirements 5.3, 5.4, 5.6, 6.1**
+    // **Validates (pass-it-on): Requirements 2.8, 2.9, 2.10, 3.5**
     it('rejects every one-byte change at every position with the right reason', () => {
       fc.assert(
         fc.property(alertArb, (alert) => {
@@ -116,7 +120,7 @@ describe('message-code properties', () => {
     // **Validates: Requirements 4.3, 4.6, 7.1, 7.10, 7.11, 7.12, 7.14, 7.15, 7.16, 7.17, 7.18, 7.19, 12.8, 12.9**
     it('never throws, returns an exact shape, leaves input alone, and accepted messages re-encode identically', () => {
       const ALERT_KEYS = [
-        'action', 'counter', 'event', 'latitude', 'longitude', 'passedOn', 'placeName',
+        'action', 'counter', 'event', 'hopCount', 'latitude', 'longitude', 'passedOn', 'placeName',
         'sentMinute', 'severity', 'stationId', 'test', 'urgency', 'validSteps',
       ].join(',');
 

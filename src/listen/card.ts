@@ -31,13 +31,28 @@ export interface CardView {
   sentence: string | null; // buildAlertSentence text, null when it fails
   event: EventType; // event type, for the icon tile and name
   expiredLabel: string | null; // card.expired text when expired, else null
+  passedOnLine: string | null; // null for highestHop 0
+  passButton: PassButtonView | null; // null unless expiry is 'current'
 }
+
+export interface PassUiInput {
+  phase: 'idle' | 'loading' | 'playing';
+}
+
+export interface PassButtonView {
+  label: string; // listen.pass.btn
+  enabled: boolean;
+  note: string | null; // listen.pass.max when highestHop is 15
+}
+
+const MAX_HOP = 15;
 
 export function buildCardView(
   entry: HistoryEntry,
   nowMs: number,
   offsetMinutes: number,
   strings: Strings,
+  pass: PassUiInput,
 ): CardView {
   const alert = entry.alert;
   const expiry = checkExpiry(alert, nowMs);
@@ -67,6 +82,22 @@ export function buildCardView(
   const status = expiry.status;
   const expired = status === 'expired';
 
+  const hop = entry.highestHop;
+  const passedOnLine =
+    hop <= 0
+      ? null
+      : hop === 1
+        ? text(strings, 'listen.pass.line.one')
+        : text(strings, 'listen.pass.line.many', { n: hop });
+  const passButton: PassButtonView | null =
+    status === 'current'
+      ? {
+          label: text(strings, 'listen.pass.btn'),
+          enabled: hop < MAX_HOP && pass.phase === 'idle',
+          note: hop >= MAX_HOP ? text(strings, 'listen.pass.max') : null,
+        }
+      : null;
+
   return {
     key: alertKey(alert),
     testBanner: alert.test ? text(strings, 'test.banner') : null,
@@ -85,5 +116,7 @@ export function buildCardView(
     sentence: built.ok ? built.text : null,
     event: alert.event,
     expiredLabel: expired ? text(strings, 'card.expired') : null,
+    passedOnLine,
+    passButton,
   };
 }

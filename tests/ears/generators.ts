@@ -13,7 +13,7 @@ const pointArb = fc.oneof(
 /** A valid TEST alert. `sentMinute` is always present. */
 export const validTestAlertArb: fc.Arbitrary<Alert> = fc
   .record({
-    passedOn: fc.boolean(),
+    hopCount: fc.integer({ min: 0, max: 15 }),
     event: fc.constantFrom(...EVENT_TYPES),
     urgency: fc.constantFrom(...URGENCIES),
     severity: fc.constantFrom(...SEVERITIES),
@@ -25,7 +25,7 @@ export const validTestAlertArb: fc.Arbitrary<Alert> = fc
     counter: fc.integer({ min: 0, max: 255 }),
     placeName: placeNameArb,
   })
-  .map(({ point, ...rest }) => ({ test: true, latitude: point[0], longitude: point[1], ...rest }) as Alert);
+  .map(({ point, ...rest }) => ({ test: true, passedOn: rest.hopCount >= 1, latitude: point[0], longitude: point[1], ...rest }) as Alert);
 
 /** A valid TEST alert without `sentMinute`, as the tools receive it. */
 export const validTestInputArb: fc.Arbitrary<Record<string, unknown>> = validTestAlertArb.map((a) => {

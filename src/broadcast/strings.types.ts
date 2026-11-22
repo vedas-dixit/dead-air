@@ -175,6 +175,21 @@ export const TEXT_KEYS = [
   'switch.test.off',
   'btn.onair',
   'card.expired',
+  // Pass it on
+  'listen.pass.btn',
+  'listen.pass.line.one',
+  'listen.pass.line.many',
+  'listen.pass.max',
+  'listen.pass.playing',
+  'listen.pass.stop',
+  'listen.pass.volume',
+  'listen.pass.paused',
+  'listen.pass.start-reason',
+  'listen.pass.err.load',
+  'listen.pass.err.not-current',
+  'listen.pass.err.expired-mid',
+  'listen.pass.err.failed',
+  'listen.pass.err.audio',
 ] as const;
 
 export type TextKey = (typeof TEXT_KEYS)[number];
@@ -322,6 +337,20 @@ export const PLACEHOLDERS: Readonly<Record<TextKey, readonly string[]>> = {
   'switch.test.off': [],
   'btn.onair': [],
   'card.expired': [],
+  'listen.pass.btn': [],
+  'listen.pass.line.one': [],
+  'listen.pass.line.many': ['n'],
+  'listen.pass.max': [],
+  'listen.pass.playing': [],
+  'listen.pass.stop': [],
+  'listen.pass.volume': [],
+  'listen.pass.paused': [],
+  'listen.pass.start-reason': [],
+  'listen.pass.err.load': [],
+  'listen.pass.err.not-current': [],
+  'listen.pass.err.expired-mid': [],
+  'listen.pass.err.failed': [],
+  'listen.pass.err.audio': [],
 };
 
 export interface Strings {

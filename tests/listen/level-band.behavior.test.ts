@@ -17,6 +17,8 @@ import {
   FakeListenClock,
   FakeListenStorage,
   FakePageVisibility,
+  makeFakeHost,
+  makeFakeTimeouts,
   FakeSoundLinkLoader,
   FakeWakeLock,
   flushPromises,
@@ -175,7 +177,7 @@ describe('integration with the TEST broadcast', () => {
     const sig = mix(whiteNoise(8, 0.002, 4), scaled(base, 0.05), 2 * RATE);
     const blocks = toBlocks(sig);
     const alert: Alert = {
-      test: true, passedOn: false, event: 'flood', urgency: 'immediate', severity: 'severe', action: 'evacuate',
+      test: true, passedOn: false, hopCount: 0, event: 'flood', urgency: 'immediate', severity: 'severe', action: 'evacuate',
       sentMinute: 29_000_000, validSteps: 8, latitude: null, longitude: null, stationId: 7, counter: 1, placeName: 'Test Town',
     };
     const clock = new FakeListenClock(29_000_000 * 60000 + 60_000);
@@ -183,7 +185,7 @@ describe('integration with the TEST broadcast', () => {
     const loader = new FakeSoundLinkLoader();
     const ctl = createListenController({
       clock, timers: new FakeIntervalTimers(clock), audio, loadLink: loader.load, storage: new FakeListenStorage(),
-      wake: new FakeWakeLock(), visibility: new FakePageVisibility(true), strings: stringsEn,
+      wake: new FakeWakeLock(), visibility: new FakePageVisibility(true), host: makeFakeHost(), timeouts: makeFakeTimeouts(), strings: stringsEn,
     });
     await ctl.tapStart();
     await flushPromises();

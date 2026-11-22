@@ -131,7 +131,7 @@ describe('parameter validation properties', () => {
   const badRate = fc.constantFrom<unknown>(15999, 96001, 1.5, '48000', Number.NaN, null, -1, Infinity, true);
   const badNoise = fc.constantFrom<unknown>(61, -61, Number.NaN, Infinity, -Infinity, '5', null, true, {});
   const badTries = fc.constantFrom<unknown>(0, 201, 1.5, '3', Number.NaN, null, -1, Infinity, true);
-  const goodAlert = { ...({} as object), test: true, passedOn: false, event: 'flood', urgency: 'immediate', severity: 'severe', action: 'evacuate', validSteps: 24, latitude: null, longitude: null, stationId: 1, counter: 1, placeName: 'x' };
+  const goodAlert = { ...({} as object), test: true, passedOn: false, hopCount: 0, event: 'flood', urgency: 'immediate', severity: 'severe', action: 'evacuate', validSteps: 24, latitude: null, longitude: null, stationId: 1, counter: 1, placeName: 'x' };
 
   // Feature: kiro-ears, Property 14: Out-of-range parameters are rejected with their own reason
   it('Property 14: each bad value gets its own reason and touches nothing', async () => {

@@ -1,4 +1,4 @@
-// Controller tests: visibility, Hidden_Resume, wake lock, mic loss, tick. Test alerts only.
+// Controller tests: visibility, host: makeFakeHost(), timeouts: makeFakeTimeouts(), Hidden_Resume, wake lock, mic loss, tick. Test alerts only.
 import { describe, expect, it } from 'vitest';
 import { stringsEn } from '../../src/broadcast/strings.en';
 import { createListenController } from '../../src/listen/controller';
@@ -10,6 +10,8 @@ import {
   FakeListenClock,
   FakeListenStorage,
   FakePageVisibility,
+  makeFakeHost,
+  makeFakeTimeouts,
   FakeSoundLinkLoader,
   FakeWakeLock,
   flushPromises,
@@ -22,6 +24,7 @@ function testAlert(): Alert {
   return {
     test: true,
     passedOn: false,
+    hopCount: 0,
     event: 'flood',
     urgency: 'immediate',
     severity: 'severe',
@@ -49,7 +52,7 @@ function setup(wake: FakeWakeLock = new FakeWakeLock()) {
     loadLink: loader.load,
     storage: new FakeListenStorage(),
     wake,
-    visibility,
+    visibility, host: makeFakeHost(), timeouts: makeFakeTimeouts(),
     strings: stringsEn,
   });
   return { ctl, clock, audio, loader, wake, visibility };

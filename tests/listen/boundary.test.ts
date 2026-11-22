@@ -50,12 +50,16 @@ describe('listen source boundaries', () => {
     for (const f of all) expect(mentions(code(f), words), rel(f)).toEqual([]);
   });
 
-  it('imports from src/broadcast are limited to strings.*, map-point and the providers types', () => {
+  it('imports from src/broadcast are limited to strings.*, map-point, the providers types and dom/web-audio in dom/mount.ts', () => {
     for (const f of all) {
       const src = code(f);
       for (const m of src.matchAll(/\bfrom\s+'([^']*broadcast\/[^']*)'/g)) {
         const target = m[1].split('broadcast/')[1];
-        const ok = /^strings\.[\w.]+$/.test(target) || target === 'map-point' || target === 'providers';
+        const ok =
+          /^strings\.[\w.]+$/.test(target) ||
+          target === 'map-point' ||
+          target === 'providers' ||
+          (target === 'dom/web-audio' && rel(f) === 'src/listen/dom/mount.ts');
         expect(ok, `${rel(f)} imports ${m[1]}`).toBe(true);
         if (target === 'providers') {
           const stmt = m[0];

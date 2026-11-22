@@ -115,6 +115,8 @@ function card(t: string, test: boolean, expired: boolean): CardView {
     sentence: t,
     event: 'flood',
     expiredLabel: expired ? t : null,
+    passedOnLine: null,
+    passButton: null,
   } as CardView;
 }
 
@@ -145,6 +147,14 @@ function buildListen(t: string, test: boolean, expired: boolean) {
     unreadableText: null,
     keepOpenText: null,
     historyUnkeptText: null,
+    pass: {
+      phase: 'idle',
+      statusText: null,
+      volumeText: null,
+      stopVisible: false,
+      errorText: null,
+      start: { enabled: true, reasonText: null },
+    },
     clearEnabled: true,
   } as unknown as ListenUi;
   renderer.render(ui);
