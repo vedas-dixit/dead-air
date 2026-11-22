@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { ALL_ELEMENT_IDS as BROADCAST_IDS } from '../../src/broadcast/dom/ids';
 import { TEXT_KEYS } from '../../src/broadcast/strings.types';
 import { ALL_ELEMENT_IDS as LISTEN_IDS } from '../../src/listen/dom/ids';
+import logo from '../../src/shared/ui/logo.svg?raw';
 import { headerHtml } from '../../src/shared/ui/header';
 import { utf8Decode } from '../../src/message-code/utf8';
 
@@ -35,13 +36,13 @@ for (const page of pages) {
 
     it('contains every id from its ids file exactly once', () => {
       // The build fills the header marker with the shared header, which owns three ids.
-      const built = html.replace('<!--look:header-->', headerHtml({ page: page.name as 'listen' | 'broadcast', base: '/' }));
+      const built = html.replace('<!--look:header-->', headerHtml({ page: page.name as 'listen' | 'broadcast', base: '/', logo }));
       for (const id of page.ids) {
         expect([...built.matchAll(new RegExp(`\\sid="${id}"`, 'g'))].length, id).toBe(1);
       }
     });
 
-    it('has no visible text outside data-text, except static title "Dead Air"', () => {
+    it('has no visible text outside data-text, except static title "Dead Air" and the logo link', () => {
       const titles = [...html.matchAll(/<title\b([^>]*)>([\s\S]*?)<\/title>/g)];
       expect(titles.length).toBe(1);
       const [, attrs, inner] = titles[0] as RegExpMatchArray;
@@ -56,6 +57,8 @@ for (const page of pages) {
         .replace(/<title\b[\s\S]*?<\/title>/g, '')
         .replace(/<script\b[\s\S]*?<\/script>/g, '')
         .replace(/<style\b[\s\S]*?<\/style>/g, '')
+        // The one allowed static name: the visually hidden text inside the logo link.
+        .replace(/<a\b[^>]*\bclass="app-name"[^>]*>[\s\S]*?<\/a>/, '')
         .replace(/<[^>]*>/g, '');
       expect(body.trim()).toBe('');
     });
@@ -73,7 +76,7 @@ for (const page of pages) {
     });
 
     it('has the language-switch element', () => {
-      const built = html.replace('<!--look:header-->', headerHtml({ page: page.name as 'listen' | 'broadcast', base: '/' }));
+      const built = html.replace('<!--look:header-->', headerHtml({ page: page.name as 'listen' | 'broadcast', base: '/', logo }));
       expect([...built.matchAll(/\sid="language-switch"/g)].length).toBe(1);
     });
   });

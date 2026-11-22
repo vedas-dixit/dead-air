@@ -7,13 +7,15 @@ export interface LanguageEntry {
   readonly code: string;
   /** The language's own name, for example 'English'. */
   readonly name: string;
+  /** Short text for the switch button, when the name is too wide. `name` then becomes the accessible name. */
+  readonly short?: string;
   /** BCP 47 tag used to pick a speech voice. */
   readonly speechTag: string;
   readonly strings: Strings;
 }
 
 export const LANGUAGES: readonly LanguageEntry[] = [
-  { code: 'en', name: 'English', speechTag: 'en', strings: stringsEn },
+  { code: 'en', name: 'English', short: 'EN', speechTag: 'en', strings: stringsEn },
   { code: 'hi', name: 'हिन्दी', speechTag: 'hi', strings: stringsHi },
 ];
 

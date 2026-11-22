@@ -22,7 +22,7 @@ These rules never override `promises.md`. Look changes must not change what a pa
 | Olive | #5B6E53 | #8FA586 | "All clear" mark only |
 | Muted | #6B6558 | #B9B2A2 | Secondary text on the page background only |
 
-- Orange is used only for: the TEST banner, the on-air lamp, the listening lamp, the TEST toggle lamp, the dial marker, the arrival flash band, and the one orange part allowed in an icon.
+- Orange is used only for: the TEST banner, the on-air lamp, the listening lamp, the TEST toggle lamp, the dial marker, the arrival flash band, the signal in the logo, and the one orange part allowed in an icon.
 - Orange never carries meaning alone. Every lamp has a 3 px ring (ink in light, paper at night) and sits beside a text state. The orange part of an icon is an accent: the icon reads from its ink shape without it.
 - Orange is never a text colour, on any background. Text on orange is ink.
 - Olive is a shape (dot or ring), never text, and sits on paper (light) or ink and dark panel (night). It is not used on the light panel, where it fails 3:1.
@@ -91,7 +91,7 @@ Text and shape pairs, night theme:
 - At most 60 KB for all font files together, woff2, the package's unmodified Latin subset, using `unicode-range` so Hindi never falls into it.
 - No font is loaded from another site. No font loader script. This is the only font family the languages spec's tests allow (see the edit to those tests below).
 - Hindi uses the phone's own font (`system-ui` stack). The layout must hold in both languages: no fixed-height text boxes, no clipped lines, line height at least 1.5 for Hindi, and every screen checked in both.
-- Headings and other tight lines use line height 1.25 in Latin and 1.6 in Hindi. Latin text inside a Hindi page (the "English" button) keeps the bundled font.
+- Headings and other tight lines use line height 1.25 in Latin and 1.6 in Hindi. Latin text inside a Hindi page (the "EN" button) keeps the bundled font.
 - Small labels: capitals with wide spacing (0.12em). Where a language has no capitals (Hindi), turn off capitalisation and set letter spacing to 0, because spacing breaks joined Devanagari letters. Use `:lang(hi)`.
 - Tile names and the words beside a switch are words to read, not small labels: no capitals and no letter spacing. Switch words are at body size. A long tile name wraps between words or hyphenates, never at any letter.
 - Record the font's licence (name, SIL Open Font License 1.1, source package and version) in `README.md`. Ship the package's `LICENSE` text and copyright line next to the font files, because the licence requires every copy to carry them. Do not modify or rename the font.
@@ -121,7 +121,11 @@ Text and shape pairs, night theme:
 
 ## Header, on every page
 
-- Name, then a two-position switch between Listen and Broadcast drawn as a slide switch (a pill track with a round knob and both labels in text), then the language switch. On a phone the switch takes the rest of the first row, up to 20rem, and the knob sits inside the track with a 4 px inset.
+- Logo, then a two-position switch between Listen and Broadcast drawn as a slide switch (a pill track with a round knob and both labels in text), then the language switch. On a phone the switch takes the rest of the first row, up to 20rem, and the knob sits inside the track with a 4 px inset.
+- The logo is `src/shared/ui/logo.svg`, one file. The people use `fill="currentColor"` (ink in light, paper at night). The signal stays `#FF5D1F` in every theme. `docs/design/logo-black.svg` and `logo-white.svg` are the source drawings and are not edited. The words "Dead Air" are not drawn in the header.
+- The logo is inline SVG in the page HTML, `aria-hidden="true"`, 36 px tall and 55 px wide, and sits inside the link to the front page. The link also holds the words "Dead Air" as visually hidden text (`sr-only`), so screen readers and tests find the name. The logo is not a separate file in the saved-for-offline list. The front page has the same link.
+- From 390 px wide up to 40em, the logo, the page switch and the language switch share one line. The page switch takes the rest of the row, and its floor is the width of its own words, so at a large text size the language switch drops to a second line and nothing overflows. Below 390 px the language switch may drop to a second line. Nothing is cut off at 360 px. Every button stays at least 48 px tall.
+- The English button shows "EN" and its accessible name is "English". The Hindi button shows its own name. Padding inside the header pills is tighter on phones (0.25rem on the switch links, 0.25rem by 0.5rem on the language buttons).
 - The current page is shown by knob position and by text, never by colour alone.
 - The switch is a pair of real links to `/listen` and `/broadcast`. It works without scripts and keyboard use works.
 

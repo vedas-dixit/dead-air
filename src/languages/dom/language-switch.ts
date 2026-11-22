@@ -14,7 +14,8 @@ export function mountLanguageSwitch(
     const button = doc.createElement('button');
     button.type = 'button';
     button.lang = entry.code;
-    button.textContent = entry.name;
+    button.textContent = entry.short ?? entry.name;
+    if (entry.short !== undefined) button.setAttribute('aria-label', entry.name);
     button.addEventListener('click', () => {
       state.set(entry.code);
     });

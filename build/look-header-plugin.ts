@@ -1,10 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Plugin } from 'vite';
-import { headerHtml } from '../src/shared/ui/header.ts';
+import { headerHtml, logoHtml } from '../src/shared/ui/header.ts';
 
 const MARKER = '<!--look:header-->';
+const LOGO_MARKER = '<!--look:logo-->';
 const LICENSE_FILE = 'fonts/ibm-plex-mono-LICENSE.txt';
+const LOGO_SOURCE = 'src/shared/ui/logo.svg';
 const LICENSE_SOURCE = 'node_modules/@fontsource/ibm-plex-mono/LICENSE';
 
 /** The app page a path belongs to, or null for the front page and anything else. */
@@ -24,6 +26,7 @@ export function lookHeaderPlugin(): Plugin {
   let base = '/';
   let root = process.cwd();
   let license: string | null = null;
+  let logo = '';
 
   return {
     name: 'dead-air-look-header',
@@ -35,6 +38,7 @@ export function lookHeaderPlugin(): Plugin {
         throw new Error(`Font licence not found: ${LICENSE_SOURCE}`);
       }
       license = readFileSync(file, 'utf8');
+      logo = readFileSync(resolve(root, LOGO_SOURCE), 'utf8');
     },
     buildStart() {
       if (license === null) throw new Error(`Font licence not found: ${LICENSE_SOURCE}`);
@@ -49,8 +53,9 @@ export function lookHeaderPlugin(): Plugin {
           if (!out.includes(MARKER)) {
             throw new Error(`Missing ${MARKER} in ${ctx.filename}`);
           }
-          out = out.split(MARKER).join(headerHtml({ page, base }));
+          out = out.split(MARKER).join(headerHtml({ page, base, logo }));
         }
+        out = out.split(LOGO_MARKER).join(logoHtml(logo));
         if (!out.includes('</head>')) {
           throw new Error(`Missing </head> in ${ctx.filename}`);
         }

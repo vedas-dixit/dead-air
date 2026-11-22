@@ -405,6 +405,15 @@ legend {
   font-weight: 600;
   text-decoration: none;
 }
+/* The logo is inline SVG, 36 px tall, 55 px wide (the drawing is 542 by 357). The
+   people take the text colour, the signal keeps its own orange. */
+.site-header .app-name .logo {
+  display: block;
+  flex: none;
+  width: 55px;
+  height: 36px;
+  color: var(--text);
+}
 
 /* Page_Switch: a pill track, a knob that sits inside it, both labels in text.
    On a phone it takes the rest of the first row. */
@@ -487,6 +496,28 @@ legend {
   background: var(--selected-bg);
 }
 
+/* Phones 390 px and up: logo, page switch and language switch share one line.
+   The switch takes what is left (its floor is the width of its own words, so at a
+   large text size it wraps instead of squeezing). Below 390 px the language switch
+   may drop to a second line. Every target stays at least 48 px tall. */
+@media (min-width: 390px) and (max-width: 40em) {
+  .site-header {
+    column-gap: var(--gap);
+  }
+  .page-switch {
+    flex: 1 1 0;
+  }
+  .page-switch a {
+    padding: 0.25rem;
+  }
+  #language-switch {
+    flex: none;
+    flex-wrap: nowrap;
+  }
+  #language-switch button {
+    padding: 0.25rem 0.5rem;
+  }
+}
 /* ---------- Event picker ---------- */
 
 /* Three across, a bank of nine. Falls to two, then one, when a third of the

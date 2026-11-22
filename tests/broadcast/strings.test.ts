@@ -4,6 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import logo from '../../src/shared/ui/logo.svg?raw';
 import { headerHtml } from '../../src/shared/ui/header';
 import { ELEMENT_IDS } from '../../src/broadcast/dom/ids';
 import { ACTIONS, EVENT_TYPES, SEVERITIES, URGENCIES } from '../../src/message-code/index';
@@ -125,7 +126,7 @@ describe('markup', () => {
   // The build fills the header marker with the shared header, which owns the language switch and the links.
   const html = readFileSync(join(process.cwd(), 'broadcast', 'index.html'), 'utf8').replace(
     '<!--look:header-->',
-    headerHtml({ page: 'broadcast', base: '/' }),
+    headerHtml({ page: 'broadcast', base: '/', logo }),
   );
 
   function countMatches(re: RegExp): number {
