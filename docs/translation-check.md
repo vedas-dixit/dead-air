@@ -235,7 +235,7 @@ Needs human check: 316
 | text.front.s1.h.a | When the internet  | जब इंटरनेट  | needs human check |
 | text.front.s1.h.dies | dies | मर जाता है | needs human check |
 | text.front.s1.h.b | , the radio still speaks. | , तब भी रेडियो बोलता है। | needs human check |
-| text.front.s1.under | Dead Air turns an emergency alert into a few seconds of sound. Any phone with this page open hears it and shows the alert in the reader’s own language, with no network. | Dead Air आपातकालीन चेतावनी को कुछ सेकंड की आवाज़ में बदल देता है। यह पृष्ठ खुला रखने वाला कोई भी फ़ोन इसे सुनता है और बिना नेटवर्क के पाठक की अपनी भाषा में चेतावनी दिखाता है। | needs human check |
+| text.front.s1.under | Dead Air sends a short alert as sound. A nearby phone with the Listen page open can pick it up and show the message in the listener’s language, even when there’s no internet or mobile signal. | Dead Air आपातकालीन चेतावनी को कुछ सेकंड की आवाज़ में बदल देता है। यह पृष्ठ खुला रखने वाला कोई भी फ़ोन इसे सुनता है और बिना नेटवर्क के पाठक की अपनी भाषा में चेतावनी दिखाता है। | needs human check |
 | text.front.s1.btn.play | Play test alert | परीक्षण चेतावनी चलाएँ | needs human check |
 | text.front.s1.btn.playing | Playing | चल रही है | needs human check |
 | text.front.s1.btn.listen | Open Listen | सुनना खोलें | needs human check |
@@ -248,69 +248,69 @@ Needs human check: 316
 | text.front.demo.err.clock | This phone’s clock could not be read, so no alert was played. Check the date and time, then tap Play test alert again. | इस फ़ोन की घड़ी पढ़ी नहीं जा सकी, इसलिए कोई चेतावनी नहीं चलाई गई। तारीख़ और समय जाँचें, फिर "परीक्षण चेतावनी चलाएँ" दोबारा दबाएँ। | needs human check |
 | text.front.source | Source: | स्रोत: | needs human check |
 | text.front.sources | Sources: | स्रोत: | needs human check |
-| text.front.s2.title | Networks fail when people need them most | नेटवर्क तब जवाब दे जाते हैं जब लोगों को उनकी सबसे ज़्यादा ज़रूरत होती है | needs human check |
-| text.front.s2.n1.words | of Puerto Rico’s cell sites were out of service after Hurricane Maria. | पोर्टो रिको की सेल साइटें तूफ़ान मारिया के बाद सेवा से बाहर थीं। | needs human check |
-| text.front.s2.n2.words | mobile base stations, at the worst point, stopped working in Japan after the 2011 earthquake and tsunami. | मोबाइल बेस स्टेशन, सबसे बुरे समय में, 2011 के भूकंप और सुनामी के बाद जापान में काम करना बंद कर गए। | needs human check |
+| text.front.s2.title | When the network goes, it goes for everyone | नेटवर्क तब जवाब दे जाते हैं जब लोगों को उनकी सबसे ज़्यादा ज़रूरत होती है | needs human check |
+| text.front.s2.n1.words | of Puerto Rico’s mobile sites were out of service after Hurricane Maria. | पोर्टो रिको की सेल साइटें तूफ़ान मारिया के बाद सेवा से बाहर थीं। | needs human check |
+| text.front.s2.n2.words | mobile base stations were out of service in Japan at the worst point after the 2011 earthquake and tsunami. | मोबाइल बेस स्टेशन, सबसे बुरे समय में, 2011 के भूकंप और सुनामी के बाद जापान में काम करना बंद कर गए। | needs human check |
 | text.front.s2.n3.unit | hours | घंटे | needs human check |
-| text.front.s2.n3.words | is about how long the Kashmir Valley went without mobile, internet and broadband after fibre cuts in heavy rain, August 2025. | लगभग इतनी देर कश्मीर घाटी में भारी बारिश में फ़ाइबर कटने के बाद मोबाइल, इंटरनेट और ब्रॉडबैंड बंद रहे, अगस्त 2025। | needs human check |
-| text.front.s2.line | Warnings that reach people save lives. Countries with substantial to comprehensive early warning systems recorded disaster deaths 6.1 times lower than countries with limited to moderate ones. | जो चेतावनियाँ लोगों तक पहुँचती हैं, वे जान बचाती हैं। जिन देशों में पूर्व चेतावनी प्रणालियाँ काफ़ी से लेकर व्यापक थीं, वहाँ आपदा से मौतें सीमित से मध्यम प्रणालियों वाले देशों की तुलना में 6.1 गुना कम दर्ज हुईं। | needs human check |
+| text.front.s2.n3.words | the length of the mobile, internet and broadband outage in Kashmir Valley after fibre cables were cut during heavy rain in August 2025. | लगभग इतनी देर कश्मीर घाटी में भारी बारिश में फ़ाइबर कटने के बाद मोबाइल, इंटरनेट और ब्रॉडबैंड बंद रहे, अगस्त 2025। | needs human check |
+| text.front.s2.line | Early warnings make a real difference. Countries with substantial or comprehensive warning systems recorded 6.1 times fewer disaster deaths than countries with limited or moderate systems. | जो चेतावनियाँ लोगों तक पहुँचती हैं, वे जान बचाती हैं। जिन देशों में पूर्व चेतावनी प्रणालियाँ काफ़ी से लेकर व्यापक थीं, वहाँ आपदा से मौतें सीमित से मध्यम प्रणालियों वाले देशों की तुलना में 6.1 गुना कम दर्ज हुईं। | needs human check |
 | text.front.s3.title | Cyclone Fani | चक्रवात Fani | needs human check |
 | text.front.s3.place | Odisha, India · 3 May 2019 | Odisha, India · 3 मई 2019 | needs human check |
-| text.front.s3.failed.label | What failed | क्या बंद हुआ | needs human check |
-| text.front.s3.failed.text | Every telephone and cell phone in Puri district. Power to about 3.5 million households. | पुरी ज़िले का हर टेलीफ़ोन और मोबाइल फ़ोन। लगभग 35 लाख घरों की बिजली। | needs human check |
-| text.front.s3.worked.label | What still worked | क्या चलता रहा | needs human check |
-| text.front.s3.worked.text | Sirens from 122 towers on the coast, volunteers, and police radio. | तट पर 122 टावरों के सायरन, स्वयंसेवक और पुलिस रेडियो। | needs human check |
-| text.front.s3.happened.label | What happened | क्या हुआ | needs human check |
-| text.front.s3.happened.text | 1.2 million people were evacuated. 64 people died. A super cyclone on the same coast in 1999 killed 9,885 by the official count. | 12 लाख लोगों को सुरक्षित स्थानों पर पहुँचाया गया। 64 लोगों की मृत्यु हुई। उसी तट पर 1999 के एक सुपर साइक्लोन में आधिकारिक गिनती के अनुसार 9,885 लोग मारे गए थे। | needs human check |
-| text.front.s3.gap.label | The gap | कमी | needs human check |
-| text.front.s3.gap.text | Even then, people in some villages said no message reached them about when the storm would land. | तब भी कुछ गाँवों के लोगों ने कहा कि तूफ़ान कब टकराएगा, इसका कोई संदेश उन तक नहीं पहुँचा। | needs human check |
+| text.front.s3.failed.label | What went down | क्या बंद हुआ | needs human check |
+| text.front.s3.failed.text | Telephone and mobile service across Puri district, along with power to about 3.5 million households. | पुरी ज़िले का हर टेलीफ़ोन और मोबाइल फ़ोन। लगभग 35 लाख घरों की बिजली। | needs human check |
+| text.front.s3.worked.label | What was still working | क्या चलता रहा | needs human check |
+| text.front.s3.worked.text | Sirens from 122 coastal towers, along with volunteers and police radio. | तट पर 122 टावरों के सायरन, स्वयंसेवक और पुलिस रेडियो। | needs human check |
+| text.front.s3.happened.label | What followed | क्या हुआ | needs human check |
+| text.front.s3.happened.text | Around 1.2 million people were evacuated and 64 people died. The same coast was hit by a super cyclone in 1999; the official death toll was 9,885. | 12 लाख लोगों को सुरक्षित स्थानों पर पहुँचाया गया। 64 लोगों की मृत्यु हुई। उसी तट पर 1999 के एक सुपर साइक्लोन में आधिकारिक गिनती के अनुसार 9,885 लोग मारे गए थे। | needs human check |
+| text.front.s3.gap.label | What was missing | कमी | needs human check |
+| text.front.s3.gap.text | Even with those systems in place, people in some villages said they never received a warning about when the storm would arrive. | तब भी कुछ गाँवों के लोगों ने कहा कि तूफ़ान कब टकराएगा, इसका कोई संदेश उन तक नहीं पहुँचा। | needs human check |
 | text.front.s3.samelink | (same link) | (वही लिंक) | needs human check |
 | text.front.s3.caption | City lights around Bhubaneswar and Cuttack, before and after Cyclone Fani. | Cyclone Fani से पहले और बाद में Bhubaneswar और Cuttack के आसपास शहर की रोशनियाँ। | needs human check |
-| text.front.s3.after | Sound and people carried that warning. Dead Air adds one small thing: the sound becomes text, an icon and a voice on the phone, in the listener’s own language. | उस चेतावनी को आवाज़ और लोगों ने पहुँचाया। Dead Air एक छोटी बात जोड़ता है: आवाज़ फ़ोन पर सुनने वाले की अपनी भाषा में लिखे शब्द, एक चिह्न और एक आवाज़ बन जाती है। | needs human check |
-| text.front.s4.title | How it works | यह कैसे काम करता है | needs human check |
+| text.front.s3.after | People and sound helped carry the warning. Dead Air tries to add another way to receive it: a phone turns that sound into a message people can read or hear in their own language. | उस चेतावनी को आवाज़ और लोगों ने पहुँचाया। Dead Air एक छोटी बात जोड़ता है: आवाज़ फ़ोन पर सुनने वाले की अपनी भाषा में लिखे शब्द, एक चिह्न और एक आवाज़ बन जाती है। | needs human check |
+| text.front.s4.title | How a message gets through | यह कैसे काम करता है | needs human check |
 | text.front.s4.step1.name | Send. | भेजें। | needs human check |
-| text.front.s4.step1.text | Someone picks an alert: what happened, how urgent it is, what to do, and where. Dead Air packs it into 40 bytes or less. | कोई एक चेतावनी चुनता है: क्या हुआ, कितनी जल्दी है, क्या करना है और कहाँ। Dead Air उसे 40 बाइट या उससे कम में पैक करता है। | needs human check |
+| text.front.s4.step1.text | The sender chooses what happened, how urgent it is, what people should do and where. Dead Air packs those details into a message no longer than 40 bytes. | कोई एक चेतावनी चुनता है: क्या हुआ, कितनी जल्दी है, क्या करना है और कहाँ। Dead Air उसे 40 बाइट या उससे कम में पैक करता है। | needs human check |
 | text.front.s4.step2.name | Sound. | आवाज़। | needs human check |
-| text.front.s4.step2.text | The alert becomes a few seconds of sound, like an old modem. It is made to be played over a radio broadcast or a loudspeaker, or straight from a phone. | चेतावनी कुछ सेकंड की आवाज़ बन जाती है, पुराने मॉडेम की तरह। इसे रेडियो प्रसारण या लाउडस्पीकर पर, या सीधे फ़ोन से चलाने के लिए बनाया गया है। | needs human check |
+| text.front.s4.step2.text | That message is turned into a short burst of sound. It can be played through a radio broadcast, a loudspeaker or another phone. | चेतावनी कुछ सेकंड की आवाज़ बन जाती है, पुराने मॉडेम की तरह। इसे रेडियो प्रसारण या लाउडस्पीकर पर, या सीधे फ़ोन से चलाने के लिए बनाया गया है। | needs human check |
 | text.front.s4.step3.name | Hear. | सुनें। | needs human check |
-| text.front.s4.step3.text | Any phone with the Listen page open hears it through the microphone and checks it. It shows the alert with an icon, in English or Hindi, and can read it aloud. One tap passes it on to the next phone. | सुनने का पृष्ठ खुला रखने वाला कोई भी फ़ोन इसे माइक्रोफ़ोन से सुनता है और जाँचता है। वह चेतावनी को चिह्न के साथ, अंग्रेज़ी या हिंदी में दिखाता है और उसे ज़ोर से पढ़ भी सकता है। एक टैप से यह अगले फ़ोन तक पहुँच जाती है। | needs human check |
+| text.front.s4.step3.text | A nearby phone with Listen open picks up the sound through its microphone. It checks the message before showing anything, then displays the alert in English or Hindi. The phone can read it aloud, too. A listener can pass it on with one tap. | सुनने का पृष्ठ खुला रखने वाला कोई भी फ़ोन इसे माइक्रोफ़ोन से सुनता है और जाँचता है। वह चेतावनी को चिह्न के साथ, अंग्रेज़ी या हिंदी में दिखाता है और उसे ज़ोर से पढ़ भी सकता है। एक टैप से यह अगले फ़ोन तक पहुँच जाती है। | needs human check |
 | text.front.s4.caption | AI-generated illustration | एआई से बनाया गया चित्र | needs human check |
 | text.front.s4.pause | Pause animation | एनिमेशन रोकें | needs human check |
-| text.front.s5.title | An old idea, brought back | एक पुराना विचार, फिर से लौटा | needs human check |
-| text.front.s5.text | Sending data as sound is not new. It is how computers first went online, and how radio alerts have worked for decades. | डेटा को आवाज़ के रूप में भेजना नया नहीं है। कंप्यूटर इसी तरह पहली बार ऑनलाइन हुए थे, और रेडियो चेतावनियाँ दशकों से इसी तरह काम करती रही हैं। | needs human check |
-| text.front.s5.p1970 | Acoustic couplers. A computer talks through a telephone handset, by sound. | एकूस्टिक कपलर। कंप्यूटर टेलीफ़ोन के हैंडसेट से आवाज़ के ज़रिए बात करता है। | needs human check |
-| text.front.s5.p1997 | In the United States, radio and TV alerts start with a short burst of coded sound that a receiver can read. It is still in use. | अमेरिका में रेडियो और टीवी चेतावनियाँ कोडित आवाज़ की एक छोटी बौछार से शुरू होती हैं, जिसे रिसीवर पढ़ सकता है। यह आज भी उपयोग में है। | needs human check |
-| text.front.s5.p2026 | Dead Air does the same in a web page, on a smartphone. | Dead Air यही काम एक वेब पेज में, स्मार्टफ़ोन पर करता है। | needs human check |
+| text.front.s5.title | This idea is older than the internet | एक पुराना विचार, फिर से लौटा | needs human check |
+| text.front.s5.text | Computers used to send data through telephone lines as sound. Radio alert systems have used coded audio for years, too. Dead Air borrows from both. | डेटा को आवाज़ के रूप में भेजना नया नहीं है। कंप्यूटर इसी तरह पहली बार ऑनलाइन हुए थे, और रेडियो चेतावनियाँ दशकों से इसी तरह काम करती रही हैं। | needs human check |
+| text.front.s5.p1970 | Acoustic couplers let computers exchange data through the sound travelling down a telephone handset. | एकूस्टिक कपलर। कंप्यूटर टेलीफ़ोन के हैंडसेट से आवाज़ के ज़रिए बात करता है। | needs human check |
+| text.front.s5.p1997 | In the United States, radio and TV emergency alerts use a short coded tone sequence that compatible receivers can recognise. The system is still in use. | अमेरिका में रेडियो और टीवी चेतावनियाँ कोडित आवाज़ की एक छोटी बौछार से शुरू होती हैं, जिसे रिसीवर पढ़ सकता है। यह आज भी उपयोग में है। | needs human check |
+| text.front.s5.p2026 | Dead Air brings that basic idea to a web app on a phone. | Dead Air यही काम एक वेब पेज में, स्मार्टफ़ोन पर करता है। | needs human check |
 | text.front.s5.quote | "But the radio stayed on." | "लेकिन रेडियो चालू रहा।" | needs human check |
 | text.front.s5.quote.by | Sibyle Veil, head of Radio France, on the April 2025 blackout in Spain and Portugal, when power, mobile networks and the internet failed. | Sibyle Veil, Radio France की प्रमुख, अप्रैल 2025 में Spain और Portugal में हुए ब्लैकआउट पर, जब बिजली, मोबाइल नेटवर्क और इंटरनेट सब ठप हो गए थे। | needs human check |
-| text.front.s6.title | What we promise | हमारे वादे | needs human check |
-| text.front.s6.p1 | A damaged alert is never shown. | क्षतिग्रस्त चेतावनी कभी नहीं दिखाई जाती। | needs human check |
-| text.front.s6.p2 | An expired alert is never shown as current. Every alert shows when it was sent. | समाप्त हो चुकी चेतावनी कभी मान्य बनाकर नहीं दिखाई जाती। हर चेतावनी दिखाती है कि वह कब भेजी गई थी। | needs human check |
-| text.front.s6.p3 | A test is always marked TEST. | परीक्षण हमेशा TEST चिह्नित होता है। | needs human check |
-| text.front.s6.p4 | After the first load, it works with no network and never contacts any other site. | पहली बार लोड होने के बाद यह बिना नेटवर्क के काम करता है और किसी दूसरी साइट से कभी संपर्क नहीं करता। | needs human check |
-| text.front.s6.p5 | Microphone sound is never recorded, stored or uploaded. | माइक्रोफ़ोन की आवाज़ कभी रिकॉर्ड, सहेजी या अपलोड नहीं की जाती। | needs human check |
-| text.front.s6.p6 | Every alert has an icon and text in every language the app ships. | हर चेतावनी का चिह्न और पाठ ऐप की हर भाषा में मौजूद है। | needs human check |
-| text.front.s7.title | What it is not | यह क्या नहीं है | needs human check |
-| text.front.s7.i1 | It is a prototype. It has never been used in a real disaster. | यह एक प्रोटोटाइप है। इसे कभी किसी असली आपदा में उपयोग नहीं किया गया है। | needs human check |
-| text.front.s7.i2 | It does not replace official alerts. India’s SACHET system has sent over 134 billion SMS alerts in more than 19 languages. Dead Air is a backup for when phones lose the network. | यह आधिकारिक चेतावनियों का विकल्प नहीं है। भारत की SACHET प्रणाली 19 से अधिक भाषाओं में 134 अरब से ज़्यादा SMS चेतावनियाँ भेज चुकी है। Dead Air उस समय का बैकअप है जब फ़ोन का नेटवर्क चला जाए। | needs human check |
-| text.front.s7.i3 | It needs a smartphone with the Listen page open and the screen on. Load the page once while you still have a connection. | इसके लिए ऐसा स्मार्टफ़ोन चाहिए जिसमें सुनने का पृष्ठ खुला हो और स्क्रीन चालू हो। जब तक कनेक्शन है, पृष्ठ को एक बार लोड कर लें। | needs human check |
-| text.front.s7.i4 | It needs a working radio, loudspeaker or phone nearby. Radio often outlasts mobile networks, but not always. Weeks after Hurricane Maria, about one-third of Puerto Rico’s AM and FM stations were still off air. | इसके पास चालू रेडियो, लाउडस्पीकर या फ़ोन होना चाहिए। रेडियो अक्सर मोबाइल नेटवर्क से ज़्यादा टिकता है, पर हमेशा नहीं। तूफ़ान मारिया के हफ़्तों बाद भी पोर्टो रिको के लगभग एक-तिहाई AM और FM स्टेशन बंद थे। | needs human check |
-| text.front.s7.i5 | It cannot help when no warning is sent, or when it is sent too late. In Maui in 2023 the sirens were never sounded. In Valencia in 2024 the phone alert went out after the flooding had begun. | जब कोई चेतावनी भेजी ही न जाए, या बहुत देर से भेजी जाए, तब यह मदद नहीं कर सकता। 2023 में Maui में सायरन कभी बजाए ही नहीं गए। 2024 में Valencia में फ़ोन चेतावनी बाढ़ शुरू होने के बाद भेजी गई। | needs human check |
-| text.front.s7.i6 | It cannot yet prove who sent an alert. | यह अभी यह साबित नहीं कर सकता कि चेतावनी किसने भेजी। | needs human check |
-| text.front.s7.i7 | English and Hindi so far. | अभी तक अंग्रेज़ी और हिंदी। | needs human check |
-| text.front.s7.i8 | Tested so far: | अब तक की जाँच: | needs human check |
-| text.front.s7.tested.near | {m} m ({ft} ft), heard every time. | {m} मीटर ({ft} फ़ुट), हर बार सुनाई दिया। | needs human check |
-| text.front.s7.tested.far | {m} m ({ft} ft), next room through an open doorway, {n} of {of} alerts received. | {m} मीटर ({ft} फ़ुट), खुले दरवाज़े के पार अगला कमरा, {of} में से {n} चेतावनियाँ मिलीं। | needs human check |
-| text.front.s7.tested.how | Sound played by {device}, heard by {phone}. These were informal tests. | आवाज़ {device} से चलाई गई, {phone} ने सुनी। ये अनौपचारिक जाँचें थीं। | needs human check |
-| text.front.s7.radio | Radio: not tested yet. | रेडियो: अभी जाँचा नहीं गया। | needs human check |
-| text.front.s7.loud | Loudspeaker: not tested yet. | लाउडस्पीकर: अभी जाँचा नहीं गया। | needs human check |
+| text.front.s6.title | Things we won't compromise on | हमारे वादे | needs human check |
+| text.front.s6.p1 | If an alert fails its integrity check, we show none of it. | क्षतिग्रस्त चेतावनी कभी नहीं दिखाई जाती। | needs human check |
+| text.front.s6.p2 | An expired alert is never presented as current. The time it was sent is always visible. | समाप्त हो चुकी चेतावनी कभी मान्य बनाकर नहीं दिखाई जाती। हर चेतावनी दिखाती है कि वह कब भेजी गई थी। | needs human check |
+| text.front.s6.p3 | Test messages always carry a TEST label. | परीक्षण हमेशा TEST चिह्नित होता है। | needs human check |
+| text.front.s6.p4 | After the first visit, the app works offline. It doesn't contact third-party sites. | पहली बार लोड होने के बाद यह बिना नेटवर्क के काम करता है और किसी दूसरी साइट से कभी संपर्क नहीं करता। | needs human check |
+| text.front.s6.p5 | Audio from the microphone is processed in memory, then discarded. It is never recorded, saved or uploaded. | माइक्रोफ़ोन की आवाज़ कभी रिकॉर्ड, सहेजी या अपलोड नहीं की जाती। | needs human check |
+| text.front.s6.p6 | Every alert type has an icon and translated text in every language we support. | हर चेतावनी का चिह्न और पाठ ऐप की हर भाषा में मौजूद है। | needs human check |
+| text.front.s7.title | A few limits to be clear about | यह क्या नहीं है | needs human check |
+| text.front.s7.i1 | This is a prototype. It has not been used in a real emergency. | यह एक प्रोटोटाइप है। इसे कभी किसी असली आपदा में उपयोग नहीं किया गया है। | needs human check |
+| text.front.s7.i2 | Dead Air is not a replacement for official alerts. India’s SACHET system has sent over 134 billion SMS alerts in more than 19 languages. This is a backup idea for the times phones lose their network. | यह आधिकारिक चेतावनियों का विकल्प नहीं है। भारत की SACHET प्रणाली 19 से अधिक भाषाओं में 134 अरब से ज़्यादा SMS चेतावनियाँ भेज चुकी है। Dead Air उस समय का बैकअप है जब फ़ोन का नेटवर्क चला जाए। | needs human check |
+| text.front.s7.i3 | The listener needs a smartphone with the Listen page open and the screen on. Visit the page once while you still have a connection so it can be saved for offline use. | इसके लिए ऐसा स्मार्टफ़ोन चाहिए जिसमें सुनने का पृष्ठ खुला हो और स्क्रीन चालू हो। जब तक कनेक्शन है, पृष्ठ को एक बार लोड कर लें। | needs human check |
+| text.front.s7.i4 | There also needs to be a working radio, loudspeaker or phone nearby to play the sound. Radio can stay on when mobile networks fail, but it isn't guaranteed to. Weeks after Hurricane Maria, about a third of Puerto Rico’s AM and FM stations were still off air. | इसके पास चालू रेडियो, लाउडस्पीकर या फ़ोन होना चाहिए। रेडियो अक्सर मोबाइल नेटवर्क से ज़्यादा टिकता है, पर हमेशा नहीं। तूफ़ान मारिया के हफ़्तों बाद भी पोर्टो रिको के लगभग एक-तिहाई AM और FM स्टेशन बंद थे। | needs human check |
+| text.front.s7.i5 | Dead Air can't help if nobody sends a warning, or if it comes too late. The sirens in Maui were not sounded during the 2023 fires. In Valencia, the phone alert in 2024 went out after the flooding had started. | जब कोई चेतावनी भेजी ही न जाए, या बहुत देर से भेजी जाए, तब यह मदद नहीं कर सकता। 2023 में Maui में सायरन कभी बजाए ही नहीं गए। 2024 में Valencia में फ़ोन चेतावनी बाढ़ शुरू होने के बाद भेजी गई। | needs human check |
+| text.front.s7.i6 | It can't currently verify the identity of whoever sent an alert. | यह अभी यह साबित नहीं कर सकता कि चेतावनी किसने भेजी। | needs human check |
+| text.front.s7.i7 | Right now, the app supports English and Hindi. | अभी तक अंग्रेज़ी और हिंदी। | needs human check |
+| text.front.s7.i8 | A few informal tests so far: | अब तक की जाँच: | needs human check |
+| text.front.s7.tested.near | At {m} m ({ft} ft): received every time. | {m} मीटर ({ft} फ़ुट), हर बार सुनाई दिया। | needs human check |
+| text.front.s7.tested.far | At {m} m ({ft} ft), through an open doorway into the next room: {n} out of {of} alerts received. | {m} मीटर ({ft} फ़ुट), खुले दरवाज़े के पार अगला कमरा, {of} में से {n} चेतावनियाँ मिलीं। | needs human check |
+| text.front.s7.tested.how | The sound came from a {device} and was picked up by a {phone}. These were informal tests, not lab measurements. | आवाज़ {device} से चलाई गई, {phone} ने सुनी। ये अनौपचारिक जाँचें थीं। | needs human check |
+| text.front.s7.radio | Radio broadcasts haven't been tested yet. | रेडियो: अभी जाँचा नहीं गया। | needs human check |
+| text.front.s7.loud | Loudspeakers haven't been tested yet. | लाउडस्पीकर: अभी जाँचा नहीं गया। | needs human check |
 | text.front.s8.credits | Credits | श्रेय | needs human check |
 | text.front.s8.font | Font | फ़ॉन्ट | needs human check |
 | text.front.s8.sound | Sound library | आवाज़ की लाइब्रेरी | needs human check |
 | text.front.s8.qr | QR code library | QR कोड की लाइब्रेरी | needs human check |
 | text.front.s8.licence | Licence | लाइसेंस | needs human check |
 | text.front.s8.pictures | Pictures | चित्र | needs human check |
-| text.front.s8.last | Dead Air is a prototype and a backup channel. Always follow official alerts. | Dead Air एक प्रोटोटाइप और बैकअप माध्यम है। हमेशा आधिकारिक चेतावनियों का पालन करें। | needs human check |
+| text.front.s8.last | Dead Air is a prototype and a backup channel. Keep following official alerts. | Dead Air एक प्रोटोटाइप और बैकअप माध्यम है। हमेशा आधिकारिक चेतावनियों का पालन करें। | needs human check |
 | text.front.alt.fani-before | Satellite view at night of the city lights around Bhubaneswar and Cuttack, before Cyclone Fani. | Cyclone Fani से पहले रात में Bhubaneswar और Cuttack के आसपास शहर की रोशनियों का उपग्रह दृश्य। | needs human check |
 | text.front.alt.fani-after | Satellite view at night of the same area after Cyclone Fani, with far fewer lights. | Cyclone Fani के बाद उसी इलाके का रात का उपग्रह दृश्य, जिसमें रोशनियाँ बहुत कम हैं। | needs human check |
 | text.front.alt.coupler | An old acoustic coupler modem with two rubber cups for a telephone handset. | एक पुराना एकूस्टिक कपलर मॉडेम, जिसमें टेलीफ़ोन हैंडसेट के लिए दो रबड़ के कप हैं। | needs human check |

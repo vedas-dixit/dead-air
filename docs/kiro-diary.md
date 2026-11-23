@@ -293,3 +293,12 @@ The owner reworked the front page and the shared frame on branch `manual/front-p
 - **How it works scene.** An animated scene. `how-scene.ts` only decides when it may move: not before it is on screen, not while off screen, not when paused, and not under reduced motion. A round pause button was added, with the new text `front.s4.pause` ("Pause animation") in English and Hindi. The Hindi is not reviewed (Needs_Human_Check), and the check list now shows 316.
 - **Styles.** The front page styles moved from `look.css` into a new `src/front/front.css` (1305 lines), with a new lint test, `tests/front/front-css.test.ts`.
 - **Not re-run by me:** the test suite after this change. I only read the diff.
+## Front page words by hand (23 Nov 2026)
+Files: `index.html`, `src/broadcast/strings.en.ts`, `src/front/dom/bind-text.ts`, `tests/front/facts.test.ts`, `docs/front-page-content.md`, `docs/translation-check.md`, `.kiro/specs/front-page/requirements.md`. No new spec.
+The owner rewrote the English front page text in plain, personal words. Only wording changed, no new facts, numbers or sources.
+- **Titles.** Section 2 "When the network goes, it goes for everyone", section 4 "How a message gets through", section 5 "This idea is older than the internet", section 6 "Things we won't compromise on", section 7 "A few limits to be clear about".
+- **Case card labels.** "What went down", "What was still working", "What followed", "What was missing".
+- **Tested line.** The device text is now "MacBook Pro M4 at full volume (about 85 dB)", shortened from the diary's wording. The diary table above is unchanged.
+- **Updated to match.** `docs/front-page-content.md` was rewritten to the new words, so it is again the source for the page. Front-page `requirements.md` 4 and 3a now use the new labels and device text.
+- **Translation check.** `docs/translation-check.md` was regenerated from the new English. The Hindi was not changed, so it still has to be checked against the new English by a Hindi speaker (Needs_Human_Check, still 316).
+- **Tests.** `tests/front/facts.test.ts` failed 4 tests, because it looked for the old words ("heard every time", "3 of 4", the long device text, "not tested yet"). I changed it to accept the new words. It still checks the same facts against the diary: the distances, 3 of 4 received, the MacBook Pro M4, full volume, 85 dB, and no radio or loudspeaker row.

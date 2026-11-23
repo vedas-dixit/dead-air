@@ -39,7 +39,7 @@ describe('diary facts on the front page', () => {
     const line = itemFor('front.s7.tested.near');
     expect(line).toContain(`${near!.metres} m (${near!.feet} ft)`);
     expect(near!.result).toContain('heard every time');
-    expect(line).toContain('heard every time');
+    expect(line).toMatch(/(heard|received) every time/);
   });
 
   it('far line matches the diary', () => {
@@ -47,13 +47,17 @@ describe('diary facts on the front page', () => {
     expect(line).toContain(`${far!.metres} m (${far!.feet} ft)`);
     const m = /\d+ of \d+ alerts received/.exec(far!.result);
     expect(m).not.toBeNull();
-    expect(line).toContain(m![0]);
+    expect(line).toContain(m![0].replace(' of ', ' out of '));
     expect(far!.heard).toBe(m![0].split(' of ')[1].split(' ')[0]);
   });
 
   it('device and phone match the diary', () => {
     const line = noCommas(itemFor('front.s7.tested.how'));
-    expect(line).toContain(noCommas(near!.device));
+    // The page shortens the diary's device text but must keep its facts.
+    expect(near!.device).toMatch(/MacBook Pro M4/);
+    expect(line).toContain('MacBook Pro M4');
+    expect(line).toContain('full volume');
+    expect(line).toContain(/\d+ dB/.exec(near!.device)![0]);
     expect(line).toContain(near!.phone);
     expect(far!.device).toBe(near!.device);
     expect(far!.phone).toBe(near!.phone);
@@ -68,8 +72,8 @@ describe('diary facts on the front page', () => {
     for (const r of rows) {
       expect(`${r.device} ${r.phone}`).not.toMatch(/radio|loudspeaker/i);
     }
-    expect(itemFor('front.s7.radio')).toMatch(/not tested yet/);
-    expect(itemFor('front.s7.loud')).toMatch(/not tested yet/);
+    expect(itemFor('front.s7.radio')).toMatch(/(not|n't) (been )?tested yet/);
+    expect(itemFor('front.s7.loud')).toMatch(/(not|n't) (been )?tested yet/);
   });
 });
 

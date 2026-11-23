@@ -11,7 +11,7 @@ export const TESTED_PARAMS: Readonly<Record<string, TemplateParams>> = {
   'front.s7.tested.near': { m: '2.4', ft: 8 },
   'front.s7.tested.far': { m: '6.4', ft: 21, n: 3, of: 4 },
   'front.s7.tested.how': {
-    device: 'MacBook Pro M4, built-in speakers, full volume, about 85 dB',
+    device: 'MacBook Pro M4 at full volume (about 85 dB)',
     phone: 'Samsung Galaxy S25 Ultra',
   },
 };
