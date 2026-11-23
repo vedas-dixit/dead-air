@@ -308,19 +308,6 @@ button:disabled {
   background: var(--page);
 }
 
-/* Front page demo button. Loading stays solid (disabled and busy). Playing is the hollow pill. */
-#btn-demo:disabled[data-state='loading'] {
-  border-color: var(--selected-bg);
-  color: var(--selected-fg);
-  background: var(--selected-bg);
-}
-
-#btn-demo:disabled[data-state='playing'] {
-  border-color: var(--panel);
-  color: var(--text);
-  background: var(--page);
-}
-
 /* ---------- Fields ---------- */
 
 input[type='text'],
@@ -480,7 +467,7 @@ legend {
   color: var(--selected-fg);
 }
 
-/* Front page: two plain pills and an empty slot kept for a language switch. */
+/* Front page header: two plain pills. The rest of the front page is in src/front/front.css. */
 .front-links {
   display: flex;
   flex-wrap: wrap;
@@ -535,154 +522,6 @@ legend {
     padding: 0.25rem 0.5rem;
   }
 }
-/* ---------- Front page ---------- */
-
-.front-section {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--gap) * 2);
-  min-width: 0;
-}
-
-/* Big_Number: a figure set large in the mono font. rem inside clamp, so it follows text size. */
-.front-big {
-  margin: 0;
-  color: var(--text);
-  background: var(--page);
-  font-family: var(--font-latin);
-  font-size: clamp(3rem, 12vw, 5rem);
-  font-weight: 600;
-  line-height: var(--lh-tight);
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-/* Tuning_Line: a thin rule with tick marks and the section number beside it. */
-.front-tuning {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--gap) * 2);
-  min-height: 1.5rem;
-  color: var(--muted);
-  background: var(--page);
-}
-
-.front-tuning svg {
-  display: block;
-  flex: 1 1 auto;
-  min-width: 0;
-  height: 1.5rem;
-  stroke: currentColor;
-  fill: none;
-}
-
-.front-tuning-no {
-  flex: none;
-  color: var(--muted);
-  background: var(--page);
-  font-family: var(--font-latin);
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-/* Sections 6 and 7: stacked on a phone, side by side from 60em, wider than the text column. */
-.front-twin {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: calc(var(--gap) * 3);
-  min-width: 0;
-}
-
-.front-twin > * {
-  min-width: 0;
-}
-
-/* Pictures side by side when there is room, stacked when not. */
-.front-pair {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
-  gap: calc(var(--gap) * 2);
-  align-items: start;
-}
-
-.front-pair > figure,
-.front-picture-box {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap);
-  margin: 0;
-  min-width: 0;
-}
-
-.front-picture,
-.front-pair img {
-  display: block;
-  width: 100%;
-  max-width: var(--measure);
-  height: auto;
-  border-radius: var(--radius);
-}
-
-/* Case_Card: a Listen-style card with no banner, time or voice button. */
-.front-case {
-  min-width: 0;
-}
-
-.front-case .card-rows {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-/* Captions and sources: muted text on the page, never in a panel. */
-.front-caption {
-  margin: 0;
-  color: var(--muted);
-  background: var(--page);
-  font-size: 0.875rem;
-}
-
-.front-source {
-  color: var(--text);
-  background: var(--page);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-/* QR code: always paper and ink from the tokens, whatever the theme. */
-.front-qr {
-  display: block;
-  width: 100%;
-  max-width: 14rem;
-  height: auto;
-}
-
-.front-qr rect {
-  fill: var(--qr-paper);
-}
-
-.front-qr path {
-  fill: var(--qr-ink);
-}
-
-/* The line under the demo button (volume advice or a failure). Empty takes no room. */
-.front-demo-line {
-  color: var(--text);
-  background: var(--page);
-  font-weight: 600;
-}
-
-.front-demo-line:empty {
-  display: none;
-}
-
-@media (min-width: 60em) {
-  .front-twin {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-self: center;
-    width: min(72rem, calc(100vw - 2 * var(--gutter)));
-    max-width: 72rem;
-  }
-}
-
 /* ---------- Event picker ---------- */
 
 /* Three across, a bank of nine. Falls to two, then one, when a third of the
