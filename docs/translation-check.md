@@ -3,7 +3,7 @@
 This text is machine-written. Only entries marked `checked` were checked by a native speaker. Review all other entries before real use.
 
 Checked: 0
-Needs human check: 315
+Needs human check: 316
 
 ## Strings
 | Key | English | Hindi | Status |
@@ -275,6 +275,7 @@ Needs human check: 315
 | text.front.s4.step3.name | Hear. | सुनें। | needs human check |
 | text.front.s4.step3.text | Any phone with the Listen page open hears it through the microphone and checks it. It shows the alert with an icon, in English or Hindi, and can read it aloud. One tap passes it on to the next phone. | सुनने का पृष्ठ खुला रखने वाला कोई भी फ़ोन इसे माइक्रोफ़ोन से सुनता है और जाँचता है। वह चेतावनी को चिह्न के साथ, अंग्रेज़ी या हिंदी में दिखाता है और उसे ज़ोर से पढ़ भी सकता है। एक टैप से यह अगले फ़ोन तक पहुँच जाती है। | needs human check |
 | text.front.s4.caption | Illustration | चित्रण | needs human check |
+| text.front.s4.pause | Pause animation | एनिमेशन रोकें | needs human check |
 | text.front.s5.title | An old idea, brought back | एक पुराना विचार, फिर से लौटा | needs human check |
 | text.front.s5.text | Sending data as sound is not new. It is how computers first went online, and how radio alerts have worked for decades. | डेटा को आवाज़ के रूप में भेजना नया नहीं है। कंप्यूटर इसी तरह पहली बार ऑनलाइन हुए थे, और रेडियो चेतावनियाँ दशकों से इसी तरह काम करती रही हैं। | needs human check |
 | text.front.s5.p1970 | Acoustic couplers. A computer talks through a telephone handset, by sound. | एकूस्टिक कपलर। कंप्यूटर टेलीफ़ोन के हैंडसेट से आवाज़ के ज़रिए बात करता है। | needs human check |

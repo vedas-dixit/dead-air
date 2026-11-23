@@ -1,11 +1,13 @@
-// Entry point of the front page. Text, language switch, cyclone icon, QR code, demo, service worker.
+// Entry point of the front page. Text, language switch, cyclone icon, QR code, demo, the How it works scene, service worker.
 import '../shared/ui/look.css';
+import './front.css';
 import { applyDocumentLanguage, createWebLanguageState } from '../languages/dom/web-language';
 import { mountLanguageSwitch } from '../languages/dom/language-switch';
 import { registerServiceWorker } from '../offline/dom/register';
 import { iconNode } from '../shared/ui/dom/icon-node';
 import { bindText } from './dom/bind-text';
 import { mountDemo } from './dom/demo';
+import { mountHowScene } from './dom/how-scene';
 import { mountQr } from './dom/qr-svg';
 import { listenUrl } from './listen-url';
 
@@ -35,4 +37,5 @@ if (qr !== null) {
 }
 
 mountDemo(document, language);
+mountHowScene(document);
 registerServiceWorker();

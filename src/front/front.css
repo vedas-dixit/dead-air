@@ -1,0 +1,1305 @@
+/* Dead Air: the front page. Loaded by index.html only, after look.css.
+   Colours, type and shapes come from the tokens in look.css; this file names no
+   colour value. It holds the page layout and the one moving picture on the site
+   (the How it works scene), which runs only under prefers-reduced-motion:
+   no-preference and can be paused. */
+
+.front-page {
+  --measure: 77rem;
+  --gutter: clamp(16px, 4vw, 40px);
+  --section-gap: clamp(4rem, 2.5rem + 6vw, 7.5rem);
+  --lh-display: 1.12;
+  --cycle: 12s;
+}
+
+.front-page:lang(hi),
+.front-page :lang(hi) {
+  --lh-display: 1.6;
+}
+
+.front-page .site-header {
+  padding-bottom: calc(var(--gap) * 2);
+}
+
+/* Phones: the logo and the language switch share the first row, and the two
+   page links fill the second, each half the width, like the app's page switch. */
+@media (max-width: 40em) {
+  .front-page .site-header .front-links {
+    flex: 1 1 100%;
+    order: 1;
+  }
+
+  .front-page .site-header .front-links .pill {
+    flex: 1 1 auto;
+  }
+}
+
+.front-page main {
+  gap: 0;
+  padding: 0 0 4rem;
+}
+
+.front-section {
+  min-width: 0;
+}
+
+.front-section h2 {
+  max-width: 28ch;
+  font-size: clamp(1.5rem, 1rem + 2.4vw, 2.75rem);
+  line-height: var(--lh-display);
+  text-wrap: balance;
+}
+
+.front-section p {
+  text-wrap: pretty;
+}
+
+/* Captions and sources: muted text on the page, never in a panel. */
+.front-caption,
+.front-cite {
+  margin: 0;
+  color: var(--muted);
+  background: var(--page);
+  font-size: 0.875rem;
+}
+
+.front-source {
+  color: var(--text);
+  background: var(--page);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.front-picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+/* ---------- Dial scale: the line between sections ---------- */
+
+/* A tuning scale with the orange marker one stop further along for each section. */
+.front-tuning {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: var(--section-gap) 0 clamp(1.5rem, 1rem + 2vw, 2.75rem);
+  color: var(--muted);
+  background: var(--page);
+}
+
+.front-tuning svg {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.front-tuning svg * {
+  vector-effect: non-scaling-stroke;
+}
+
+.front-tuning .tuning-mark {
+  stroke: var(--orange);
+  stroke-width: 5;
+}
+
+.front-tuning-no {
+  flex: none;
+  color: var(--muted);
+  background: var(--page);
+  font-family: var(--font-latin);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ---------- 1. Top: the photograph, the headline, the demo ---------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 1.25rem;
+}
+
+.hero-photo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+  margin: 0;
+}
+
+.hero-title {
+  font-size: clamp(1.75rem, 1rem + 3.4vw, 3rem);
+  line-height: var(--lh-display);
+  text-wrap: balance;
+}
+
+.hero-lede {
+  max-width: 36rem;
+  font-size: clamp(1.125rem, 1rem + 0.45vw, 1.3125rem);
+}
+
+.hero-demo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: calc(var(--gap) * 1.5) 1rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.front-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: var(--gap);
+}
+
+.front-buttons > * {
+  flex: 1 1 auto;
+}
+
+/* Demo button. Loading stays solid (disabled and busy). Playing is the hollow
+   pill with the on-air lamp, and Stop is the solid one beside it. */
+#btn-demo:disabled[data-state='loading'] {
+  border-color: var(--selected-bg);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+#btn-demo:disabled[data-state='playing'] {
+  border-color: var(--panel);
+  color: var(--text);
+  background: var(--page);
+}
+
+#btn-demo[data-state='playing']::before {
+  content: '';
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: var(--ring) solid var(--text);
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+/* The line under the demo button (volume advice or a failure). Empty takes no room. */
+.front-demo-line {
+  grid-column: 1 / -1;
+  color: var(--text);
+  background: var(--page);
+  font-weight: 600;
+}
+
+.front-demo-line:empty {
+  display: none;
+}
+
+/* The QR code sits on a tile. It is always paper and ink, whatever the theme. */
+#qr {
+  grid-column: 1;
+  width: 7.5rem;
+  padding: var(--gap);
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--panel);
+}
+
+#qr code {
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.front-qr {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.front-qr rect {
+  fill: var(--qr-paper);
+}
+
+.front-qr path {
+  fill: var(--qr-ink);
+}
+
+.hero-scan {
+  grid-column: 2;
+  max-width: 20rem;
+  font-size: 1rem;
+}
+
+/* From a tablet up the headline is a plate set into the corner of the
+   photograph. The figure gives up its own box, so the picture and its credit
+   sit in the section's grid and the plate can share the picture's row. */
+@media (min-width: 48em) {
+  .hero {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    row-gap: 1.5rem;
+  }
+
+  .hero > *,
+  .hero-photo > * {
+    grid-column: 1 / -1;
+  }
+
+  .hero-photo {
+    display: contents;
+  }
+
+  /* The whole picture when the screen is tall enough. On a short screen it
+     gives up height so the demo stays on the first screen. */
+  .hero-photo img {
+    grid-row: 1;
+    aspect-ratio: 16 / 9;
+    max-height: max(18rem, calc(100svh - 21rem));
+    object-fit: cover;
+    object-position: 50% 55%;
+  }
+
+  /* The credit keeps close under the picture until there is room for its own plate. */
+  .hero-credit {
+    grid-row: 2;
+    justify-self: end;
+    margin-top: calc(var(--gap) - 1.5rem);
+  }
+
+  /* One px wider and taller than its box on the outer edges, so no hairline of
+     the photograph shows beside it at a fractional zoom. */
+  .hero-title {
+    position: relative;
+    z-index: 1;
+    grid-row: 1;
+    align-self: end;
+    justify-self: start;
+    max-width: calc(24ch + 2rem + 1px);
+    margin: 0 0 -1px -1px;
+    padding: 1.25rem 2rem 1px 1px;
+    border-radius: 0 var(--radius) 0 0;
+    color: var(--text);
+    background: var(--page);
+    text-wrap: wrap;
+  }
+
+  .hero-title:lang(hi) {
+    font-size: clamp(1.75rem, 1rem + 2.6vw, 2.5rem);
+  }
+
+  /* Where a plate meets the photograph, the photograph keeps a round corner.
+     Each piece is a 12 px square with a quarter circle cut out of it, and laps
+     1 px over its plate so the join has no seam. */
+  .hero-title::before,
+  .hero-title::after {
+    content: '';
+    position: absolute;
+    background: var(--page);
+  }
+
+  .hero-title::before {
+    bottom: calc(100% - 1px);
+    left: 0;
+    width: 12px;
+    height: 13px;
+    clip-path: path('M0 0V13H12V12A12 12 0 0 1 0 0Z');
+  }
+
+  .hero-title::after {
+    bottom: 0;
+    left: calc(100% - 1px);
+    width: 13px;
+    height: 12px;
+    clip-path: path('M0 0V12H13A12 12 0 0 1 1 0Z');
+  }
+
+  .hero-demo {
+    justify-self: start;
+    width: min(100%, 30rem);
+  }
+
+  #qr {
+    width: 9rem;
+  }
+}
+
+/* Wide screens: the words on the left, the demo on the right, like a control strip. */
+@media (min-width: 62em) {
+  .hero-lede {
+    grid-column: 1 / span 6;
+    grid-row: 3;
+  }
+
+  .hero-small {
+    grid-column: 1 / span 6;
+    grid-row: 4;
+  }
+
+  .hero-demo {
+    grid-column: 7 / -1;
+    grid-row: 3 / span 2;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 1.25rem;
+    align-items: start;
+    justify-self: end;
+    width: min(100%, 27rem);
+  }
+
+  #qr {
+    grid-row: 1 / span 3;
+    width: 100%;
+  }
+
+  .hero-scan {
+    grid-row: 1;
+  }
+
+  .hero-demo .front-buttons {
+    flex-direction: column;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .hero-demo .front-demo-line {
+    grid-column: 2;
+    grid-row: 3;
+  }
+}
+
+/* Room for both plates: the credit moves into the other corner of the photograph. */
+@media (min-width: 70em) {
+  .hero-credit {
+    position: relative;
+    z-index: 1;
+    grid-row: 1;
+    align-self: end;
+    margin: 0 -1px -1px 0;
+    padding: 0.5rem 1px 1px 0.875rem;
+    border-radius: var(--radius) 0 0 0;
+    color: var(--muted);
+    background: var(--page);
+  }
+
+  .hero-credit::before,
+  .hero-credit::after {
+    content: '';
+    position: absolute;
+    background: var(--page);
+  }
+
+  .hero-credit::before {
+    right: 0;
+    bottom: calc(100% - 1px);
+    width: 12px;
+    height: 13px;
+    clip-path: path('M12 0V13H0V12A12 12 0 0 0 12 0Z');
+  }
+
+  .hero-credit::after {
+    right: calc(100% - 1px);
+    bottom: 0;
+    width: 13px;
+    height: 12px;
+    clip-path: path('M13 0V12H0A12 12 0 0 0 12 0Z');
+  }
+
+  .hero-lede {
+    grid-row: 2;
+  }
+
+  .hero-small {
+    grid-row: 3;
+  }
+
+  .hero-demo {
+    grid-column: 8 / -1;
+    grid-row: 2 / span 2;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    justify-self: stretch;
+    width: auto;
+  }
+}
+
+/* ---------- 2. The problem: three numbers ---------- */
+
+/* --big is the size of the figures. The words beside them use it to start level with their top. */
+.number-list {
+  --big: min(clamp(3.5rem, 2rem + 7vw, 7.5rem), 25vw);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+  margin-top: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+}
+
+.number-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+}
+
+/* Big_Number: a figure set large in the mono font. rem inside clamp, so it follows text size. */
+.front-big {
+  margin: 0;
+  color: var(--text);
+  background: var(--page);
+  font-family: var(--font-latin);
+  font-size: var(--big);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  word-spacing: -0.3em;
+  white-space: nowrap;
+}
+
+.front-big:lang(hi) {
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.front-big span {
+  font-size: clamp(1.25rem, 0.75rem + 2.3vw, 2.5rem);
+  letter-spacing: 0;
+}
+
+.front-big span:lang(hi) {
+  font-family: var(--font-system);
+  letter-spacing: 0;
+}
+
+.number-words {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+  max-width: 34rem;
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+}
+
+/* The line under the numbers: an ink plate, like the app's banner. */
+.statement {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  padding: clamp(1.25rem, 0.75rem + 3vw, 3rem);
+  border-radius: var(--radius);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+.statement-words {
+  max-width: 36em;
+  font-size: clamp(1.25rem, 1rem + 1.1vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.statement-words:lang(hi) {
+  line-height: 1.6;
+}
+
+.statement-cite {
+  font-size: 0.875rem;
+}
+
+.statement .front-source {
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+.statement :focus-visible,
+.promises :focus-visible {
+  outline-color: var(--selected-fg);
+}
+
+@media (min-width: 48em) {
+  .number-list {
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: clamp(1.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
+  /* The rows share one grid, so the words line up after the widest number. */
+  .number-row {
+    display: contents;
+  }
+
+  /* The first line of the words starts level with the top of the digits. The
+     two factors are where the capital height sits in a line of each size:
+     0.177 of the figure's size (line height 1) and 0.427 of the words' own
+     (line height 1.5), from the IBM Plex Mono metrics. */
+  .number-words {
+    padding-top: calc(var(--big) * 0.177 - 0.427em);
+  }
+
+  .number-words:lang(hi) {
+    padding-top: calc(var(--big) * 0.427 - 0.45em);
+  }
+}
+
+/* ---------- 3. How it works: the scene and the three steps ---------- */
+
+.how {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+/* The stage is one large tile. On a phone it runs edge to edge as a straight band. */
+.how-stage {
+  position: relative;
+  margin: 0 calc(var(--gutter) * -1);
+  padding: 1.5rem var(--gap);
+  border-radius: 0;
+  color: var(--text);
+  background: var(--panel);
+}
+
+/* Room for the pause button, only when it is there. */
+.how-stage:has(.how-toggle:not([hidden])) {
+  padding-bottom: 4.5rem;
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 54rem;
+  height: auto;
+  margin: 0 auto;
+}
+
+.sc-ink {
+  fill: var(--text);
+}
+
+.sc-paper {
+  fill: var(--page);
+}
+
+.sc-panel {
+  fill: var(--panel);
+}
+
+.sc-orange {
+  fill: var(--orange);
+}
+
+.sc-ink-line,
+.sc-paper-line,
+.sc-wave {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.sc-ink-line {
+  stroke: var(--text);
+}
+
+.sc-paper-line {
+  stroke: var(--page);
+}
+
+.sc-wave {
+  stroke: var(--orange);
+  stroke-width: 8;
+}
+
+.sc-lamp-ring {
+  fill: var(--page);
+  stroke: var(--text);
+  stroke-width: 3;
+}
+
+/* Pause: a round transport button on the stage. Solid ink, because a panel pill would vanish here. */
+.how-toggle {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  width: var(--target);
+  height: var(--target);
+  padding: 0;
+  border-color: var(--selected-bg);
+  border-radius: 50%;
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+.how-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+}
+
+.how-toggle .icon-play,
+.how-toggle[aria-pressed='true'] .icon-pause {
+  display: none;
+}
+
+.how-toggle[aria-pressed='true'] .icon-play {
+  display: block;
+}
+
+.how-steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.how-steps > li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  align-content: start;
+  counter-increment: step;
+}
+
+/* The step number is a lamp: hollow when idle, solid while its part of the scene plays. */
+.how-steps > li::before {
+  content: counter(step);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: var(--ring) solid var(--text);
+  border-radius: 50%;
+  color: var(--text);
+  background: var(--page);
+  font-family: var(--font-latin);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.how-steps strong {
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  line-height: var(--lh-display);
+}
+
+.how-steps span {
+  grid-column: 1 / -1;
+  max-width: 36rem;
+}
+
+@media (min-width: 48em) {
+  .how-stage,
+  .how-stage:has(.how-toggle:not([hidden])) {
+    margin: 0;
+    padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1rem, 4vw, 3.5rem);
+    border-radius: var(--radius);
+  }
+
+  .how-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+}
+
+/* ---------- 4. One storm, up close ---------- */
+
+.fani {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 1.25rem;
+}
+
+/* Case_Card: a Listen-style card with no banner, time or voice button. */
+.front-case {
+  min-width: 0;
+  gap: 1.25rem;
+  padding: clamp(1rem, 0.75rem + 1.5vw, 1.75rem);
+}
+
+.front-case .event-name {
+  font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+  line-height: var(--lh-display);
+}
+
+.case-place {
+  font-weight: 600;
+}
+
+.front-case .card-rows {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+.front-case .card-rows > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.25rem;
+}
+
+.front-case dt,
+.front-case dd {
+  margin: 0;
+}
+
+.case-cite {
+  font-size: 0.875rem;
+}
+
+.front-case .front-source {
+  color: var(--text);
+  background: var(--panel);
+}
+
+/* Pictures side by side when there is room, stacked when not. */
+.front-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: calc(var(--gap) * 2);
+  align-items: start;
+}
+
+.front-pair > figure,
+.front-picture-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+  margin: 0;
+}
+
+.fani-after {
+  max-width: 40rem;
+  margin-top: 0.75rem;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.fani-after:lang(hi) {
+  line-height: 1.6;
+}
+
+@media (min-width: 62em) {
+  .fani {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    column-gap: 1.5rem;
+    align-items: start;
+  }
+
+  .front-case {
+    grid-column: 1 / span 5;
+    grid-row: 1 / -1;
+  }
+
+  .fani > .front-pair,
+  .fani > .front-caption,
+  .fani-after {
+    grid-column: 7 / -1;
+  }
+}
+
+/* ---------- 5. An old idea, brought back ---------- */
+
+.old {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 1.5rem;
+}
+
+.old-intro {
+  max-width: 36rem;
+  font-size: clamp(1.125rem, 1rem + 0.45vw, 1.3125rem);
+}
+
+/* Three points on a line. The past is hollow, the present is solid. */
+.timeline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline > li {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.25rem;
+  max-width: 36rem;
+  padding-left: 2.5rem;
+}
+
+.timeline > li::before {
+  content: '';
+  position: absolute;
+  top: 0.4rem;
+  left: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: var(--ring) solid var(--text);
+  border-radius: 50%;
+  background: var(--page);
+}
+
+.timeline > li:last-child::before {
+  background: var(--text);
+}
+
+.timeline > li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 1.65rem;
+  bottom: -2.65rem;
+  left: calc(0.625rem - 1.5px);
+  width: var(--ring);
+  background: var(--text);
+}
+
+.timeline strong {
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: var(--lh-display);
+}
+
+.pull {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: clamp(2rem, 1rem + 5vw, 4.5rem) 0 0;
+}
+
+.pull-words {
+  font-size: clamp(2rem, 1rem + 4.6vw, 4.25rem);
+  font-weight: 600;
+  line-height: var(--lh-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.pull-words:lang(hi) {
+  letter-spacing: 0;
+}
+
+.pull-by {
+  max-width: 36rem;
+}
+
+@media (min-width: 62em) {
+  .old {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    align-items: start;
+  }
+
+  .old > * {
+    grid-column: 1 / -1;
+  }
+
+  .old > .front-picture-box {
+    grid-column: 1 / span 5;
+    margin-top: 1rem;
+  }
+
+  .old > .timeline {
+    grid-column: 7 / -1;
+    align-self: center;
+  }
+}
+
+/* ---------- 6 and 7: what we promise, what it is not ---------- */
+
+/* Solid means live, hollow means not: the promises are a solid plate, the limits a hollow one. */
+.front-twin {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.twin-col {
+  min-width: 0;
+}
+
+.promises,
+.limits {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: clamp(1.25rem, 0.75rem + 2.5vw, 2.5rem);
+  border: var(--ring) solid var(--text);
+  border-radius: var(--radius);
+}
+
+.promises {
+  border-color: var(--selected-bg);
+  color: var(--selected-fg);
+  background: var(--selected-bg);
+}
+
+.limits {
+  color: var(--text);
+  background: var(--page);
+}
+
+.front-twin h2 {
+  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+}
+
+.promises ol,
+.limits ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.promises ol {
+  counter-reset: promise;
+}
+
+.promises li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  font-weight: 600;
+  counter-increment: promise;
+}
+
+.promises li::before {
+  content: counter(promise);
+  font-family: var(--font-latin);
+}
+
+.limits > ul > li {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.limits > ul > li::before {
+  content: '';
+  position: absolute;
+  top: 0.45em;
+  left: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: var(--ring) solid var(--text);
+  border-radius: 50%;
+}
+
+.limits .limit-cite {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.limits ul ul {
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.limits ul ul li {
+  padding-left: 1rem;
+  border-left: var(--ring) solid var(--text);
+}
+
+@media (min-width: 62em) {
+  .front-twin {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 1.5rem;
+    align-items: start;
+  }
+
+  /* The promises stay in view while the longer list scrolls. */
+  .twin-col:first-child {
+    position: sticky;
+    top: 0;
+  }
+}
+
+/* ---------- 8. Bottom ---------- */
+
+.foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 2rem;
+}
+
+.foot .front-links {
+  align-self: start;
+}
+
+.foot-credits {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  color: var(--muted);
+  background: var(--page);
+  font-size: 0.875rem;
+}
+
+.foot-credits > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.foot-credits h3,
+.foot-credits p {
+  color: var(--text);
+  background: var(--page);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: var(--lh-tight);
+}
+
+.foot-credits ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foot-last {
+  max-width: 24em;
+  font-size: clamp(1.5rem, 1.1rem + 2vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.foot-last:lang(hi) {
+  line-height: 1.6;
+}
+
+@media (min-width: 62em) {
+  .foot {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
+
+  .foot > * {
+    grid-column: 1 / -1;
+  }
+
+  .foot-credits {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
+
+  .foot-credits > div:first-child {
+    grid-column: 1 / span 5;
+  }
+
+  .foot-credits > div:last-child {
+    grid-column: 7 / -1;
+  }
+}
+
+/* ---------- Motion: the How it works scene ---------- */
+
+/* Without motion the scene is the finished picture: the alert sent, heard and
+   passed on. With motion it plays that story in a 12 second loop, only while
+   the scene is on screen (the page script sets data-live and data-away), and
+   the round button pauses it. */
+@media (prefers-reduced-motion: no-preference) {
+  .how[data-live] .sc-pick,
+  .how[data-live] .sc-press,
+  .how[data-live] .sc-lamp,
+  .how[data-live] .sc-wave,
+  .how[data-live] .sc-dot,
+  .how[data-live] .sc-card,
+  .how[data-live] .how-steps > li::before {
+    animation-duration: var(--cycle);
+    animation-timing-function: ease-out;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+  }
+
+  .how[data-away] .scene *,
+  .how[data-paused] .scene *,
+  .how[data-away] .how-steps > li::before,
+  .how[data-paused] .how-steps > li::before {
+    animation-play-state: paused;
+  }
+
+  .sc-press,
+  .sc-card {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .how[data-live] .sc-pick {
+    animation-name: sc-pick;
+  }
+
+  .how[data-live] .sc-go {
+    animation-name: sc-go;
+  }
+
+  .how[data-live] .sc-lamp {
+    animation-name: sc-lamp;
+  }
+
+  .how[data-live] .sc-wave-a {
+    animation-name: sc-wave-a;
+  }
+
+  .how[data-live] .sc-wave-b {
+    animation-name: sc-wave-b;
+  }
+
+  .how[data-live] .sc-dot-a {
+    animation-name: sc-dot-a;
+  }
+
+  .how[data-live] .sc-dot-b {
+    animation-name: sc-dot-b;
+  }
+
+  .how[data-live] .sc-card-a {
+    animation-name: sc-card-a;
+  }
+
+  .how[data-live] .sc-card-b {
+    animation-name: sc-card-b;
+  }
+
+  .how[data-live] .sc-pass {
+    animation-name: sc-pass;
+  }
+
+  /* Each wave and each dot starts a moment after the one before it. */
+  .how[data-live] .sc-n2 {
+    animation-delay: 0.14s;
+  }
+
+  .how[data-live] .sc-n3 {
+    animation-delay: 0.28s;
+  }
+
+  .how[data-live] .sc-n4 {
+    animation-delay: 0.42s;
+  }
+
+  .how[data-live] .sc-n5 {
+    animation-delay: 0.56s;
+  }
+
+  .how[data-live] .sc-n6 {
+    animation-delay: 0.7s;
+  }
+
+  .how[data-live] .sc-n7 {
+    animation-delay: 0.84s;
+  }
+
+  .how[data-live] .how-steps > li:nth-child(1)::before {
+    animation-name: step-1;
+  }
+
+  .how[data-live] .how-steps > li:nth-child(2)::before {
+    animation-name: step-2;
+  }
+
+  .how[data-live] .how-steps > li:nth-child(3)::before {
+    animation-name: step-3;
+  }
+
+  /* Send: a tile is picked, Go on air is pressed, the lamp lights. */
+  @keyframes sc-pick {
+    0%, 4% { opacity: 0; }
+    6%, 92% { opacity: 1; }
+    95%, 100% { opacity: 0; }
+  }
+
+  @keyframes sc-go {
+    0%, 10% { transform: scale(1); }
+    12% { transform: scale(0.95); }
+    14%, 100% { transform: scale(1); }
+  }
+
+  @keyframes sc-lamp {
+    0%, 12% { opacity: 0; }
+    13%, 92% { opacity: 1; }
+    95%, 100% { opacity: 0; }
+  }
+
+  /* Sound: three bursts cross the gap to the first phone, and its grille fills. */
+  @keyframes sc-wave-a {
+    0%, 17% { opacity: 0; }
+    19% { opacity: 1; }
+    25% { opacity: 0; }
+    27% { opacity: 1; }
+    33% { opacity: 0; }
+    35% { opacity: 1; }
+    42%, 100% { opacity: 0; }
+  }
+
+  @keyframes sc-dot-a {
+    0%, 20% { opacity: 0; }
+    22%, 92% { opacity: 1; }
+    95%, 100% { opacity: 0; }
+  }
+
+  /* Hear: the card arrives, one tap passes it on, the next phone gets it too. */
+  @keyframes sc-card-a {
+    0%, 43% { opacity: 0; transform: translateY(10px); }
+    47%, 92% { opacity: 1; transform: translateY(0); }
+    95%, 100% { opacity: 0; transform: translateY(0); }
+  }
+
+  @keyframes sc-pass {
+    0%, 53% { transform: scale(1); }
+    55% { transform: scale(0.92); }
+    57%, 100% { transform: scale(1); }
+  }
+
+  @keyframes sc-wave-b {
+    0%, 56% { opacity: 0; }
+    58% { opacity: 1; }
+    64% { opacity: 0; }
+    66% { opacity: 1; }
+    72% { opacity: 0; }
+    74% { opacity: 1; }
+    80%, 100% { opacity: 0; }
+  }
+
+  @keyframes sc-dot-b {
+    0%, 59% { opacity: 0; }
+    61%, 92% { opacity: 1; }
+    95%, 100% { opacity: 0; }
+  }
+
+  @keyframes sc-card-b {
+    0%, 79% { opacity: 0; transform: translateY(10px); }
+    83%, 92% { opacity: 1; transform: translateY(0); }
+    95%, 100% { opacity: 0; transform: translateY(0); }
+  }
+
+  @keyframes step-1 {
+    0%, 2% { color: var(--text); background-color: var(--page); }
+    3%, 16% { color: var(--page); background-color: var(--text); }
+    17%, 100% { color: var(--text); background-color: var(--page); }
+  }
+
+  @keyframes step-2 {
+    0%, 16% { color: var(--text); background-color: var(--page); }
+    17%, 42% { color: var(--page); background-color: var(--text); }
+    43%, 100% { color: var(--text); background-color: var(--page); }
+  }
+
+  @keyframes step-3 {
+    0%, 42% { color: var(--text); background-color: var(--page); }
+    43%, 92% { color: var(--page); background-color: var(--text); }
+    95%, 100% { color: var(--text); background-color: var(--page); }
+  }
+}

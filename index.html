@@ -6,8 +6,9 @@
     <title data-text="front.page.title">Dead Air: Front page</title>
     <link rel="manifest" href="%BASE_URL%manifest.webmanifest" />
     <link rel="stylesheet" href="./src/shared/ui/look.css" />
+    <link rel="stylesheet" href="./src/front/front.css" />
   </head>
-  <body>
+  <body class="front-page">
     <header class="site-header">
       <a class="app-name" id="link-home" href="%BASE_URL%"><!--look:logo--><span class="sr-only">Dead Air</span></a>
       <nav class="front-links">
@@ -17,78 +18,190 @@
       <div id="language-switch" role="group"></div>
     </header>
     <main>
-      <section id="s1" class="front-section">
-        <h1>
+      <section id="s1" class="front-section hero">
+        <figure class="hero-photo">
+          <img class="front-picture" src="./docs/design/front/illustration-phone.webp" width="1672" height="941" alt="Illustration of a phone showing an alert." data-alt="front.alt.illustration" fetchpriority="high" />
+          <figcaption class="front-caption hero-credit"><span data-text="front.s4.caption">Illustration</span> · Photo by Vedas Dixit</figcaption>
+        </figure>
+        <h1 class="hero-title">
           <span data-text="front.s1.h.a">When the internet </span><span id="dies" data-text="front.s1.h.dies">dies</span><span data-text="front.s1.h.b">, the radio still speaks.</span>
         </h1>
-        <p data-text="front.s1.under">Dead Air turns an emergency alert into a few seconds of sound. Any phone with this page open hears it and shows the alert in the reader’s own language, with no network.</p>
-        <div class="front-buttons">
-          <button id="btn-demo" class="btn-primary" type="button" data-text="front.s1.btn.play">Play test alert</button>
-          <button id="btn-demo-stop" class="btn-primary" type="button" data-text="btn.stop" hidden>Stop</button>
-          <a class="pill" href="%BASE_URL%listen/" data-text="front.s1.btn.listen">Open Listen</a>
+        <p class="hero-lede" data-text="front.s1.under">Dead Air turns an emergency alert into a few seconds of sound. Any phone with this page open hears it and shows the alert in the reader’s own language, with no network.</p>
+        <div class="hero-demo">
+          <div class="front-buttons">
+            <button id="btn-demo" class="btn-primary" type="button" data-text="front.s1.btn.play">Play test alert</button>
+            <button id="btn-demo-stop" class="btn-primary" type="button" data-text="btn.stop" hidden>Stop</button>
+            <a class="pill" href="%BASE_URL%listen/" data-text="front.s1.btn.listen">Open Listen</a>
+          </div>
+          <p id="demo-line" class="front-demo-line" role="status"></p>
+          <div id="qr"></div>
+          <p class="hero-scan" data-text="front.s1.qr.line">Scan with a second phone, then press Play test alert.</p>
         </div>
-        <p id="demo-line" class="front-demo-line" role="status"></p>
-        <div id="qr"></div>
-        <p class="front-caption" data-text="front.s1.qr.line">Scan with a second phone, then press Play test alert.</p>
-        <p class="front-caption" data-text="front.s1.small">A prototype. A backup channel, not a replacement for official alerts.</p>
+        <p class="front-caption hero-small" data-text="front.s1.small">A prototype. A backup channel, not a replacement for official alerts.</p>
       </section>
 
       <div class="front-tuning" aria-hidden="true">
-        <svg viewBox="0 0 400 24" preserveAspectRatio="none" focusable="false"><line x1="0" y1="12" x2="400" y2="12" stroke-width="2" /><path d="M0 4v16M100 8v8M200 4v16M300 8v8M400 4v16" stroke-width="2" /></svg>
+        <svg viewBox="0 0 800 24" preserveAspectRatio="none" focusable="false"><path d="M0 20H800M0 3V20M20 12V20M40 12V20M60 12V20M80 12V20M100 3V20M120 12V20M140 12V20M160 12V20M180 12V20M200 3V20M220 12V20M240 12V20M260 12V20M280 12V20M300 3V20M320 12V20M340 12V20M360 12V20M380 12V20M400 3V20M420 12V20M440 12V20M460 12V20M480 12V20M500 3V20M520 12V20M540 12V20M560 12V20M580 12V20M600 3V20M620 12V20M640 12V20M660 12V20M680 12V20M700 3V20M720 12V20M740 12V20M760 12V20M780 12V20M800 3V20" /><line class="tuning-mark" x1="100" y1="0" x2="100" y2="24" /></svg>
         <span class="front-tuning-no">02</span>
       </div>
-      <section id="s2" class="front-section">
+      <section id="s2" class="front-section numbers">
         <h2 data-section="2" data-text="front.s2.title">Networks fail when people need them most</h2>
-        <div>
-          <p class="front-big">95.2%</p>
-          <p data-text="front.s2.n1.words">of Puerto Rico’s cell sites were out of service after Hurricane Maria.</p>
-          <p><span data-text="front.source">Source:</span> <a class="front-source" href="https://docs.fcc.gov/public/attachments/doc-353805a1.pdf">FCC, 2018</a></p>
+        <div class="number-list">
+          <div class="number-row">
+            <p class="front-big">95.2%</p>
+            <div class="number-words">
+              <p data-text="front.s2.n1.words">of Puerto Rico’s cell sites were out of service after Hurricane Maria.</p>
+              <p class="front-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://docs.fcc.gov/public/attachments/doc-353805a1.pdf">FCC, 2018</a></p>
+            </div>
+          </div>
+          <div class="number-row">
+            <p class="front-big">29,000</p>
+            <div class="number-words">
+              <p data-text="front.s2.n2.words">mobile base stations, at the worst point, stopped working in Japan after the 2011 earthquake and tsunami.</p>
+              <p class="front-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.soumu.go.jp/johotsusintokei/whitepaper/eng/WP2011/2011-outline.pdf">Japan MIC, 2011</a></p>
+            </div>
+          </div>
+          <div class="number-row">
+            <p class="front-big">24 <span data-text="front.s2.n3.unit">hours</span></p>
+            <div class="number-words">
+              <p data-text="front.s2.n3.words">is about how long the Kashmir Valley went without mobile, internet and broadband after fibre cuts in heavy rain, August 2025.</p>
+              <p class="front-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.deccanherald.com/amp/story/india%2Fjammu-and-kashmir%2Finternet-mobile-services-restored-in-jk-after-24-hour-disruption-amid-heavy-rains-3700035">Deccan Herald, 2025</a></p>
+            </div>
+          </div>
         </div>
-        <div>
-          <p class="front-big">29,000</p>
-          <p data-text="front.s2.n2.words">mobile base stations, at the worst point, stopped working in Japan after the 2011 earthquake and tsunami.</p>
-          <p><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.soumu.go.jp/johotsusintokei/whitepaper/eng/WP2011/2011-outline.pdf">Japan MIC, 2011</a></p>
-        </div>
-        <div>
-          <p class="front-big">24 <span data-text="front.s2.n3.unit">hours</span></p>
-          <p data-text="front.s2.n3.words">is about how long the Kashmir Valley went without mobile, internet and broadband after fibre cuts in heavy rain, August 2025.</p>
-          <p><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.deccanherald.com/amp/story/india%2Fjammu-and-kashmir%2Finternet-mobile-services-restored-in-jk-after-24-hour-disruption-amid-heavy-rains-3700035">Deccan Herald, 2025</a></p>
-        </div>
-        <div>
-          <p data-text="front.s2.line">Warnings that reach people save lives. Countries with substantial to comprehensive early warning systems recorded disaster deaths 6.1 times lower than countries with limited to moderate ones.</p>
-          <p><span data-text="front.source">Source:</span> <a class="front-source" href="https://wmo.int/news/media-centre/early-warning-protection-expands-worldwide">WMO and UNDRR, November 2026</a></p>
+        <div class="statement">
+          <p class="statement-words" data-text="front.s2.line">Warnings that reach people save lives. Countries with substantial to comprehensive early warning systems recorded disaster deaths 6.1 times lower than countries with limited to moderate ones.</p>
+          <p class="statement-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://wmo.int/news/media-centre/early-warning-protection-expands-worldwide">WMO and UNDRR, November 2026</a></p>
         </div>
       </section>
 
       <div class="front-tuning" aria-hidden="true">
-        <svg viewBox="0 0 400 24" preserveAspectRatio="none" focusable="false"><line x1="0" y1="12" x2="400" y2="12" stroke-width="2" /><path d="M0 4v16M100 8v8M200 4v16M300 8v8M400 4v16" stroke-width="2" /></svg>
+        <svg viewBox="0 0 800 24" preserveAspectRatio="none" focusable="false"><path d="M0 20H800M0 3V20M20 12V20M40 12V20M60 12V20M80 12V20M100 3V20M120 12V20M140 12V20M160 12V20M180 12V20M200 3V20M220 12V20M240 12V20M260 12V20M280 12V20M300 3V20M320 12V20M340 12V20M360 12V20M380 12V20M400 3V20M420 12V20M440 12V20M460 12V20M480 12V20M500 3V20M520 12V20M540 12V20M560 12V20M580 12V20M600 3V20M620 12V20M640 12V20M660 12V20M680 12V20M700 3V20M720 12V20M740 12V20M760 12V20M780 12V20M800 3V20" /><line class="tuning-mark" x1="200" y1="0" x2="200" y2="24" /></svg>
         <span class="front-tuning-no">03</span>
       </div>
-      <section id="s3" class="front-section">
-        <h2 data-section="3" data-text="front.s3.title">Cyclone Fani</h2>
+      <section id="s3" class="front-section how">
+        <h2 data-section="3" data-text="front.s4.title">How it works</h2>
+        <div class="how-stage">
+          <svg class="scene" viewBox="4 0 640 300" aria-hidden="true" focusable="false">
+            <g>
+              <rect class="sc-ink" x="20" y="58" width="200" height="184" rx="22" />
+              <g class="sc-paper-line" stroke-width="3"><rect x="39.5" y="81.5" width="19" height="19" rx="4" /><rect x="67.5" y="81.5" width="19" height="19" rx="4" /><rect x="95.5" y="81.5" width="19" height="19" rx="4" /><rect x="39.5" y="109.5" width="19" height="19" rx="4" /><rect x="67.5" y="109.5" width="19" height="19" rx="4" /><rect x="95.5" y="109.5" width="19" height="19" rx="4" /><rect x="39.5" y="137.5" width="19" height="19" rx="4" /><rect x="67.5" y="137.5" width="19" height="19" rx="4" /><rect x="95.5" y="137.5" width="19" height="19" rx="4" /></g>
+              <g class="sc-pick">
+                <rect class="sc-paper" x="38" y="80" width="22" height="22" rx="5" />
+                <path class="sc-ink-line" stroke-width="2.6" d="M42.5 89q3.25-5 6.5 0t6.5 0" />
+                <rect class="sc-ink" x="42.5" y="94" width="13" height="2.6" />
+              </g>
+              <g class="sc-paper"><rect x="142" y="85" width="48" height="4" rx="2" /><rect x="134" y="93" width="64" height="4" rx="2" /><rect x="129.3" y="101" width="73.4" height="4" rx="2" /><rect x="126.8" y="109" width="78.4" height="4" rx="2" /><rect x="126" y="117" width="80" height="4" rx="2" /><rect x="126.8" y="125" width="78.4" height="4" rx="2" /><rect x="129.3" y="133" width="73.4" height="4" rx="2" /><rect x="134" y="141" width="64" height="4" rx="2" /><rect x="142" y="149" width="48" height="4" rx="2" /></g>
+              <g class="sc-press sc-go">
+                <rect class="sc-paper" x="38" y="178" width="164" height="42" rx="21" />
+                <circle class="sc-lamp-ring" cx="60" cy="199" r="9" />
+                <circle class="sc-orange sc-lamp" cx="60" cy="199" r="7.5" />
+                <rect class="sc-ink" x="82" y="194.5" width="66" height="9" rx="4.5" />
+              </g>
+            </g>
+            <path class="sc-wave sc-wave-a sc-n1" d="M236.05 136.22A26 26 0 0 1 236.05 163.78" />
+            <path class="sc-wave sc-wave-a sc-n2" d="M251.31 126.68A44 44 0 0 1 251.31 173.32" />
+            <path class="sc-wave sc-wave-a sc-n3" d="M266.58 117.15A62 62 0 0 1 266.58 182.85" />
+            <g>
+              <rect class="sc-ink" x="300" y="32" width="124" height="236" rx="20" />
+              <rect class="sc-paper" x="308" y="40" width="108" height="220" rx="13" />
+              <circle class="sc-panel" cx="362" cy="74" r="24" />
+              <g class="sc-paper"><circle cx="362" cy="74" r="3.4" /><circle cx="362" cy="61" r="3.4" /><circle cx="373.26" cy="67.5" r="3.4" /><circle cx="373.26" cy="80.5" r="3.4" /><circle cx="362" cy="87" r="3.4" /><circle cx="350.74" cy="80.5" r="3.4" /><circle cx="350.74" cy="67.5" r="3.4" /></g>
+              <g class="sc-ink"><circle class="sc-dot sc-dot-a sc-n1" cx="362" cy="74" r="3.4" /><circle class="sc-dot sc-dot-a sc-n2" cx="362" cy="61" r="3.4" /><circle class="sc-dot sc-dot-a sc-n3" cx="373.26" cy="67.5" r="3.4" /><circle class="sc-dot sc-dot-a sc-n4" cx="373.26" cy="80.5" r="3.4" /><circle class="sc-dot sc-dot-a sc-n5" cx="362" cy="87" r="3.4" /><circle class="sc-dot sc-dot-a sc-n6" cx="350.74" cy="80.5" r="3.4" /><circle class="sc-dot sc-dot-a sc-n7" cx="350.74" cy="67.5" r="3.4" /></g>
+              <g class="sc-card sc-card-a">
+                <rect class="sc-panel" x="316" y="108" width="92" height="144" rx="9" />
+                <rect class="sc-orange" x="324" y="116" width="76" height="14" />
+                <rect class="sc-ink" x="324" y="138" width="30" height="30" rx="6" />
+                <path class="sc-paper-line" stroke-width="2.6" d="M329.4 149.5q3.2-5 6.4 0t6.4 0t6.4 0" />
+                <rect class="sc-paper" x="329.4" y="155" width="19.2" height="2.6" />
+                <rect class="sc-paper" x="329.4" y="160.4" width="19.2" height="2.6" />
+                <rect class="sc-ink" x="362" y="142" width="38" height="9" rx="4.5" />
+                <rect class="sc-ink" x="362" y="156" width="26" height="6" rx="3" />
+                <rect class="sc-ink" x="324" y="178" width="76" height="5" rx="2.5" />
+                <rect class="sc-ink" x="324" y="189" width="58" height="5" rx="2.5" />
+                <rect class="sc-ink" x="324" y="200" width="68" height="5" rx="2.5" />
+                <g class="sc-press sc-pass">
+                  <rect class="sc-ink" x="324" y="216" width="76" height="26" rx="13" />
+                  <rect class="sc-paper" x="343" y="226" width="38" height="6" rx="3" />
+                </g>
+              </g>
+            </g>
+            <path class="sc-wave sc-wave-b sc-n1" d="M440.05 136.22A26 26 0 0 1 440.05 163.78" />
+            <path class="sc-wave sc-wave-b sc-n2" d="M455.31 126.68A44 44 0 0 1 455.31 173.32" />
+            <path class="sc-wave sc-wave-b sc-n3" d="M470.58 117.15A62 62 0 0 1 470.58 182.85" />
+            <g transform="translate(204 0)">
+              <rect class="sc-ink" x="300" y="32" width="124" height="236" rx="20" />
+              <rect class="sc-paper" x="308" y="40" width="108" height="220" rx="13" />
+              <circle class="sc-panel" cx="362" cy="74" r="24" />
+              <g class="sc-paper"><circle cx="362" cy="74" r="3.4" /><circle cx="362" cy="61" r="3.4" /><circle cx="373.26" cy="67.5" r="3.4" /><circle cx="373.26" cy="80.5" r="3.4" /><circle cx="362" cy="87" r="3.4" /><circle cx="350.74" cy="80.5" r="3.4" /><circle cx="350.74" cy="67.5" r="3.4" /></g>
+              <g class="sc-ink"><circle class="sc-dot sc-dot-b sc-n1" cx="362" cy="74" r="3.4" /><circle class="sc-dot sc-dot-b sc-n2" cx="362" cy="61" r="3.4" /><circle class="sc-dot sc-dot-b sc-n3" cx="373.26" cy="67.5" r="3.4" /><circle class="sc-dot sc-dot-b sc-n4" cx="373.26" cy="80.5" r="3.4" /><circle class="sc-dot sc-dot-b sc-n5" cx="362" cy="87" r="3.4" /><circle class="sc-dot sc-dot-b sc-n6" cx="350.74" cy="80.5" r="3.4" /><circle class="sc-dot sc-dot-b sc-n7" cx="350.74" cy="67.5" r="3.4" /></g>
+              <g class="sc-card sc-card-b">
+                <rect class="sc-panel" x="316" y="108" width="92" height="144" rx="9" />
+                <rect class="sc-orange" x="324" y="116" width="76" height="14" />
+                <rect class="sc-ink" x="324" y="138" width="30" height="30" rx="6" />
+                <path class="sc-paper-line" stroke-width="2.6" d="M329.4 149.5q3.2-5 6.4 0t6.4 0t6.4 0" />
+                <rect class="sc-paper" x="329.4" y="155" width="19.2" height="2.6" />
+                <rect class="sc-paper" x="329.4" y="160.4" width="19.2" height="2.6" />
+                <rect class="sc-ink" x="362" y="142" width="38" height="9" rx="4.5" />
+                <rect class="sc-ink" x="362" y="156" width="26" height="6" rx="3" />
+                <rect class="sc-ink" x="324" y="178" width="76" height="5" rx="2.5" />
+                <rect class="sc-ink" x="324" y="189" width="58" height="5" rx="2.5" />
+                <rect class="sc-ink" x="324" y="200" width="68" height="5" rx="2.5" />
+                <g>
+                  <rect class="sc-ink" x="324" y="216" width="76" height="26" rx="13" />
+                  <rect class="sc-paper" x="343" y="226" width="38" height="6" rx="3" />
+                </g>
+              </g>
+            </g>
+          </svg>
+          <button id="how-toggle" class="how-toggle" type="button" aria-pressed="false" hidden>
+            <span class="sr-only" data-text="front.s4.pause">Pause animation</span>
+            <svg class="icon-pause" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="4" y="3" width="4" height="14" rx="1" /><rect x="12" y="3" width="4" height="14" rx="1" /></svg>
+            <svg class="icon-play" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M6 3v14l11-7z" /></svg>
+          </button>
+        </div>
+        <ol class="how-steps">
+          <li><strong data-text="front.s4.step1.name">Send.</strong> <span data-text="front.s4.step1.text">Someone picks an alert: what happened, how urgent it is, what to do, and where. Dead Air packs it into 40 bytes or less.</span></li>
+          <li><strong data-text="front.s4.step2.name">Sound.</strong> <span data-text="front.s4.step2.text">The alert becomes a few seconds of sound, like an old modem. It is made to be played over a radio broadcast or a loudspeaker, or straight from a phone.</span></li>
+          <li><strong data-text="front.s4.step3.name">Hear.</strong> <span data-text="front.s4.step3.text">Any phone with the Listen page open hears it through the microphone and checks it. It shows the alert with an icon, in English or Hindi, and can read it aloud. One tap passes it on to the next phone.</span></li>
+        </ol>
+      </section>
+
+      <div class="front-tuning" aria-hidden="true">
+        <svg viewBox="0 0 800 24" preserveAspectRatio="none" focusable="false"><path d="M0 20H800M0 3V20M20 12V20M40 12V20M60 12V20M80 12V20M100 3V20M120 12V20M140 12V20M160 12V20M180 12V20M200 3V20M220 12V20M240 12V20M260 12V20M280 12V20M300 3V20M320 12V20M340 12V20M360 12V20M380 12V20M400 3V20M420 12V20M440 12V20M460 12V20M480 12V20M500 3V20M520 12V20M540 12V20M560 12V20M580 12V20M600 3V20M620 12V20M640 12V20M660 12V20M680 12V20M700 3V20M720 12V20M740 12V20M760 12V20M780 12V20M800 3V20" /><line class="tuning-mark" x1="300" y1="0" x2="300" y2="24" /></svg>
+        <span class="front-tuning-no">04</span>
+      </div>
+      <section id="s4" class="front-section fani">
         <article class="card card-live front-case">
           <div class="card-head">
             <span class="icon-tile" data-icon="cyclone"></span>
-            <span class="event-name" data-text="front.s3.place">Odisha, India · 3 May 2019</span>
-          </div>
-          <div class="card-rows">
             <div>
-              <strong data-text="front.s3.failed.label">What failed</strong>: <span data-text="front.s3.failed.text">Every telephone and cell phone in Puri district. Power to about 3.5 million households.</span>
-              <span data-text="front.sources">Sources:</span> <a class="front-source" href="https://reliefweb.int/report/india/odisha-fani-cyclone-assessment-report">Indian Red Cross, 2019</a> · <a class="front-source" href="https://earthobservatory.nasa.gov/images/145017/lights-out-after-cyclone-fani">NASA, 2019</a>
-            </div>
-            <div>
-              <strong data-text="front.s3.worked.label">What still worked</strong>: <span data-text="front.s3.worked.text">Sirens from 122 towers on the coast, volunteers, and police radio.</span>
-              <span data-text="front.sources">Sources:</span> <a class="front-source" href="https://www.undrr.org/news/fanis-hard-lesson-resilient-infrastructure">UNDRR, 2019</a> · <a class="front-source" href="https://www.pressreader.com/india/hindustan-times-patiala/20190513/282020443740335">Hindustan Times, 13 May 2019</a>
-            </div>
-            <div>
-              <strong data-text="front.s3.happened.label">What happened</strong>: <span data-text="front.s3.happened.text">1.2 million people were evacuated. 64 people died. A super cyclone on the same coast in 1999 killed 9,885 by the official count.</span>
-              <span data-text="front.sources">Sources:</span> <a class="front-source" href="https://www.undrr.org/news/fanis-hard-lesson-resilient-infrastructure">UNDRR, 2019</a> <span data-text="front.s3.samelink">(same link)</span> · <a class="front-source" href="https://www.worldbank.org/en/news/speech/2019/06/14/odisha-fani-disaster-preparedness">World Bank, 2019</a>
-            </div>
-            <div>
-              <strong data-text="front.s3.gap.label">The gap</strong>: <span data-text="front.s3.gap.text">Even then, people in some villages said no message reached them about when the storm would land.</span>
-              <span data-text="front.source">Source:</span> <a class="front-source" href="https://www.pressreader.com/india/hindustan-times-st-jaipur/20190515/281938839366214">Hindustan Times, 15 May 2019</a>
+              <h2 class="event-name" data-section="4" data-text="front.s3.title">Cyclone Fani</h2>
+              <p class="case-place" data-text="front.s3.place">Odisha, India · 3 May 2019</p>
             </div>
           </div>
+          <dl class="card-rows">
+            <div>
+              <dt class="label" data-text="front.s3.failed.label">What failed</dt>
+              <dd data-text="front.s3.failed.text">Every telephone and cell phone in Puri district. Power to about 3.5 million households.</dd>
+              <dd class="case-cite"><span data-text="front.sources">Sources:</span> <a class="front-source" href="https://reliefweb.int/report/india/odisha-fani-cyclone-assessment-report">Indian Red Cross, 2019</a> · <a class="front-source" href="https://earthobservatory.nasa.gov/images/145017/lights-out-after-cyclone-fani">NASA, 2019</a></dd>
+            </div>
+            <div>
+              <dt class="label" data-text="front.s3.worked.label">What still worked</dt>
+              <dd data-text="front.s3.worked.text">Sirens from 122 towers on the coast, volunteers, and police radio.</dd>
+              <dd class="case-cite"><span data-text="front.sources">Sources:</span> <a class="front-source" href="https://www.undrr.org/news/fanis-hard-lesson-resilient-infrastructure">UNDRR, 2019</a> · <a class="front-source" href="https://www.pressreader.com/india/hindustan-times-patiala/20190513/282020443740335">Hindustan Times, 13 May 2019</a></dd>
+            </div>
+            <div>
+              <dt class="label" data-text="front.s3.happened.label">What happened</dt>
+              <dd data-text="front.s3.happened.text">1.2 million people were evacuated. 64 people died. A super cyclone on the same coast in 1999 killed 9,885 by the official count.</dd>
+              <dd class="case-cite"><span data-text="front.sources">Sources:</span> <a class="front-source" href="https://www.undrr.org/news/fanis-hard-lesson-resilient-infrastructure">UNDRR, 2019</a> <span data-text="front.s3.samelink">(same link)</span> · <a class="front-source" href="https://www.worldbank.org/en/news/speech/2019/06/14/odisha-fani-disaster-preparedness">World Bank, 2019</a></dd>
+            </div>
+            <div>
+              <dt class="label" data-text="front.s3.gap.label">The gap</dt>
+              <dd data-text="front.s3.gap.text">Even then, people in some villages said no message reached them about when the storm would land.</dd>
+              <dd class="case-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.pressreader.com/india/hindustan-times-st-jaipur/20190515/281938839366214">Hindustan Times, 15 May 2019</a></dd>
+            </div>
+          </dl>
         </article>
         <div class="front-pair">
           <figure>
@@ -101,131 +214,122 @@
           </figure>
         </div>
         <p class="front-caption" data-text="front.s3.caption">City lights around Bhubaneswar and Cuttack, before and after Cyclone Fani.</p>
-        <p data-text="front.s3.after">Sound and people carried that warning. Dead Air adds one small thing: the sound becomes text, an icon and a voice on the phone, in the listener’s own language.</p>
+        <p class="fani-after" data-text="front.s3.after">Sound and people carried that warning. Dead Air adds one small thing: the sound becomes text, an icon and a voice on the phone, in the listener’s own language.</p>
       </section>
 
       <div class="front-tuning" aria-hidden="true">
-        <svg viewBox="0 0 400 24" preserveAspectRatio="none" focusable="false"><line x1="0" y1="12" x2="400" y2="12" stroke-width="2" /><path d="M0 4v16M100 8v8M200 4v16M300 8v8M400 4v16" stroke-width="2" /></svg>
-        <span class="front-tuning-no">04</span>
-      </div>
-      <section id="s4" class="front-section">
-        <h2 data-section="4" data-text="front.s4.title">How it works</h2>
-        <ol>
-          <li><strong data-text="front.s4.step1.name">Send.</strong> <span data-text="front.s4.step1.text">Someone picks an alert: what happened, how urgent it is, what to do, and where. Dead Air packs it into 40 bytes or less.</span></li>
-          <li><strong data-text="front.s4.step2.name">Sound.</strong> <span data-text="front.s4.step2.text">The alert becomes a few seconds of sound, like an old modem. It is made to be played over a radio broadcast or a loudspeaker, or straight from a phone.</span></li>
-          <li><strong data-text="front.s4.step3.name">Hear.</strong> <span data-text="front.s4.step3.text">Any phone with the Listen page open hears it through the microphone and checks it. It shows the alert with an icon, in English or Hindi, and can read it aloud. One tap passes it on to the next phone.</span></li>
-        </ol>
-        <figure class="front-picture-box">
-          <img class="front-picture" src="./docs/design/front/illustration-phone.webp" width="1200" height="675" alt="Illustration of a phone showing an alert." data-alt="front.alt.illustration" loading="lazy" />
-          <figcaption class="front-caption"><span data-text="front.s4.caption">Illustration</span> · Photo by Vedas Dixit</figcaption>
-        </figure>
-      </section>
-
-      <div class="front-tuning" aria-hidden="true">
-        <svg viewBox="0 0 400 24" preserveAspectRatio="none" focusable="false"><line x1="0" y1="12" x2="400" y2="12" stroke-width="2" /><path d="M0 4v16M100 8v8M200 4v16M300 8v8M400 4v16" stroke-width="2" /></svg>
+        <svg viewBox="0 0 800 24" preserveAspectRatio="none" focusable="false"><path d="M0 20H800M0 3V20M20 12V20M40 12V20M60 12V20M80 12V20M100 3V20M120 12V20M140 12V20M160 12V20M180 12V20M200 3V20M220 12V20M240 12V20M260 12V20M280 12V20M300 3V20M320 12V20M340 12V20M360 12V20M380 12V20M400 3V20M420 12V20M440 12V20M460 12V20M480 12V20M500 3V20M520 12V20M540 12V20M560 12V20M580 12V20M600 3V20M620 12V20M640 12V20M660 12V20M680 12V20M700 3V20M720 12V20M740 12V20M760 12V20M780 12V20M800 3V20" /><line class="tuning-mark" x1="400" y1="0" x2="400" y2="24" /></svg>
         <span class="front-tuning-no">05</span>
       </div>
-      <section id="s5" class="front-section">
+      <section id="s5" class="front-section old">
         <h2 data-section="5" data-text="front.s5.title">An old idea, brought back</h2>
-        <p data-text="front.s5.text">Sending data as sound is not new. It is how computers first went online, and how radio alerts have worked for decades.</p>
-        <ul>
-          <li>
-            <strong>1970s.</strong> <span data-text="front.s5.p1970">Acoustic couplers. A computer talks through a telephone handset, by sound.</span>
-            <figure class="front-picture-box">
-              <img class="front-picture" src="./docs/design/front/acoustic-coupler.webp" width="1200" height="1269" alt="An old acoustic coupler modem with two rubber cups for a telephone handset." data-alt="front.alt.coupler" loading="lazy" />
-              <figcaption class="front-caption">Acoustic coupler modem · Photo by secretlondon123, CC BY-SA 2.0, resized · <a class="front-source" href="https://commons.wikimedia.org/wiki/File:Analogue_modem_-_acoustic_coupler.jpg">Wikimedia Commons</a></figcaption>
-            </figure>
-          </li>
+        <p class="old-intro" data-text="front.s5.text">Sending data as sound is not new. It is how computers first went online, and how radio alerts have worked for decades.</p>
+        <figure class="front-picture-box">
+          <img class="front-picture" src="./docs/design/front/acoustic-coupler.webp" width="1200" height="1269" alt="An old acoustic coupler modem with two rubber cups for a telephone handset." data-alt="front.alt.coupler" loading="lazy" />
+          <figcaption class="front-caption">Acoustic coupler modem · Photo by secretlondon123, CC BY-SA 2.0, resized · <a class="front-source" href="https://commons.wikimedia.org/wiki/File:Analogue_modem_-_acoustic_coupler.jpg">Wikimedia Commons</a></figcaption>
+        </figure>
+        <ul class="timeline">
+          <li><strong>1970s.</strong> <span data-text="front.s5.p1970">Acoustic couplers. A computer talks through a telephone handset, by sound.</span></li>
           <li>
             <strong>1997.</strong> <span data-text="front.s5.p1997">In the United States, radio and TV alerts start with a short burst of coded sound that a receiver can read. It is still in use.</span>
-            <span data-text="front.source">Source:</span> <a class="front-source" href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-11/subpart-B/section-11.31">47 CFR 11.31</a>
+            <span class="front-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-11/subpart-B/section-11.31">47 CFR 11.31</a></span>
           </li>
           <li><strong>2026.</strong> <span data-text="front.s5.p2026">Dead Air does the same in a web page, on a smartphone.</span></li>
         </ul>
-        <blockquote>
-          <p data-text="front.s5.quote">"But the radio stayed on."</p>
-          <p data-text="front.s5.quote.by">Sibyle Veil, head of Radio France, on the April 2025 blackout in Spain and Portugal, when power, mobile networks and the internet failed.</p>
-          <p><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.ebu.ch/news/2025/09/when-everything-else-fails-radio-doesnt">EBU, 2025</a></p>
+        <blockquote class="pull">
+          <p class="pull-words" data-text="front.s5.quote">"But the radio stayed on."</p>
+          <p class="pull-by" data-text="front.s5.quote.by">Sibyle Veil, head of Radio France, on the April 2025 blackout in Spain and Portugal, when power, mobile networks and the internet failed.</p>
+          <p class="front-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.ebu.ch/news/2025/09/when-everything-else-fails-radio-doesnt">EBU, 2025</a></p>
         </blockquote>
       </section>
 
       <div class="front-twin">
-        <section id="s6" class="front-section">
+        <div class="twin-col">
           <div class="front-tuning" aria-hidden="true">
-            <svg viewBox="0 0 400 24" preserveAspectRatio="none" focusable="false"><line x1="0" y1="12" x2="400" y2="12" stroke-width="2" /><path d="M0 4v16M100 8v8M200 4v16M300 8v8M400 4v16" stroke-width="2" /></svg>
+            <svg viewBox="0 0 800 24" preserveAspectRatio="none" focusable="false"><path d="M0 20H800M0 3V20M20 12V20M40 12V20M60 12V20M80 12V20M100 3V20M120 12V20M140 12V20M160 12V20M180 12V20M200 3V20M220 12V20M240 12V20M260 12V20M280 12V20M300 3V20M320 12V20M340 12V20M360 12V20M380 12V20M400 3V20M420 12V20M440 12V20M460 12V20M480 12V20M500 3V20M520 12V20M540 12V20M560 12V20M580 12V20M600 3V20M620 12V20M640 12V20M660 12V20M680 12V20M700 3V20M720 12V20M740 12V20M760 12V20M780 12V20M800 3V20" /><line class="tuning-mark" x1="500" y1="0" x2="500" y2="24" /></svg>
             <span class="front-tuning-no">06</span>
           </div>
-          <h2 data-section="6" data-text="front.s6.title">What we promise</h2>
-          <ol>
-            <li data-text="front.s6.p1">A damaged alert is never shown.</li>
-            <li data-text="front.s6.p2">An expired alert is never shown as current. Every alert shows when it was sent.</li>
-            <li data-text="front.s6.p3">A test is always marked TEST.</li>
-            <li data-text="front.s6.p4">After the first load, it works with no network and never contacts any other site.</li>
-            <li data-text="front.s6.p5">Microphone sound is never recorded, stored or uploaded.</li>
-            <li data-text="front.s6.p6">Every alert has an icon and text in every language the app ships.</li>
-          </ol>
-        </section>
-        <section id="s7" class="front-section">
+          <section id="s6" class="front-section promises">
+            <h2 data-section="6" data-text="front.s6.title">What we promise</h2>
+            <ol>
+              <li data-text="front.s6.p1">A damaged alert is never shown.</li>
+              <li data-text="front.s6.p2">An expired alert is never shown as current. Every alert shows when it was sent.</li>
+              <li data-text="front.s6.p3">A test is always marked TEST.</li>
+              <li data-text="front.s6.p4">After the first load, it works with no network and never contacts any other site.</li>
+              <li data-text="front.s6.p5">Microphone sound is never recorded, stored or uploaded.</li>
+              <li data-text="front.s6.p6">Every alert has an icon and text in every language the app ships.</li>
+            </ol>
+          </section>
+        </div>
+        <div class="twin-col">
           <div class="front-tuning" aria-hidden="true">
-            <svg viewBox="0 0 400 24" preserveAspectRatio="none" focusable="false"><line x1="0" y1="12" x2="400" y2="12" stroke-width="2" /><path d="M0 4v16M100 8v8M200 4v16M300 8v8M400 4v16" stroke-width="2" /></svg>
+            <svg viewBox="0 0 800 24" preserveAspectRatio="none" focusable="false"><path d="M0 20H800M0 3V20M20 12V20M40 12V20M60 12V20M80 12V20M100 3V20M120 12V20M140 12V20M160 12V20M180 12V20M200 3V20M220 12V20M240 12V20M260 12V20M280 12V20M300 3V20M320 12V20M340 12V20M360 12V20M380 12V20M400 3V20M420 12V20M440 12V20M460 12V20M480 12V20M500 3V20M520 12V20M540 12V20M560 12V20M580 12V20M600 3V20M620 12V20M640 12V20M660 12V20M680 12V20M700 3V20M720 12V20M740 12V20M760 12V20M780 12V20M800 3V20" /><line class="tuning-mark" x1="600" y1="0" x2="600" y2="24" /></svg>
             <span class="front-tuning-no">07</span>
           </div>
-          <h2 data-section="7" data-text="front.s7.title">What it is not</h2>
-          <ul>
-            <li data-text="front.s7.i1">It is a prototype. It has never been used in a real disaster.</li>
-            <li>
-              <span data-text="front.s7.i2">It does not replace official alerts. India’s SACHET system has sent over 134 billion SMS alerts in more than 19 languages. Dead Air is a backup for when phones lose the network.</span>
-              <span data-text="front.source">Source:</span> <a class="front-source" href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2140843&amp;reg=48&amp;lang=2">PIB</a>
-            </li>
-            <li data-text="front.s7.i3">It needs a smartphone with the Listen page open and the screen on. Load the page once while you still have a connection.</li>
-            <li>
-              <span data-text="front.s7.i4">It needs a working radio, loudspeaker or phone nearby. Radio often outlasts mobile networks, but not always. Weeks after Hurricane Maria, about one-third of Puerto Rico’s AM and FM stations were still off air.</span>
-              <span data-text="front.source">Source:</span> <a class="front-source" href="https://docs.fcc.gov/public/attachments/doc-353805a1.pdf">FCC, 2018</a>
-            </li>
-            <li>
-              <span data-text="front.s7.i5">It cannot help when no warning is sent, or when it is sent too late. In Maui in 2023 the sirens were never sounded. In Valencia in 2024 the phone alert went out after the flooding had begun.</span>
-              <span data-text="front.sources">Sources:</span> <a class="front-source" href="https://www.nbcnews.com/news/us-news/hawaiis-emergency-warning-sirens-werent-activated-alert-residents-agen-rcna99475">NBC News, 2023</a> · <a class="front-source" href="https://www.ssph-journal.org/journals/public-health-reviews/articles/10.3389/phrs.2025.1608297/full">Public Health Reviews, 2025</a>
-            </li>
-            <li data-text="front.s7.i6">It cannot yet prove who sent an alert.</li>
-            <li data-text="front.s7.i7">English and Hindi so far.</li>
-            <li>
-              <span data-text="front.s7.i8">Tested so far:</span>
-              <ul>
-                <li data-text="front.s7.tested.near">2.4 m (8 ft), heard every time.</li>
-                <li data-text="front.s7.tested.far">6.4 m (21 ft), next room through an open doorway, 3 of 4 alerts received.</li>
-                <li data-text="front.s7.tested.how">Sound played by MacBook Pro M4, built-in speakers, full volume, about 85 dB, heard by Samsung Galaxy S25 Ultra. These were informal tests.</li>
-                <li data-text="front.s7.radio">Radio: not tested yet.</li>
-                <li data-text="front.s7.loud">Loudspeaker: not tested yet.</li>
-              </ul>
-            </li>
-          </ul>
-        </section>
+          <section id="s7" class="front-section limits">
+            <h2 data-section="7" data-text="front.s7.title">What it is not</h2>
+            <ul>
+              <li data-text="front.s7.i1">It is a prototype. It has never been used in a real disaster.</li>
+              <li>
+                <span data-text="front.s7.i2">It does not replace official alerts. India’s SACHET system has sent over 134 billion SMS alerts in more than 19 languages. Dead Air is a backup for when phones lose the network.</span>
+                <span class="limit-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2140843&amp;reg=48&amp;lang=2">PIB</a></span>
+              </li>
+              <li data-text="front.s7.i3">It needs a smartphone with the Listen page open and the screen on. Load the page once while you still have a connection.</li>
+              <li>
+                <span data-text="front.s7.i4">It needs a working radio, loudspeaker or phone nearby. Radio often outlasts mobile networks, but not always. Weeks after Hurricane Maria, about one-third of Puerto Rico’s AM and FM stations were still off air.</span>
+                <span class="limit-cite"><span data-text="front.source">Source:</span> <a class="front-source" href="https://docs.fcc.gov/public/attachments/doc-353805a1.pdf">FCC, 2018</a></span>
+              </li>
+              <li>
+                <span data-text="front.s7.i5">It cannot help when no warning is sent, or when it is sent too late. In Maui in 2023 the sirens were never sounded. In Valencia in 2024 the phone alert went out after the flooding had begun.</span>
+                <span class="limit-cite"><span data-text="front.sources">Sources:</span> <a class="front-source" href="https://www.nbcnews.com/news/us-news/hawaiis-emergency-warning-sirens-werent-activated-alert-residents-agen-rcna99475">NBC News, 2023</a> · <a class="front-source" href="https://www.ssph-journal.org/journals/public-health-reviews/articles/10.3389/phrs.2025.1608297/full">Public Health Reviews, 2025</a></span>
+              </li>
+              <li data-text="front.s7.i6">It cannot yet prove who sent an alert.</li>
+              <li data-text="front.s7.i7">English and Hindi so far.</li>
+              <li>
+                <span data-text="front.s7.i8">Tested so far:</span>
+                <ul>
+                  <li data-text="front.s7.tested.near">2.4 m (8 ft), heard every time.</li>
+                  <li data-text="front.s7.tested.far">6.4 m (21 ft), next room through an open doorway, 3 of 4 alerts received.</li>
+                  <li data-text="front.s7.tested.how">Sound played by MacBook Pro M4, built-in speakers, full volume, about 85 dB, heard by Samsung Galaxy S25 Ultra. These were informal tests.</li>
+                  <li data-text="front.s7.radio">Radio: not tested yet.</li>
+                  <li data-text="front.s7.loud">Loudspeaker: not tested yet.</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+        </div>
       </div>
 
       <div class="front-tuning" aria-hidden="true">
-        <svg viewBox="0 0 400 24" preserveAspectRatio="none" focusable="false"><line x1="0" y1="12" x2="400" y2="12" stroke-width="2" /><path d="M0 4v16M100 8v8M200 4v16M300 8v8M400 4v16" stroke-width="2" /></svg>
+        <svg viewBox="0 0 800 24" preserveAspectRatio="none" focusable="false"><path d="M0 20H800M0 3V20M20 12V20M40 12V20M60 12V20M80 12V20M100 3V20M120 12V20M140 12V20M160 12V20M180 12V20M200 3V20M220 12V20M240 12V20M260 12V20M280 12V20M300 3V20M320 12V20M340 12V20M360 12V20M380 12V20M400 3V20M420 12V20M440 12V20M460 12V20M480 12V20M500 3V20M520 12V20M540 12V20M560 12V20M580 12V20M600 3V20M620 12V20M640 12V20M660 12V20M680 12V20M700 3V20M720 12V20M740 12V20M760 12V20M780 12V20M800 3V20" /><line class="tuning-mark" x1="700" y1="0" x2="700" y2="24" /></svg>
         <span class="front-tuning-no">08</span>
       </div>
-      <section id="s8" class="front-section">
+      <section id="s8" class="front-section foot">
         <p class="front-links">
           <a class="pill" href="%BASE_URL%listen/" data-text="nav.switch.listen">Listen</a>
           <a class="pill" href="%BASE_URL%broadcast/" data-text="nav.switch.broadcast">Broadcast</a>
           <a class="pill" href="https://github.com/vedas-dixit/dead-air">GitHub</a>
         </p>
-        <h3 data-section="8" data-text="front.s8.credits">Credits</h3>
-        <ul>
-          <li><span data-text="front.s8.font">Font</span>: IBM Plex Mono · <span data-text="front.s8.licence">Licence</span>: OFL-1.1</li>
-          <li><span data-text="front.s8.sound">Sound library</span>: ggwave · <span data-text="front.s8.licence">Licence</span>: MIT</li>
-          <li><span data-text="front.s8.qr">QR code library</span>: qrcode-generator · <span data-text="front.s8.licence">Licence</span>: MIT</li>
-        </ul>
-        <p><strong data-text="front.s8.pictures">Pictures</strong></p>
-        <ul>
-          <li>fani-before: Bhubaneswar at night, 30 April 2019 · NASA Earth Observatory (Lauren Dauphin), with Black Marble data from NASA Goddard and Landsat data from USGS · <a class="front-source" href="https://science.nasa.gov/earth/earth-observatory/lights-out-after-cyclone-fani-145017/">NASA</a></li>
-          <li>fani-after: Bhubaneswar at night, 5 May 2019 · NASA Earth Observatory (Lauren Dauphin), with Black Marble data from NASA Goddard and Landsat data from USGS · <a class="front-source" href="https://science.nasa.gov/earth/earth-observatory/lights-out-after-cyclone-fani-145017/">NASA</a></li>
-          <li>acoustic-coupler: Acoustic coupler modem · Photo by secretlondon123, CC BY-SA 2.0, resized · <a class="front-source" href="https://commons.wikimedia.org/wiki/File:Analogue_modem_-_acoustic_coupler.jpg">Wikimedia Commons</a></li>
-          <li>illustration-phone: Illustration · Photo by Vedas Dixit</li>
-        </ul>
-        <p data-text="front.s8.last">Dead Air is a prototype and a backup channel. Always follow official alerts.</p>
+        <div class="foot-credits">
+          <div>
+          <h3 data-section="8" data-text="front.s8.credits">Credits</h3>
+          <ul>
+            <li><span data-text="front.s8.font">Font</span>: IBM Plex Mono · <span data-text="front.s8.licence">Licence</span>: OFL-1.1</li>
+            <li><span data-text="front.s8.sound">Sound library</span>: ggwave · <span data-text="front.s8.licence">Licence</span>: MIT</li>
+            <li><span data-text="front.s8.qr">QR code library</span>: qrcode-generator · <span data-text="front.s8.licence">Licence</span>: MIT</li>
+          </ul>
+          </div>
+          <div>
+          <p><strong data-text="front.s8.pictures">Pictures</strong></p>
+          <ul>
+            <li>fani-before: Bhubaneswar at night, 30 April 2019 · NASA Earth Observatory (Lauren Dauphin), with Black Marble data from NASA Goddard and Landsat data from USGS · <a class="front-source" href="https://science.nasa.gov/earth/earth-observatory/lights-out-after-cyclone-fani-145017/">NASA</a></li>
+            <li>fani-after: Bhubaneswar at night, 5 May 2019 · NASA Earth Observatory (Lauren Dauphin), with Black Marble data from NASA Goddard and Landsat data from USGS · <a class="front-source" href="https://science.nasa.gov/earth/earth-observatory/lights-out-after-cyclone-fani-145017/">NASA</a></li>
+            <li>acoustic-coupler: Acoustic coupler modem · Photo by secretlondon123, CC BY-SA 2.0, resized · <a class="front-source" href="https://commons.wikimedia.org/wiki/File:Analogue_modem_-_acoustic_coupler.jpg">Wikimedia Commons</a></li>
+            <li>illustration-phone: Illustration · Photo by Vedas Dixit</li>
+          </ul>
+          </div>
+        </div>
+        <p class="foot-last" data-text="front.s8.last">Dead Air is a prototype and a backup channel. Always follow official alerts.</p>
       </section>
     </main>
     <script type="module" src="./src/front/main.ts"></script>

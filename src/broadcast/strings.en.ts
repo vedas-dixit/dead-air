@@ -314,6 +314,7 @@ export const stringsEn: Strings = {
     'front.s4.step3.name': 'Hear.',
     'front.s4.step3.text': 'Any phone with the Listen page open hears it through the microphone and checks it. It shows the alert with an icon, in English or Hindi, and can read it aloud. One tap passes it on to the next phone.',
     'front.s4.caption': 'Illustration',
+    'front.s4.pause': 'Pause animation',
     'front.s5.title': 'An old idea, brought back',
     'front.s5.text': 'Sending data as sound is not new. It is how computers first went online, and how radio alerts have worked for decades.',
     'front.s5.p1970': 'Acoustic couplers. A computer talks through a telephone handset, by sound.',
