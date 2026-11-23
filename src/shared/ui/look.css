@@ -1420,7 +1420,7 @@ dialog::backdrop {
 /* ---------- Room to spare: two columns ---------- */
 
 @media (min-width: 60em) {
-  .listen-page[data-has-cards],
+  .listen-page,
   .broadcast-page {
     --measure: 72rem;
   }
@@ -1451,7 +1451,55 @@ dialog::backdrop {
     margin-top: auto;
   }
 
-  /* Listen: the bar leaves the screen edge and sits under the state line. */
+  /* Listen: the same two columns as Broadcast, with or without a history. The
+     receiver and the alerts are on the left. The settings are a deck on the
+     right that stays in view. Nothing changes column when an alert arrives.
+     The last row is the one that stretches, so the receiver stays tight. */
+  .listen-page main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    grid-template-rows: auto auto 1fr;
+    gap: 0 3rem;
+    align-items: start;
+  }
+
+  .listen-page #error-line {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin-bottom: calc(var(--gap) * 2);
+  }
+
+  .listen-page .receiver {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .listen-page #cards {
+    grid-column: 1;
+    grid-row: 3;
+    padding-top: calc(var(--gap) * 2);
+  }
+
+  /* The deck starts on the same line as the Broadcast deck. */
+  .listen-page .listen-foot {
+    position: sticky;
+    top: var(--gap);
+    grid-column: 2;
+    grid-row: 2 / -1;
+    align-items: stretch;
+    padding-top: 0;
+  }
+
+  /* Nothing heard yet: the grille is the face of the page. */
+  .listen-page:not([data-has-cards]) .receiver {
+    padding-top: var(--gap);
+  }
+
+  .listen-page:not([data-has-cards]) .grille {
+    width: 18rem;
+  }
+
+  /* The bar leaves the screen edge and sits under the state line. */
   .listen-page .action-bar {
     position: static;
     width: 100%;
@@ -1460,56 +1508,17 @@ dialog::backdrop {
     padding: var(--gap) 0 0;
   }
 
-  /* Listen with a history: the receiver on the left, the cards on the right.
-     The last row is the one that stretches, so the left column stays tight. */
-  .listen-page[data-has-cards] main {
-    display: grid;
-    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
-    grid-template-rows: auto auto auto 1fr;
-    gap: 0 3rem;
-    align-items: start;
+  /* With a history the receiver is one strip: grille, state and buttons in a
+     row, the notes under it, then the cards. */
+  .listen-page[data-has-cards] .receiver > .action-bar:not(#level-meter) {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+    padding: 0;
   }
 
-  .listen-page[data-has-cards] #error-line {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    margin-bottom: calc(var(--gap) * 2);
-  }
-
-  .listen-page[data-has-cards] .receiver {
-    display: grid;
-    grid-column: 1;
-    grid-row: 2;
-    gap: var(--gap);
-    padding: calc(var(--gap) * 2) 0 0;
-    text-align: center;
-  }
-
-  .listen-page[data-has-cards] #level-meter {
-    width: 100%;
-    height: auto;
-  }
-
-  .listen-page[data-has-cards] .grille {
-    width: 12rem;
-    height: auto;
-    max-width: 64%;
-  }
-
-  .listen-page[data-has-cards] .state-line {
-    justify-content: center;
-  }
-
-  .listen-page[data-has-cards] #cards {
-    grid-column: 2;
-    grid-row: 2 / -1;
-    padding-top: calc(var(--gap) * 2);
-  }
-
-  .listen-page[data-has-cards] .listen-foot {
-    grid-column: 1;
-    grid-row: 3;
-    margin-top: 2rem;
+  .listen-page[data-has-cards] .receiver > div:not(#level-meter):not(.state-line):not(.action-bar) {
+    order: 1;
   }
 }
 
