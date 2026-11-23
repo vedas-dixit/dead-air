@@ -100,15 +100,16 @@ describe('licences and credits on the front page', () => {
     for (const line of lines) {
       const cells = line.split('|').map((c) => c.trim());
       const name = cells[0].replace(/\.webp$/, '');
-      const credit = cells[2] === 'same credit' ? prevCredit : cells[2];
+      const credit = cells[2] === 'same credit' ? prevCredit : (cells[2] ?? '');
       const link = cells[3] === 'same link' ? prevLink : cells[3];
       prevCredit = credit;
       prevLink = link ?? prevLink;
-      const li = new RegExp(`<li>\\s*${name}:([\\s\\S]*?)</li>`).exec(html);
+      const li = new RegExp(`<li>\\s*(?:<span[^>]*>)?${cells[1]}([\\s\\S]*?)</li>`).exec(html);
       expect(li, `no credit line for ${name}`).not.toBeNull();
-      const body = li![1];
+      const body = li![0];
       const text = body.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-      expect(text.startsWith(`${cells[1]} · ${credit}`), `credit text of ${name}`).toBe(true);
+      const expected = credit ? `${cells[1]} · ${credit}` : cells[1];
+      expect(text.startsWith(expected), `credit text of ${name}`).toBe(true);
       const href = /<a[^>]*href="([^"]+)"/.exec(body)?.[1];
       if (link) expect(href, `link of ${name}`).toBe(link);
       else expect(href).toBeUndefined();

@@ -19,7 +19,7 @@ The first screen has no hero picture. It holds the headline, one short paragraph
 
 ### Decisions the owner confirmed in the request
 
-1. No hero picture. The first screen is the headline, one paragraph, the buttons, the demo and the small line.
+1. ~~No hero picture.~~ Reversed by hand after the spec (23 Nov 2026): Section 1 now opens with a hero picture, `illustration-phone.webp`, with the caption "AI-generated illustration". The rest of the first screen is unchanged: the headline, one paragraph, the buttons, the demo and the small line.
 2. The page joins the pictures to the Saved_Copy. This reverses offline decision 5 ("Front_Page images are not saved") and edits files that the offline spec owns. The 2 MiB size check must still pass.
 3. The QR code is generated inside the app, with no outside service, for the address the site is served from. It uses the npm package `qrcode-generator` (version 2.0.4, licence MIT, no dependencies, ESM build at `dist/qrcode.mjs`, with types). Measured with rolldown on the whole library, it adds about 20.6 KB (20,634 bytes) bundled and minified, and about 7.2 KB (7,200 bytes) gzipped. This approval satisfies the tech rule to ask before adding a dependency.
 4. The three numbers are set very large in the mono font, with the words small underneath.
@@ -87,14 +87,14 @@ The first screen has no hero picture. It holds the headline, one short paragraph
 10. THE Front_Page SHALL contain no emoji.
 11. THE Hindi_Check SHALL list every new Hindi text of the Front_Page, including the Hindi of the caption "Illustration", as `needs human check` until a reviewer adds it to the Reviewed_List.
 
-### Requirement 2: First screen without a hero picture
+### Requirement 2: First screen with a hero picture
 
 **User Story:** As a visitor on a phone, I want to see the headline, a short explanation and a working demo without scrolling, so that I understand the idea in one screen.
 
 #### Acceptance Criteria
 
 1. THE Front_Page SHALL show in its first screen, in this order: the headline, the one paragraph of Section 1, the buttons "Play test alert" and "Open Listen", the QR_Code with its scan line, and the small line "A prototype. A backup channel, not a replacement for official alerts."
-2. THE Front_Page SHALL draw no Picture in Section 1.
+2. THE Front_Page SHALL show `illustration-phone.webp` as the hero Picture in Section 1, with its caption and credit. (Changed by hand on 23 Nov 2026; this was "no Picture" before.)
 3. THE headline SHALL wrap the word "dies" in the Dies_Element, a `span` with a fixed `id` or `class` that a later spec can select.
 4. THE Dies_Element SHALL carry no style, script or drawing in this spec, and THE headline SHALL read word for word as in the Content_File.
 5. WHEN the viewport is 360 px wide at the default text size, THE Front_Page SHALL show the headline, the paragraph and both buttons without a horizontal scroll bar.
@@ -162,12 +162,12 @@ The first screen has no hero picture. It holds the headline, one short paragraph
 #### Acceptance Criteria
 
 1. THE Front_Page SHALL show `fani-before.webp` and `fani-after.webp` side by side in the Case_Card on a wide screen and stacked on a phone, with the caption "City lights around Bhubaneswar and Cuttack, before and after Cyclone Fani." followed by the credit line of each picture from the Credits_File.
-2. THE Front_Page SHALL show `illustration-phone.webp` in Section 4 with the caption "Illustration" and its credit from the Credits_File.
+2. THE Front_Page SHALL show `illustration-phone.webp` in Section 4 with the caption "AI-generated illustration".
 3. THE Front_Page SHALL show `acoustic-coupler.webp` with the 1970s point of Section 5, with the credit line from the Credits_File.
 4. THE Front_Page SHALL use each Picture as it is, with no crop, filter or resize in code, and with width and height attributes so the page does not shift while it loads.
 5. THE Front_Page SHALL draw each Picture with a 12 px corner radius and a width no larger than the Text_Column.
 6. THE Caption of each Picture SHALL give the credit and the licence exactly as the Credits_File states, in the muted colour on the page background, and SHALL not be placed on a panel.
-7. THE Caption credit link SHALL be an ordinary link to the address in the Credits_File, and the `illustration-phone.webp` caption SHALL show the credit "Photo by Vedas Dixit" with no link.
+7. THE Caption credit link SHALL be an ordinary link to the address in the Credits_File, and the `illustration-phone.webp` caption SHALL show the caption "AI-generated illustration" with no link.
 8. THE Front_Page SHALL give each Picture an `alt` text in English and in Hindi, taken from the Language_Files and describing what the picture shows, and WHEN the Chosen_Language changes THE Front_Page SHALL change the `alt` text with it.
 9. IF a Picture fails to load, THEN THE Front_Page SHALL show its `alt` text and Caption and keep the layout readable.
 

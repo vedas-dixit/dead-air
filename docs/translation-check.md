@@ -274,7 +274,7 @@ Needs human check: 316
 | text.front.s4.step2.text | The alert becomes a few seconds of sound, like an old modem. It is made to be played over a radio broadcast or a loudspeaker, or straight from a phone. | चेतावनी कुछ सेकंड की आवाज़ बन जाती है, पुराने मॉडेम की तरह। इसे रेडियो प्रसारण या लाउडस्पीकर पर, या सीधे फ़ोन से चलाने के लिए बनाया गया है। | needs human check |
 | text.front.s4.step3.name | Hear. | सुनें। | needs human check |
 | text.front.s4.step3.text | Any phone with the Listen page open hears it through the microphone and checks it. It shows the alert with an icon, in English or Hindi, and can read it aloud. One tap passes it on to the next phone. | सुनने का पृष्ठ खुला रखने वाला कोई भी फ़ोन इसे माइक्रोफ़ोन से सुनता है और जाँचता है। वह चेतावनी को चिह्न के साथ, अंग्रेज़ी या हिंदी में दिखाता है और उसे ज़ोर से पढ़ भी सकता है। एक टैप से यह अगले फ़ोन तक पहुँच जाती है। | needs human check |
-| text.front.s4.caption | Illustration | चित्रण | needs human check |
+| text.front.s4.caption | AI-generated illustration | एआई से बनाया गया चित्र | needs human check |
 | text.front.s4.pause | Pause animation | एनिमेशन रोकें | needs human check |
 | text.front.s5.title | An old idea, brought back | एक पुराना विचार, फिर से लौटा | needs human check |
 | text.front.s5.text | Sending data as sound is not new. It is how computers first went online, and how radio alerts have worked for decades. | डेटा को आवाज़ के रूप में भेजना नया नहीं है। कंप्यूटर इसी तरह पहली बार ऑनलाइन हुए थे, और रेडियो चेतावनियाँ दशकों से इसी तरह काम करती रही हैं। | needs human check |
