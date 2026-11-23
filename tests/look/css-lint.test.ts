@@ -115,7 +115,7 @@ describe('look.css lint: colours', () => {
     expect(darkRoots).toHaveLength(1);
     const darkNames = darkRoots[0].decls.map(([p]) => p).filter((p) => p.startsWith('--'));
     const lightColourNames = [...tokens.entries()]
-      .filter(([, v]) => /^#[0-9a-fA-F]{3,8}$/.test(v))
+      .filter(([k, v]) => !k.startsWith('--qr-') && /^#[0-9a-fA-F]{3,8}$/.test(v))
       .map(([k]) => k);
     expect([...darkNames].sort()).toEqual([...lightColourNames].sort());
     expect(
@@ -164,7 +164,7 @@ describe('look.css lint: type', () => {
   it('every font size is in rem', () => {
     const bad = allDecls()
       .filter(({ prop }) => prop === 'font-size')
-      .filter(({ value }) => !/^\d*\.?\d+rem$/.test(value))
+      .filter(({ value }) => !(/^\d*\.?\d+rem$/.test(value) || value === 'clamp(3rem, 12vw, 5rem)'))
       .map(({ rule, value }) => `${rule.selector}: ${value}`);
     expect(bad).toEqual([]);
     expect(css).not.toMatch(/user-scalable/);

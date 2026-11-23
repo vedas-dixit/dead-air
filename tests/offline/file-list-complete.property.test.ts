@@ -29,9 +29,9 @@ describe('file list completeness property tests', () => {
         expect(r.files).toContain('icons/icon-192.png');
         expect(r.files).toContain('icons/icon-512.png');
 
-        // Excluded files and front-only images are not listed.
+        // Excluded files are not listed. Front-only images are.
         for (const p of r.files) expect(isExcluded(p)).toBe(false);
-        for (const p of c.expectedFrontImages) expect(r.files).not.toContain(p);
+        for (const p of c.expectedFrontImages) expect(r.files).toContain(p);
         for (const p of c.appImages) expect(r.files).toContain(p);
 
         // The plan agrees and writes the same list.

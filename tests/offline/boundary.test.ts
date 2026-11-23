@@ -165,15 +165,14 @@ describe('offline boundary scans', () => {
     expect(hits).toEqual([]);
   });
 
-  it('(f) the three page entries use start.ts or front-entry.ts', () => {
+  it('(f) the three page entries use start.ts or the front page script', () => {
     for (const page of ['listen/main.ts', 'broadcast/main.ts']) {
       const specs = importsOf(join(ROOT, page));
       expect(specs, page).toContain('../src/offline/dom/start');
     }
     expect(read(join(ROOT, 'index.html'))).toMatch(
-      /<script[^>]*type="module"[^>]*src="\.\/src\/offline\/dom\/front-entry\.ts"/,
+      /<script[^>]*type="module"[^>]*src="\.\/src\/front\/main\.ts"/,
     );
-    expect(importsOf(join(OFFLINE, 'dom/front-entry.ts'))).toContain('./start.ts');
   });
 
   it('(g) mount.ts files run the page action first and keep the approved edits', () => {

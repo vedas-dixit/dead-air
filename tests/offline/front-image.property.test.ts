@@ -11,13 +11,13 @@ import type { OutputFile } from './generators-build.ts';
 const RUNS = { numRuns: 100 };
 
 describe('Feature: offline, Property 7: Front_Page_Image is decided by reference, not by name', () => {
-  it('generated builds: front-only images are excluded, images reached by an app root stay in', () => {
+  it('generated builds: front-only images are listed too, images reached by an app root stay in', () => {
     fc.assert(
       fc.property(cleanBuildArb, (c) => {
         const r = buildFileList(fileListInput(c));
         expect(r.frontImages).toEqual(c.expectedFrontImages);
         expect(r.files).toEqual(c.expectedFiles);
-        for (const p of c.expectedFrontImages) expect(r.files).not.toContain(p);
+        for (const p of c.expectedFrontImages) expect(r.files).toContain(p);
         for (const p of c.appImages) {
           expect(r.files).toContain(p);
           expect(r.frontImages).not.toContain(p);
@@ -62,7 +62,7 @@ describe('Feature: offline, Property 7: Front_Page_Image is decided by reference
 
   const whereArb = fc.constantFrom<Where>('none', 'app-page', 'manifest', 'app-js');
 
-  it('any image name or folder: listed in frontImages only when no app root reaches it', () => {
+  it('any image name or folder: always listed, and in frontImages only when no app root reaches it', () => {
     fc.assert(
       fc.property(baseArb, imagePathArb, whereArb, (base, image, where) => {
         const files = build(base, image, where);
@@ -78,7 +78,7 @@ describe('Feature: offline, Property 7: Front_Page_Image is decided by reference
         expect(r.missing).toEqual([]);
         if (where === 'none') {
           expect(r.frontImages).toEqual([image]);
-          expect(r.files).not.toContain(image);
+          expect(r.files).toContain(image);
         } else {
           expect(r.frontImages).toEqual([]);
           expect(r.files).toContain(image);
@@ -107,7 +107,9 @@ describe('Feature: offline, Property 7: Front_Page_Image is decided by reference
         const rb = run(b);
         expect(ra.frontImages).toEqual([a]);
         expect(rb.frontImages).toEqual([b]);
-        expect(ra.files).toEqual(rb.files);
+        expect(ra.files.filter((x) => x !== a)).toEqual(rb.files.filter((x) => x !== b));
+        expect(ra.files).toContain(a);
+        expect(rb.files).toContain(b);
       }),
       RUNS,
     );

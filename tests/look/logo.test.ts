@@ -43,6 +43,6 @@ describe('inline logo in the header', () => {
     });
   }
   it('front page source holds the logo marker and the hidden name', () => {
-    expect(front).toMatch(/<a class="app-name" href="%BASE_URL%"><!--look:logo--><span class="sr-only">Dead Air<\/span><\/a>/);
+    expect(front).toMatch(/<a class="app-name" id="link-home" href="%BASE_URL%"><!--look:logo--><span class="sr-only">Dead Air<\/span><\/a>/);
   });
 });

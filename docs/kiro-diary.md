@@ -183,6 +183,7 @@ A service worker saves every file the app needs on the first visit to any of the
 - **Install is all or nothing.** Either every file is saved or none is. Old caches are removed on a new version and other storage (the History) is left alone.
 - **Own address only (promise 4).** An offline check scans the built files and fails on any request to another address. The only exceptions are listed in `src/offline/allow-list.ts` with a reason each: the worker's own fetches, the ggwave loader paths that never run because the wasm is embedded, and one SVG namespace name.
 - **Front page images are left out** of the saved copy to keep it small. It works with an empty `BASE_PATH` and with a sub-path.
+  - Update 22 Nov 2026 (front-page spec): this is reversed. The four front pictures are now saved with the rest, and the 2 MiB size check still applies.
 Not tested on a real phone: all eight real-device checks in `.kiro/specs/offline/report.md` are marked "not run on a real device". Tests cover only part of each.
 ## Spec 7: Languages and read aloud (21 Nov 2026)
 

@@ -50,7 +50,7 @@ describe('file list soundness property tests', () => {
         }
         expect(new Set(r.files).size).toBe(r.files.length);
         expect(r.files).toEqual([...r.files].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)));
-        for (const p of r.frontImages) expect(r.files).not.toContain(p);
+        for (const p of r.frontImages) expect(r.files).toContain(p);
       }),
       { numRuns: 200 },
     );

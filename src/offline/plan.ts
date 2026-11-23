@@ -135,7 +135,10 @@ export function planOffline(input: PlanInput): PlanResult {
   const sized = listed.map((p) => ({ path: p, size: byPath.get(p)?.size ?? 0 }));
   const summary = summarizeSize(sized);
   if (summary.over) {
-    errors.push(`Saved copy is ${summary.total} bytes, over the limit of ${SIZE_LIMIT_BYTES} bytes`);
+    const largest = sized.reduce((a, b) => (b.size > a.size ? b : a), sized[0] as { path: string; size: number });
+    errors.push(
+      `Saved copy is ${summary.total} bytes, over the limit of ${SIZE_LIMIT_BYTES} bytes, largest file ${largest.path} (${largest.size} bytes)`,
+    );
   }
 
   let config: OfflineConfig | null = null;

@@ -111,6 +111,11 @@ describe('planOffline', () => {
     expect(r.sizeLine).toContain('over the limit');
   });
 
+  it('names the largest file in the over-limit error', () => {
+    const files = site().map((x) => (x.path === 'assets/main.js' ? { ...x, size: 2_097_153 } : x));
+    const msg = run(files).errors.find((e) => e.includes('over the limit')) ?? '';
+    expect(msg).toContain('largest file assets/main.js (2097153 bytes)');
+  });
   it('version changes when a listed file changes and not when an excluded one does', () => {
     const a = run(site()).config?.version;
     const changed = site().map((x) => (x.path === 'assets/main.js' ? { ...x, hash: 'other' } : x));

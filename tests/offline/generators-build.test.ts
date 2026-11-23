@@ -53,7 +53,7 @@ describe('build generators', () => {
         expect(c.expectedFiles).toEqual([...c.expectedFiles].sort());
         for (const p of [...c.expectedFiles, ...c.expectedFrontImages]) expect(paths).toContain(p);
         for (const p of c.expectedFrontImages) {
-          expect(c.expectedFiles).not.toContain(p);
+          expect(c.expectedFiles).toContain(p);
           expect(c.appImages).not.toContain(p);
           expect(IMAGE_EXTS).toContain(p.slice(p.lastIndexOf('.') + 1));
         }
@@ -72,7 +72,7 @@ describe('build generators', () => {
         const reached = reachFromText(c, roots);
         const appReached = reachFromText(c, ['listen/index.html', 'broadcast/index.html', 'manifest.webmanifest']);
         const front = [...reached].filter((p) => !appReached.has(p) && IMAGE_EXTS.includes(p.slice(p.lastIndexOf('.') + 1)));
-        expect([...reached].filter((p) => !front.includes(p)).sort()).toEqual(c.expectedFiles);
+        expect([...reached].sort()).toEqual(c.expectedFiles);
         expect(front.sort()).toEqual(c.expectedFrontImages);
       }),
       { numRuns: 100 },

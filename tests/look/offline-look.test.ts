@@ -3,7 +3,7 @@
 // Validates: Requirements 15.1, 15.2, 15.3, 15.4, 15.5, 15.6, 15.7, 15.8
 import { describe, it, expect } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { EVENT_TYPES } from '../../src/message-code/index.ts';
 const ROOT = process.cwd();
@@ -44,7 +44,7 @@ function reachable(): Set<string> {
 // Images the front page names itself.
 function frontImages(): string[] {
   const html = text('index.html');
-  const found = [...html.matchAll(/(?:src|href)\s*=\s*"([^"]+)"/gi)].map((m) => m[1]).filter((r) => IMAGE.test(r));
+  const found = [...html.matchAll(/\bsrc\s*=\s*"([^"]+)"/gi)].map((m) => m[1]).filter((r) => IMAGE.test(r));
   return found.map((r) => r.replace(/^(?:\.\/|\/)/, ''));
 }
 describe.skipIf(!built)('built offline File_List carries the look', () => {
@@ -74,19 +74,12 @@ describe.skipIf(!built)('built offline File_List carries the look', () => {
     const total = files().reduce((sum, f) => sum + statSync(join(DIST, f)).size, 0);
     expect(total).toBeLessThanOrEqual(LIMIT);
   });
-  it('reaches no front page image from an app page', () => {
-    const reached = reachable();
+  it('lists the four front pictures', () => {
     const front = frontImages();
+    expect(front.length, 'front page pictures').toBe(4);
     for (const img of front) {
-      expect(files(), `${img} is listed offline`).not.toContain(img);
-      expect(reached.has(img), `${img} reachable from an app page`).toBe(false);
-      for (const p of reached) {
-        if (/\.(html|js|css)$/i.test(p)) expect(text(p), `${p} names ${img}`).not.toContain(img);
-      }
-    }
-    // Images under the front page folder, if one is ever added, stay out of the list as well.
-    if (existsSync(join(DIST, 'front'))) {
-      for (const e of readdirSync(join(DIST, 'front'))) expect(files()).not.toContain(`front/${e}`);
+      expect(files(), `${img} is listed offline`).toContain(img);
+      expect(existsSync(join(DIST, img)), `${img} exists in dist`).toBe(true);
     }
   });
   it('passes the offline build check', () => {

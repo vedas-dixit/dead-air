@@ -304,3 +304,5 @@ Files this spec owns: a new `src/offline/` folder, the service worker source, th
 9. THE Storage_Note text SHALL be exactly "Your browser may clear this saved copy if you do not use the app. Add it to your Home Screen to keep it.", SHALL be a key in the Strings_File with the `offline.` prefix, SHALL contain no emoji, and SHALL be on an element with `aria-live="polite"`.
 10. THE Storage_Note SHALL appear exactly once on the Listen_Page and exactly once on the Broadcast_Page, and SHALL NOT appear on the Front_Page.
 11. THE Service_Worker SHALL NOT call the Persist_Request.
+
+> Update 22 Nov 2026 (front-page spec, task 6.3): offline decision 5 ("Front_Page images are not saved") is reversed by the front-page spec (Requirements 7.1, 7.2, 7.11). The four front pictures now join the File_List and the Saved_Copy. The 2 MiB Size_Limit still applies to the whole File_List.

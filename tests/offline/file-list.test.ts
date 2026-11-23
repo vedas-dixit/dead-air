@@ -39,7 +39,7 @@ const site = (): OutputFile[] => [
 ];
 
 describe('buildFileList', () => {
-  it('follows references and drops Front_Page images by reference', () => {
+  it('follows references and lists Front_Page images and reports them in frontImages', () => {
     const r = run(site());
     expect(r.files).toEqual([
       'assets/a.css',
@@ -52,6 +52,7 @@ describe('buildFileList', () => {
       'index.html',
       'listen/index.html',
       'manifest.webmanifest',
+      'photos/cover.png',
     ]);
     expect(r.frontImages).toEqual(['photos/cover.png']);
     expect(r.missing).toEqual([]);

@@ -18,6 +18,7 @@ One site, three addresses, separated by path and not by domain.
 No app code exists yet. When it is added, keep these boundaries:
 - The message code is its own module of pure functions with no browser APIs, so it can be tested in plain Node.
 - Listen and Broadcast are separate pages. Shared UI or audio helpers go in a shared folder, not copied between them.
+  - Exception (front-page spec): `src/front/` may import the demo sound code from `src/broadcast/` (build, broadcast run, web audio host), so the Broadcast spec's files stay untouched. Nothing is copied.
 - Each spec owns its files. Ask before editing files that belong to another spec.
 
 ## Docs

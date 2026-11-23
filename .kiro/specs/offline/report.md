@@ -77,31 +77,31 @@ Occurrence: none
 Reason: Service worker pass-through of an own-origin request when it is not served from the saved copy.
 
 ### Loader call 3
-File: assets/persist-*.js
+File: assets/sound-link-*.js
 Call: XMLHttpRequest
 Occurrence: 1
 Reason: Emscripten loader path in ggwave for reading a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.
 
 ### Loader call 4
-File: assets/persist-*.js
+File: assets/sound-link-*.js
 Call: XMLHttpRequest
 Occurrence: 2
 Reason: Emscripten loader path in ggwave for reading a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.
 
 ### Loader call 5
-File: assets/persist-*.js
+File: assets/sound-link-*.js
 Call: XMLHttpRequest
 Occurrence: 3
 Reason: Emscripten loader path in ggwave for reading a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.
 
 ### Loader call 6
-File: assets/persist-*.js
+File: assets/sound-link-*.js
 Call: fetch(<identifier>,{credentials:`same-origin`})
 Occurrence: 1
 Reason: Emscripten loader path in ggwave for fetching a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.
 
 ### Loader call 7
-File: assets/persist-*.js
+File: assets/sound-link-*.js
 Call: fetch(<identifier>,{credentials:`same-origin`})
 Occurrence: 2
 Reason: Emscripten loader path in ggwave for fetching a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.
@@ -111,3 +111,5 @@ Reason: Emscripten loader path in ggwave for fetching a wasm file by URL. ggwave
 Copied from src/offline/allow-list.ts. ALLOWED_URLS has 1 entry (added by spec 8, approved by the user):
 
 - `http://www.w3.org/2000/svg`. Reason: XML namespace name inside the bundled icon SVGs. It is an identifier, never fetched.
+
+> Update 22 Nov 2026 (front-page spec, task 6.3): offline decision 5 ("Front_Page images are not saved") is reversed by the front-page spec (Requirements 7.1, 7.2, 7.11). The four front pictures now join the File_List and the Saved_Copy. The 2 MiB Size_Limit still applies to the whole File_List.

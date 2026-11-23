@@ -53,7 +53,7 @@ export interface BuildCase {
   files: OutputFile[];
   /** Sorted, unique. Correct only when `failing` is false (excluded files and missing targets are left out). */
   expectedFiles: string[];
-  /** Image files reached from the Front_Page only. Sorted. */
+  /** Image files reached from the Front_Page only. Sorted. They are also in expectedFiles. */
   expectedFrontImages: string[];
   /** Image files reached from at least one app root (includes manifest icons). Sorted. */
   appImages: string[];
@@ -372,8 +372,7 @@ function buildCase(p: Params): BuildCase {
   const F = reach(FRONT_ROOTS);
   const isImage = (path: string): boolean => IMAGE_EXTS.includes(path.slice(path.lastIndexOf('.') + 1).toLowerCase());
   const frontImages = [...F].filter((path) => !A.has(path) && isImage(path));
-  const front = new Set(frontImages);
-  const expectedFiles = [...new Set([...A, ...F])].filter((path) => !front.has(path)).sort();
+  const expectedFiles = [...new Set([...A, ...F])].sort();
 
   const files = [...nodes.values()].map((n) => n.file);
   return {

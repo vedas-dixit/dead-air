@@ -28,7 +28,7 @@ export interface AllowedUrl {
   reason: string;
 }
 
-const GGWAVE_FILE = 'assets/persist-*.js';
+const GGWAVE_FILE = 'assets/sound-link-*.js';
 const GGWAVE_XHR =
   'Emscripten loader path in ggwave for reading a wasm file by URL. ggwave embeds its wasm as a data: URI, so this path never runs.';
 const GGWAVE_FETCH =

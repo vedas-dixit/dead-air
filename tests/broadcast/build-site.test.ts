@@ -139,7 +139,10 @@ describe.each([
       expect(/\.wasm(?![A-Za-z0-9_$])/.test(t), `${f} .wasm`).toBe(false);
       // Offline spec: the shared offline chunks (persist-*, register-*) hold the registration code.
       // Any other file, including the broadcast bundle, still must not mention a service worker.
-      if (!/[\\/]assets[\\/](persist|register)-[^\\/]*\.js$/.test(f)) {
+      // Front-page spec: the registration code can land in a shared chunk (for example message-code-*.js),
+      // so find it by its content, not by chunk name.
+      const isRegisterCode = /["'`]serviceWorker["'`]\s*in\s*navigator|navigator\.serviceWorker/.test(t);
+      if (!/[\\/]assets[\\/](persist|register)-[^\\/]*\.js$/.test(f) && !isRegisterCode) {
         expect(t.includes('serviceWorker'), `${f} serviceWorker`).toBe(false);
       }
       expect(t.includes('getUserMedia'), `${f} getUserMedia`).toBe(false);
@@ -155,15 +158,16 @@ describe.each([
 
   it('the front page and listen page still build and link their own pages', () => {
     // Offline spec: ignore the manifest link, which only exists after build/offline-postbuild.mjs.
-    const home = urlsIn(text(join(b.out, 'index.html'))).filter((u) => u.startsWith('./'));
-    expect(home).toContain('./listen/');
-    expect(home).toContain('./broadcast/');
+    // Front-page spec: the front page links are derived from %BASE_URL%, so they are base-prefixed, not './'.
+    const home = urlsIn(text(join(b.out, 'index.html'))).filter((u) => u.startsWith(b.base) && u.endsWith('/'));
+    expect(home).toContain(`${b.base}listen/`);
+    expect(home).toContain(`${b.base}broadcast/`);
     const listen = urlsIn(text(join(b.out, 'listen', 'index.html')));
     // The real Listen page builds its links from the Vite base, so they are absolute.
     expect(listen).toContain(b.base);
     expect(listen).toContain(`${b.base}broadcast/`);
     for (const u of home) {
-      expect(existsSync(join(resolve(b.out, dirname(u + 'x')), 'index.html')), u).toBe(true);
+      expect(existsSync(join(b.out, u.slice(b.base.length), 'index.html')), u).toBe(true);
     }
     for (const u of [b.base, `${b.base}broadcast/`]) {
       expect(existsSync(join(b.out, u.slice(b.base.length), 'index.html')), u).toBe(true);
@@ -181,7 +185,8 @@ describe.each([
           expect(text(f), u).not.toContain('AGFzbQ');
         }
       }
-      expect(/\.(png|jpe?g|gif|webp|svg)/i.test(t), p).toBe(false);
+      // Front-page spec: only the front page (index.html) may load images. Other pages load none.
+      if (p !== 'index.html') expect(/\.(png|jpe?g|gif|webp|svg)/i.test(t), p).toBe(false);
     }
     expect(/\.(png|jpe?g|gif|webp|svg)/i.test(text(join(b.out, 'broadcast', 'index.html')))).toBe(false);
   });

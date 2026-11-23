@@ -144,12 +144,8 @@ export function buildFileList(input: FileListInput): FileListResult {
   for (const p of front) {
     if (!app.has(p) && IMAGE_EXTENSIONS.includes(extensionOf(p))) frontImages.push(p);
   }
-  const dropped = new Set(frontImages);
 
-  const files: string[] = [];
-  for (const p of new Set([...app, ...front])) {
-    if (!dropped.has(p)) files.push(p);
-  }
+  const files = [...new Set([...app, ...front])];
 
   return {
     files: files.sort(compareCodeUnits),

@@ -3,6 +3,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { homeLinkHtml } from '../../src/shared/ui/header';
 const html = readFileSync(join(process.cwd(), 'index.html'), 'utf8');
 const header = /<header\b[^>]*>([\s\S]*?)<\/header>/.exec(html)?.[1] ?? '';
 const pills = [...header.matchAll(/<a\b([^>]*\bclass="pill"[^>]*)>([^<]*)<\/a>/g)];
@@ -15,16 +16,22 @@ describe('front page header (index.html)', () => {
       '%BASE_URL%broadcast/',
     ]);
   });
-  it('has no knob, page switch, current-page mark, position or language switch', () => {
-    expect(header).not.toMatch(/knob|page-switch|aria-current|data-position|language-switch/i);
+  it('has no knob, page switch, current-page mark or position', () => {
+    expect(header).not.toMatch(/knob|page-switch|aria-current|data-position|language-slot/i);
   });
-  it('ends with an empty language slot', () => {
-    expect(header).toMatch(/<span class="language-slot"><\/span>\s*$/);
-    expect(header.match(/language-slot/g)).toHaveLength(1);
+  it('has the language switch', () => {
+    expect(header.match(/id="language-switch"/g)).toHaveLength(1);
+  });
+  it('logo link equals homeLinkHtml output apart from href and id', () => {
+    const link = /<a\b[^>]*\bclass="app-name"[^>]*>[\s\S]*?<\/a>/.exec(header)?.[0] ?? '';
+    const strip = (s: string) => s.replace(/ id="[^"]*"/, '').replace(/ href="[^"]*"/, '');
+    const expected = homeLinkHtml({ href: '%BASE_URL%', id: 'link-home', logo: '<!--look:logo-->' });
+    expect(strip(link)).toBe(strip(expected));
   });
   it('loads no app script and nothing from another site', () => {
     expect(html).not.toMatch(/src\/(?:listen|broadcast)/);
-    for (const m of html.matchAll(/\b(?:src|href)\s*=\s*"([^"]*)"/gi)) {
+    // Loaded resources only. Credit and source links in <a> are navigation, not loads.
+    for (const m of html.matchAll(/<(?:script|img|link|source|iframe)\b[^>]*?\b(?:src|href)\s*=\s*"([^"]*)"/gi)) {
       expect(m[1], m[1]).not.toMatch(/^(?:[a-z][a-z0-9+.-]*:)?\/\//i);
     }
   });

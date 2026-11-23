@@ -47,7 +47,7 @@ describe('README', () => {
 describe('package and build', () => {
   it('the MCP SDK and zod are devDependencies only, and no other dependency was added', () => {
     const pkg = JSON.parse(read('package.json')) as { dependencies: Record<string, string>; devDependencies: Record<string, string> };
-    expect(Object.keys(pkg.dependencies)).toEqual(['ggwave']);
+    expect(Object.keys(pkg.dependencies)).toEqual(['ggwave', 'qrcode-generator']);
     expect(pkg.devDependencies['@modelcontextprotocol/sdk']).toMatch(/^\d/);
     expect(pkg.devDependencies.zod).toMatch(/^\d/);
   });

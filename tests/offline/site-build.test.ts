@@ -155,6 +155,39 @@ describe.each([
     expect(front).not.toContain('storage-note');
   });
 
+  it('front page: four pictures listed, total within 2 MiB, QR code bundled with no other origin, Listen_URL uses the base', () => {
+    // Validates: Requirements 7.1, 7.3, 7.7, 7.8, 7.10, 7.12, 9.6
+    expect(b.check.status, `${where}\n${b.check.output}`).toBe(0);
+    const front = text(join(b.out, 'index.html'));
+    expect(front, where).not.toContain('offline-line');
+
+    // The four pictures are in the File_List (built under assets/, hashed names).
+    for (const stem of ['fani-before', 'fani-after', 'illustration-phone', 'acoustic-coupler']) {
+      const hit = list.files.filter((f) => f.startsWith(`assets/${stem}-`) && f.endsWith('.webp'));
+      expect(hit.length, `${where} ${stem}`).toBe(1);
+      expect(front.includes(`${b.base}${hit[0]}`), `${where} index.html references ${hit[0]}`).toBe(true);
+    }
+
+    // Total size of the saved copy.
+    const total = list.files.reduce((n, f) => n + readFileSync(join(b.out, f)).length, 0);
+    expect(total, where).toBeLessThanOrEqual(2097152);
+
+    // QR library code is in a listed JS file and that file names no other origin.
+    const jsFiles = list.files.filter((f) => f.endsWith('.js'));
+    const qrFiles = jsFiles.filter((f) => /getModuleCount/.test(text(join(b.out, f))));
+    expect(qrFiles.length, `${where} QR library in a listed JS file`).toBeGreaterThan(0);
+    for (const f of qrFiles) {
+      const src = text(join(b.out, f));
+      // The SVG namespace string is an identifier, not a request.
+      const urls = (src.match(/https?:\/\/[^\s"'`)\\]+/g) ?? []).filter((u) => u !== 'http://www.w3.org/2000/svg');
+      expect(urls, `${where} ${f}`).toEqual([]);
+    }
+
+    // The Listen_URL path is built from the base.
+    const withBase = jsFiles.filter((f) => text(join(b.out, f)).includes(`location.origin,\`${b.base}\``));
+    expect(withBase.length, `${where} Listen_URL base`).toBeGreaterThan(0);
+  });
+
   it('a failing check names the BASE_PATH', () => {
     const copy = join(CACHE, `${name}-tampered`);
     rmSync(copy, { recursive: true, force: true });
@@ -194,12 +227,12 @@ describe('images in the File_List', () => {
     return real;
   }
 
-  it('leaves out an image used only by the front page and keeps an image used by the manifest', () => {
+  it('lists an image used only by the front page and keeps an image used by the manifest', () => {
     expect(existsSync(join(CACHE, 'root', 'index.html'))).toBe(true);
     const r = planOffline({ base: '/', files: files('photo.png'), hashText: (t) => `t${t.length}` });
     expect(r.errors).toEqual([]);
     const listed = r.config?.files ?? [];
-    expect(listed).not.toContain('photo.png');
+    expect(listed).toContain('photo.png');
     expect(listed).toContain('icons/icon-192.png');
     expect(listed).toContain('icons/icon-512.png');
     expect(listed).toContain('index.html');

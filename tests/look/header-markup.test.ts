@@ -28,16 +28,16 @@ describe.skipIf(!built)('built pages hold the header', () => {
       expect(h).not.toMatch(/<script|\bon[a-z]+=/i);
     });
   }
-  it('index.html has the front header with two pills and no switch', () => {
+  it('index.html has the front header with two pills and the language switch, no page switch', () => {
     const html = page('index.html');
     const h = headerOf(html);
     expect(h).toContain('class="front-links"');
     expect(hrefs(h).filter((l) => /\/(?:listen|broadcast)\/$/.test(l))).toHaveLength(2);
-    expect(h).not.toMatch(/page-switch|knob|aria-current|data-position|language-switch|<script/i);
-    expect(h).toMatch(/<span class="language-slot"><\/span>\s*$/);
+    expect(h).not.toMatch(/page-switch|knob|aria-current|data-position|<script/i);
+    expect(h).toContain('id="language-switch"');
     expect(html).not.toMatch(/%BASE_URL%/);
     const scripts = [...html.matchAll(/<script\b[^>]*\bsrc="([^"]*)"/g)].map((m) => m[1]);
     for (const s of scripts) expect(s).not.toMatch(/listen|broadcast/i);
-    for (const m of html.matchAll(/\b(?:src|href)\s*=\s*"([^"]*)"/gi)) expect(m[1]).not.toMatch(OTHER_SITE);
+    for (const m of html.matchAll(/(?:\bsrc\s*=|<link\b[^>]*\bhref\s*=)\s*"([^"]*)"/gi)) expect(m[1]).not.toMatch(OTHER_SITE);
   });
 });
