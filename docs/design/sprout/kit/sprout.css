@@ -1,0 +1,134 @@
+/* The flower that grows out of a word (spec front-sprout).
+
+   An exception to the radio look, recorded in .kiro/steering/style-rules.md
+   under "Exception: the front page sprout". It lives in its own file so that
+   front.css keeps its own rules (no blur, no glow) untouched.
+
+   dom/sprout.ts draws the marks into the anchor and writes --lx and --ly (where
+   the top of the letter is, in em). This file places the drawing on that point
+   and draws it as --grow runs from 0 to 1.
+
+   Knobs. Set them on .sprout or on any element around it:
+   --sprout-height  How tall the plant is. Default: 9.5em of the word's text,
+                    the blog's proportion for body text. A headline wants less,
+                    about 3em to 4em.
+   --sprout-time    How long it takes to grow. Default 2.8s.
+   --sprout-glow    Strength of the warm wash behind the head, 0 to 1. Default 0.85. */
+
+@property --grow {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+/* Keeps the anchor and the word on one line. */
+.sprout-host {
+  white-space: nowrap;
+}
+
+/* The anchor: a zero-size box on the baseline, just before the word. The
+   finished drawing is the default, so with reduced motion (or before the script
+   runs) the flower is simply there. */
+.sprout {
+  --grow: 1;
+  --p: var(--grow);
+  /* Fallbacks until sprout.ts has measured the letter: em across from the
+     anchor, em above the baseline. */
+  --lx: 0.3;
+  --ly: 0.7;
+  /* One drawing unit as a length. --bw, --bh (the box), --rx, --ry (the root's
+     distance from the box's left and bottom edges) and --em (the text size the
+     drawing was made against) are written here by sprout.ts. */
+  --u: calc(var(--sprout-height, calc(var(--bh) * 1em / var(--em))) / var(--bh));
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: 0;
+}
+
+.sprout[data-grown='false'] {
+  --grow: 0;
+}
+
+/* The word has wrapped onto a later line of its block: a plant there would
+   grow over the line above, so there is none. sprout.ts sets this. */
+.sprout[data-sprout-line='later'] > * {
+  display: none;
+}
+
+/* The clock. Snaps back to 0 with no transition (data-grown="false" has none). */
+@media (prefers-reduced-motion: no-preference) {
+  .sprout[data-grown='true'] {
+    transition: --grow var(--sprout-time, 2.8s) cubic-bezier(0.3, 0.1, 0.3, 1);
+  }
+}
+
+/* The drawing, placed so its root lands on (--lx, --ly). */
+.sprout-svg {
+  position: absolute;
+  left: calc(var(--lx) * 1em - var(--rx) * var(--u));
+  bottom: calc(var(--ly) * 1em - var(--ry) * var(--u));
+  display: block;
+  width: calc(var(--bw) * var(--u));
+  height: calc(var(--bh) * var(--u));
+  max-width: none;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* An invisible 1 px strip up the stem's line, as tall as the drawing. The
+   script watches it to know when the plant is on screen. */
+.sprout-probe {
+  position: absolute;
+  left: calc(var(--lx) * 1em);
+  bottom: calc(var(--ly) * 1em - var(--ry) * var(--u));
+  width: 1px;
+  height: calc(var(--bh) * var(--u));
+  pointer-events: none;
+}
+
+/* Each mark's own progress, 0 to 1, from the clock and its start and length. */
+.sprout-stem,
+.sprout-part,
+.sprout-glow {
+  --t: clamp(0, calc((var(--p) - var(--s)) / var(--d)), 1);
+}
+
+/* The stem draws from its root (pathLength is 100). */
+.sprout-stem {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--w);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: calc(100 - 100 * var(--t));
+  /* An unstarted stroke would still show its round cap as a dot. */
+  opacity: clamp(0, calc((var(--p) - var(--s)) * 60), 1);
+}
+
+/* A leaf or the head scales up from where it meets the stem, and its strokes
+   fade in base first. */
+.sprout-part {
+  transform-box: fill-box;
+  transform-origin: var(--ox) var(--oy);
+  transform: scale(var(--t));
+}
+
+.sprout-part path {
+  opacity: clamp(0, calc((var(--t) - var(--i)) * 3), 1);
+}
+
+/* The warm wash behind the head, last to arrive. */
+.sprout-glow {
+  opacity: calc(var(--t) * var(--sprout-glow, 0.85));
+}
+
+/* ------------------------------------------------------------------ */
+/* Placement on this site: the only part to edit for a new word.        */
+/*                                                                      */
+/* Body text (about 1.125rem to 1.3rem) needs nothing here. A headline  */
+/* wants a smaller plant, set on the headline's own class, for example: */
+/*                                                                      */
+/*   .hero-title { --sprout-height: 3.5em; }                            */
+/* ------------------------------------------------------------------ */

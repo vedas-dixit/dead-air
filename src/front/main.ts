@@ -1,6 +1,7 @@
 // Entry point of the front page. Text, language switch, cyclone icon, QR code, demo, the How it works scene, service worker.
 import '../shared/ui/look.css';
 import './front.css';
+import './sprout.css';
 import { applyDocumentLanguage, createWebLanguageState } from '../languages/dom/web-language';
 import { mountLanguageSwitch } from '../languages/dom/language-switch';
 import { registerServiceWorker } from '../offline/dom/register';
@@ -9,6 +10,7 @@ import { bindText } from './dom/bind-text';
 import { mountDemo } from './dom/demo';
 import { mountHowScene } from './dom/how-scene';
 import { mountQr } from './dom/qr-svg';
+import { mountSprouts } from './dom/sprout';
 import { listenUrl } from './listen-url';
 
 const language = createWebLanguageState();
@@ -38,4 +40,5 @@ if (qr !== null) {
 
 mountDemo(document, language);
 mountHowScene(document);
+mountSprouts(document);
 registerServiceWorker();

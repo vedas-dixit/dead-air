@@ -79,7 +79,7 @@ Text and shape pairs, night theme:
 - Allowed: circles, dots, straight bars, rounded rectangles.
 - One corner radius for every tile, card, field and panel: 12 px.
 - Buttons and switches are full pills (radius 999 px). The TEST banner is a straight bar with no radius.
-- Forbidden: shadows, gradients, glows, blur, outlines that fake a glow, textures, images used as decoration.
+- Forbidden: shadows, gradients, glows, blur, outlines that fake a glow, textures, images used as decoration. (One exception: the front page sprout, see the end of this file.)
 - Separation comes from panel colour and space, not from lines or depth. Lines appear only as marks: the 3 px ring of a hollow control (see State), an ink bar on the left of a field error and of the say-first line, and the ink ring round the TEST question.
 - State, taken from the lamps: solid means live, hollow means idle. A lit lamp, a switch that is on and a button you can press are solid. An unlit lamp, a switch that is off and a locked control are hollow: a 3 px ring with the page colour inside. Buttons, fields and tiles carry a 3 px border in their own fill colour, so going hollow does not change their size.
 - Focus: 3 px solid ring, ink in light and paper at night, with a 3 px gap.
@@ -110,7 +110,7 @@ Text and shape pairs, night theme:
 - Nothing that runs while listening may draw more than 15 times a second. The speaker grille updates at most 15 times a second, and a test checks the cap.
 - The arrival flash stays within 3 flashes in any one second. It is a 24 px frame round the screen edge with two bands: an orange band and an ink band (paper band at night), so it shows in both themes.
 - Under `prefers-reduced-motion: reduce`: no flash and no transitions or easing. The grille is a meter, not decoration, so it still shows the level, stepping at most twice a second with no easing. State otherwise shows by text, lamp and shape.
-- No decorative animation, no loading spinners that loop, no animated backgrounds.
+- No decorative animation, no loading spinners that loop, no animated backgrounds. (One exception: the front page sprout, see the end of this file.)
 
 ## Layout
 
@@ -170,6 +170,17 @@ Text and shape pairs, night theme:
 - TEST banner (promise 3): a full-width orange bar, ink text, always the first thing in a test alert.
 - Expired alert: the expired panel colour and a visible "no longer current" label. No strike-through anywhere on it. Sent time stays easy to read.
 - Front page placeholder: same colours, type and shapes only. The header, then the name and two links inside `main`. It loads no app code and no other site's files.
+
+## Exception: the front page sprout
+
+Approved by the owner on 24 Nov 2026 for spec `front-sprout`. One hand-drawn flower, the owner's own drawing, grows out of one word on the front page. Guide: `docs/design/sprout/guide.md`. This is the only place the rules above are relaxed, and only in these ways:
+
+- **Glow.** The flower head has one soft wash behind it, an SVG `feGaussianBlur` made by the script, in its own colour #F2BA65. The colour lives in `src/front/sprout-drawing.ts`, never in a stylesheet. It carries no meaning.
+- **Motion.** The flower grows once, over about 2.8 seconds, when the plant comes on screen, and again after it has left the screen and come back. It never loops. It moves only under `prefers-reduced-motion: no-preference`. With reduced motion, or without scripts, the finished flower (or nothing) is shown and nothing moves.
+- **Shape.** Its lines are a hand drawing, not plain geometry, in the text colour (`currentColor`).
+- **Where.** Its rules live only in `src/front/sprout.css` and its code only in `src/front/dom/sprout.ts`, `src/front/sprout-ink.ts` and `src/front/sprout-drawing.ts`. `front.css` and `look.css` keep every rule above. The Listen and Broadcast pages never load it.
+
+Everything else still holds: no colour value in CSS, sizes in em that follow the text, nothing loaded from another site, nothing a reader needs in order to understand the page, no pointer events, hidden from screen readers, and it never covers a line of text.
 
 ## Interface files only
 

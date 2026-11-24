@@ -30,4 +30,5 @@ One spec at a time, in this order:
 8. The radio look
 9. Pass it on
 10. Front page
+11. Front page sprout (`.kiro/specs/front-sprout/`): the owner's flower growing out of one word on the front page
 Requirements first, then design, then tasks. Wait for approval between phases. Stay inside the current spec. Ask before changing files that belong to another spec.

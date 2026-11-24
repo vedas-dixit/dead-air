@@ -150,6 +150,26 @@ Section 6 comes first in the source, so it is first when stacked. At 60em the pa
 
 The headline is `<h1>When the internet <span id="dies">dies</span>, the radio still speaks.</h1>`. The span has no class, style or script. `data-text` cannot be on the `h1` because the span would be replaced. Instead the h1 holds three translatable parts: `<span data-text="front.s1.h.a">When the internet </span><span id="dies" data-text="front.s1.h.dies">dies</span><span data-text="front.s1.h.b">, the radio still speaks.</span>`. In Hindi the word that translates "dies" stays in the `#dies` span. The `h1` accessible name is the three parts joined, which reads as the sentence.
 
+### Headline size on narrow screens (added for front-sprout)
+
+`src/front/front.css` has one rule beyond the original design, approved by the owner for spec `front-sprout`:
+
+```css
+@media (max-width: 32em) {
+  .hero-title:not(:lang(hi)) {
+    font-size: clamp(1.25rem, 0rem + 6.4vw, 2rem);
+  }
+}
+```
+
+Why. The flower of `front-sprout` grows out of "dies" and is hidden when the word is not on the first line of the headline. The font is IBM Plex Mono, where every character is 0.6 em wide. "dies," has its comma stuck to it, so "When the internet dies," is 23 characters, which is 23 x 0.6 = 13.8 em. It starts on line 1 only if the headline block is at least 13.8 times the font size wide. Measured before the rule (Chrome, no scrollbar, English): at 320 to 481 px the block is 288 to 443 px wide and the font 28 to 32.35 px, so 13.8 em is 386 to 446 px and "dies" starts on line 2. From 500 px up it is on line 1.
+
+How the numbers were chosen. 6.4vw gives a font of 20.48 px at 320 px, 23.04 at 360, 24.96 at 390 and 30.72 at 480, so 13.8 em is 283, 318, 344 and 424 px, inside the blocks of 288, 328, 358 and 442 px. The rule stops at 32em (512 px) because from 513 px the original `clamp(1.75rem, 1rem + 3.4vw, 3rem)` fits by itself. At 500 and 512 px the rule caps at 2rem (32 px), 1 to 1.4 px under the old size.
+
+What stays the same. The headline at 513 px and wider (768 and 1280 included) is unchanged. Hindi is left out (`:not(:lang(hi))`): a different font and word, so the 13.8 em reasoning does not apply. The size is still in rem with a 1.25rem floor, so a larger text size setting still makes the headline larger. At 200% text the word wraps again and the flower is hidden, which is the fallback the sprout guide describes. The form `0rem + 6.4vw` is the one `tests/front/front-css.test.ts` accepts for font sizes.
+
+Re-check after any change to the headline text, `.hero-title` or the font: build the site, then run `node scripts/measure-front-headline.mjs` (English) and `node scripts/measure-front-headline.mjs --lang hi --widths 360,390,768,1280` (Hindi). It prints the line "dies" starts on at each width.
+
 ### QR code
 
 `src/front/listen-url.ts` (pure):

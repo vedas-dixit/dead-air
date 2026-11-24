@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run sprout tests on save",
+      "trigger": "PostFileSave",
+      "action": {
+        "type": "command",
+        "command": "npx vitest run tests/front/sprout tests/front/front-css tests/front/page"
+      },
+      "description": "Runs the front page sprout tests, and the front page tests it must not break, whenever a sprout file, index.html or the front page script is saved.",
+      "matcher": "(src/front/(dom/)?sprout[^/]*\\.(ts|css)|index\\.html|src/front/main\\.ts)$",
+      "enabled": true
+    }
+  ]
+}

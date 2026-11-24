@@ -1,0 +1,143 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Record the target in `design.md`": [
+      {
+        "executionId": "fdecfa59-4398-4d8f-95a6-038eff918220",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507415425
+      },
+      {
+        "executionId": "fdecfa59-4398-4d8f-95a6-038eff918220",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507459398
+      }
+    ],
+    "1. Confirm the Target_Word": [
+      {
+        "executionId": "fdecfa59-4398-4d8f-95a6-038eff918220",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507459431
+      }
+    ],
+    "2.1 Copy the four source files": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507633810
+      },
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507668690
+      }
+    ],
+    "2.2 Copy the four test files": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507677200
+      },
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507766623
+      }
+    ],
+    "3.1 Wrap the Target_Word": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507677251
+      },
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507767195
+      }
+    ],
+    "4.1 Add three lines": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507677465
+      },
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507767759
+      }
+    ],
+    "2. Copy the Kit into the source": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507766659
+      }
+    ],
+    "3. Put the Anchor in `index.html`": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507767232
+      }
+    ],
+    "4. Wire it in `src/front/main.ts`": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507767807
+      }
+    ],
+    "5.1 Set the plant height for a headline": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507773957
+      },
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507812046
+      }
+    ],
+    "5. Size it": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507812083
+      }
+    ],
+    "6. Checkpoint: all checks pass": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507818202
+      },
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507890226
+      }
+    ],
+    "7.1 Add an entry to `docs/kiro-diary.md`": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507896120
+      },
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507943584
+      }
+    ],
+    "7. Diary": [
+      {
+        "executionId": "e18a524c-3358-46b3-b54a-d7ab571e5800",
+        "chatSessionId": "sess_030ba6e9-9c83-4fe4-8974-cf13ffffdeee",
+        "timestamp": 1795507943618
+      }
+    ]
+  }
+}

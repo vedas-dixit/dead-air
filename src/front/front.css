@@ -140,6 +140,14 @@
   text-wrap: balance;
 }
 
+/* Narrow screens: shrink the headline just enough that "dies," (13.8 em in
+   this mono font) stays on the first line, where the flower grows. */
+@media (max-width: 32em) {
+  .hero-title:not(:lang(hi)) {
+    font-size: clamp(1.25rem, 0rem + 6.4vw, 2rem);
+  }
+}
+
 .hero-lede {
   max-width: 36rem;
   font-size: clamp(1.125rem, 1rem + 0.45vw, 1.3125rem);

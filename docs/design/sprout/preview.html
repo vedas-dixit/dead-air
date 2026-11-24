@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sprout preview</title>
+    <!-- Run `npx vite` in the project root, then open /docs/design/sprout/preview.html -->
+    <link rel="stylesheet" href="/src/shared/ui/look.css" />
+    <link rel="stylesheet" href="./kit/sprout.css" />
+    <style>
+      body {
+        max-width: none;
+        margin: 0;
+        padding: var(--gutter);
+        font-family: var(--font-latin);
+        color: var(--text);
+        background: var(--page);
+      }
+      main {
+        max-width: 48rem;
+        margin: 0 auto;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 1rem;
+      }
+      /* Room above each sample for the plant. The flowering word sits on the
+         sample's first line, so the plant never grows over a line of text. */
+      .sample {
+        max-width: none;
+        margin: 0;
+        padding-top: 11rem;
+      }
+      .sample-head {
+        --sprout-height: 3.6em;
+        font-size: clamp(1.75rem, 1rem + 3.4vw, 3rem);
+        line-height: 1.25;
+        font-weight: 600;
+      }
+      .sample-body {
+        font-size: 1.25rem;
+        line-height: 1.7;
+      }
+      .sample-hi {
+        --sprout-height: 3.6em;
+        font-family: var(--font-system);
+        font-size: clamp(1.75rem, 1rem + 2.6vw, 2.5rem);
+        line-height: 1.6;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--gap);
+        align-items: end;
+        margin-top: 3rem;
+      }
+      .controls label {
+        display: grid;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+      }
+      .controls input {
+        min-height: var(--target);
+        padding: 0 0.75rem;
+        border: var(--ring) solid var(--panel);
+        border-radius: var(--radius);
+        font: inherit;
+        color: inherit;
+        background: var(--panel);
+      }
+      .controls button {
+        min-height: var(--target);
+        padding: 0 1.25rem;
+        border: 0;
+        border-radius: var(--pill);
+        font: inherit;
+        color: var(--page);
+        background: var(--text);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="note">Sprout preview. Each flower grows once the plant is on screen from root to top, and again after it has left the screen. With reduced motion it is simply there. Every flowering word below starts on the first line of its block, down to a 360 px wide phone: a word on a later line would grow its plant over the line above it.</p>
+
+      <!-- 1. A headline word that is its own element (the front page's "dies"). -->
+      <p class="sample sample-head">the internet <span class="sprout-host"><span class="sprout" data-sprout aria-hidden="true"></span><span id="dies">dies</span></span>,</p>
+
+      <!-- 2. Body text, plain word, the blog's size and proportion. -->
+      <p class="sample sample-body">ideas to <span class="sprout-host"><span class="sprout" data-sprout aria-hidden="true"></span>life.</span> That usually means working closely with founders and managers.</p>
+
+      <!-- 3. Hindi, system font: the stem lands on the head line. -->
+      <p class="sample sample-hi" lang="hi">इंटरनेट <span class="sprout-host"><span class="sprout" data-sprout aria-hidden="true"></span><span>मर जाता है</span></span>,</p>
+
+      <!-- 4. Try any word and letter. -->
+      <p class="sample sample-head">still <span class="sprout-host"><span class="sprout" id="try-anchor" data-sprout aria-hidden="true"></span><span id="try-word">speaks</span></span>.</p>
+      <div class="controls">
+        <label>Word <input id="word" value="speaks" /></label>
+        <label>Letter (from 0) <input id="letter" type="number" min="0" value="0" /></label>
+        <button id="replay" type="button">Grow again</button>
+      </div>
+    </main>
+    <script type="module">
+      import { mountSprouts } from './kit/dom/sprout.ts';
+
+      mountSprouts(document);
+
+      const anchor = document.getElementById('try-anchor');
+      const word = document.getElementById('try-word');
+      document.getElementById('word').addEventListener('input', (e) => {
+        word.textContent = e.target.value || 'speaks';
+      });
+      document.getElementById('letter').addEventListener('input', (e) => {
+        anchor.dataset.sproutLetter = e.target.value;
+        word.textContent = word.textContent; // measure again
+      });
+      document.getElementById('replay').addEventListener('click', () => {
+        for (const a of document.querySelectorAll('[data-sprout][data-grown]')) {
+          a.dataset.grown = 'false';
+          void a.getBoundingClientRect();
+          requestAnimationFrame(() => (a.dataset.grown = 'true'));
+        }
+      });
+    </script>
+  </body>
+</html>
