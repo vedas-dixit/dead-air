@@ -315,3 +315,12 @@ The owner's flower now grows out of the first letter of "dies" in the headline `
 - **Checks.** Typecheck is clean (12 tsc projects). `npm test`: 186 files passed, 4 skipped; 1786 tests passed, 19 skipped. `npm run build` passed, offline-check OK, saved copy 23 files, 840392 bytes of 2097152. `grep -l sprout dist/assets/*.js` lists only `main-_VEHjNhA.js`.
 - **Measured line of "dies".** English is on line 1 at 360, 390, 768 and 1280 px. Hindi is on line 1 at all four, but at 360 and 390 the plant would cover the photo credit text. That is left open for the owner.
 - **Not done:** the owner's browser check (task 8).
+
+## README split (25 Nov 2026)
+Files: `README.md`, `DOCUMENTATION.md` (new), `LICENSE` (new), `docs/kiro-diary.md`. No spec, no code change.
+The README was split in two. `README.md` is the one-minute version (86 lines): the banner, the links, what it is, the two overview pictures, the four steps, Built with Kiro in five points, How it was built, the field test table, the four main limits, three commands, one line of credits, and a centred closing line, "Made with love by Vedas Dixit for Kiroween 2026", linking to vedasdixit.com. `DOCUMENTATION.md` holds the rest: how each part works with the byte picture, the annotated Broadcast and Listen screens and the three-phone languages picture, Built with Kiro in full with the ears table, the field tests, every known limit, running and testing, the full credits and the third-party licence notes.
+- **No fact was added or dropped.** Every sentence of the old README is in one of the two files. The only changed numbers are the commit counts in How it was built.
+- **Commit numbers.** At commit `effdeda`, `git rev-list --count HEAD` gave 32 and the Claude trailer count gave 2. The README images commit (`effdeda`) was hand work with Claude Code and has no trailer, so it is now named next to `9cdbfd9` as hand work the trailer count misses.
+- **Licence.** The MIT text moved from the README into a new `LICENSE` file at the root.
+- **Checks.** Every image path, relative link and heading anchor in both files resolves, every `picture`, `p` and `sub` tag is closed, and the six outside links answered 200. The font licence (name, SIL Open Font License 1.1, package and version) stays named in `README.md`, as the style rules ask.
+- **Not changed:** the phone checks. The request had a placeholder for a list of checks run on the owner's phone, with no list filled in, so no new real-device result was written anywhere.
