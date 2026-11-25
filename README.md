@@ -83,4 +83,4 @@ Sound by [ggwave](https://github.com/ggerganov/ggwave) (MIT). Font [IBM Plex Mon
 
 MIT, see [LICENSE](LICENSE).
 
-<p align="center">Made with love by <a href="https://vedasdixit.com">Vedas Dixit</a> for Kiroween 2026.</p>
+<p align="center">Made with love by <a href="https://vedasdixit.com">Vedas Dixit</a> for Kiroween 2026 :)</p>
